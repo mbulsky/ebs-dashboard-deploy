@@ -1678,12 +1678,14 @@
           <div style="font-size:18px; font-weight:500; color:#191C21;">Bulk Personal Top Up</div>
           <button onClick="{{ closeModal }}" style="border:none; background:none; cursor:pointer;"><i class="pi-close" style="font-size:16px; color:#939EAE;"></i></button>
         </div>
-        <div style="display:flex; align-items:center; gap:8px; margin-bottom:20px;">
-          <div style="display:flex; align-items:center; gap:7px;"><div style="width:22px; height:22px; border-radius:999px; background:{{ bulkStep1Bg }}; color:{{ bulkStep1Color }}; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700;">1</div><span style="font-size:12.5px; font-weight:600; color:{{ bulkStep1TextColor }};">Input users</span></div>
+        <div style="display:flex; align-items:center; gap:6px; margin-bottom:20px;">
+          <div style="display:flex; align-items:center; gap:6px;"><div style="width:22px; height:22px; border-radius:999px; background:{{ bulkStep1Bg }}; color:{{ bulkStep1Color }}; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700;">1</div><span style="font-size:12px; font-weight:600; color:{{ bulkStep1TextColor }};">Input users</span></div>
           <div style="flex:1; height:1px; background:#E6E7EB;"></div>
-          <div style="display:flex; align-items:center; gap:7px;"><div style="width:22px; height:22px; border-radius:999px; background:{{ bulkStep2Bg }}; color:{{ bulkStep2Color }}; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700;">2</div><span style="font-size:12.5px; font-weight:600; color:{{ bulkStep2TextColor }};">Review &amp; configure</span></div>
+          <div style="display:flex; align-items:center; gap:6px;"><div style="width:22px; height:22px; border-radius:999px; background:{{ bulkStep2Bg }}; color:{{ bulkStep2Color }}; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700;">2</div><span style="font-size:12px; font-weight:600; color:{{ bulkStep2TextColor }};">Configure</span></div>
           <div style="flex:1; height:1px; background:#E6E7EB;"></div>
-          <div style="display:flex; align-items:center; gap:7px;"><div style="width:22px; height:22px; border-radius:999px; background:{{ bulkStep3Bg }}; color:{{ bulkStep3Color }}; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700;">3</div><span style="font-size:12.5px; font-weight:600; color:{{ bulkStep3TextColor }};">Done</span></div>
+          <div style="display:flex; align-items:center; gap:6px;"><div style="width:22px; height:22px; border-radius:999px; background:{{ bulkStep3Bg }}; color:{{ bulkStep3Color }}; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700;">3</div><span style="font-size:12px; font-weight:600; color:{{ bulkStep3TextColor }};">Payment</span></div>
+          <div style="flex:1; height:1px; background:#E6E7EB;"></div>
+          <div style="display:flex; align-items:center; gap:6px;"><div style="width:22px; height:22px; border-radius:999px; background:{{ bulkStep4Bg }}; color:{{ bulkStep4Color }}; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700;">4</div><span style="font-size:12px; font-weight:600; color:{{ bulkStep4TextColor }};">Done</span></div>
         </div>
       </div>
       <div style="padding:0 26px 26px;">
@@ -1723,8 +1725,8 @@
           </div>
         </sc-if>
 
-        <sc-if value="{{ bulkStepReview }}" hint-placeholder-val="{{ false }}">
-          <div style="font-size:14px; font-weight:600; color:#191C21; margin-bottom:12px;">Konfigurasi ({{ bulkRowsCount }} user)</div>
+        <sc-if value="{{ bulkStepConfigure }}" hint-placeholder-val="{{ false }}">
+          <div style="font-size:14px; font-weight:600; color:#191C21; margin-bottom:12px;">1. Choose balance type &amp; package ({{ bulkRowsCount }} user)</div>
 
           <div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Balance Type</div>
           <div style="display:flex; gap:8px; margin-bottom:14px;">
@@ -1735,34 +1737,15 @@
             <div style="background:#FFF5E5; border:1px solid #FFE0AD; border-radius:8px; padding:10px 14px; font-size:12px; color:#8C5700; margin-bottom:14px;"><i class="pi-shield" style="margin-right:6px;"></i>Free bulk top-up butuh approval Lead EBS untuk seluruh batch ({{ bulkRowsCount }} user).</div>
           </sc-if>
 
-          <div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Package</div>
+          <div style="font-size:14px; font-weight:600; color:#191C21; margin-bottom:14px;">2. Choose package</div>
           <div style="display:flex; gap:8px; margin-bottom:16px;">
             <button onClick="{{ setBulkTier_monthly }}" style="flex:1; border:1px solid {{ bulkTierMonthlyBorder }}; background:{{ bulkTierMonthlyBg }}; color:{{ bulkTierMonthlyColor }}; border-radius:8px; padding:10px; font-size:13px; font-weight:600; cursor:pointer;">Monthly</button>
             <button onClick="{{ setBulkTier_yearly }}" style="flex:1; border:1px solid {{ bulkTierYearlyBorder }}; background:{{ bulkTierYearlyBg }}; color:{{ bulkTierYearlyColor }}; border-radius:8px; padding:10px; font-size:13px; font-weight:600; cursor:pointer;">Yearly</button>
           </div>
 
-          <sc-if value="{{ bulkIsFreeOrder }}" hint-placeholder-val="{{ false }}">
-            <div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Free Balance Reason</div>
-            <textarea value="{{ bulkFreeReason }}" onInput="{{ onBulkFreeReason }}" placeholder="Alasan pemberian saldo gratis (wajib, masuk audit log)" rows="2" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px; resize:vertical; margin-bottom:16px;"></textarea>
-          </sc-if>
-
-          <sc-if value="{{ bulkShowPaymentSection }}" hint-placeholder-val="{{ true }}">
-            <div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Payment method</div>
-            <select value="{{ bulkPaymentMethod }}" onChange="{{ onBulkPaymentMethod }}" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px; margin-bottom:16px;">
-              <option value="">Select payment method</option>
-              <option value="Diserahkan ke user">Diserahkan ke user</option>
-              <option value="BCA Virtual Account">BCA Virtual Account</option>
-              <option value="BRI Virtual Account">BRI Virtual Account</option>
-              <option value="BNI Virtual Account">BNI Virtual Account</option>
-              <option value="Mandiri Virtual Account">Mandiri Virtual Account</option>
-              <option value="QRIS">QRIS</option>
-              <option value="CC">CC</option>
-            </select>
-          </sc-if>
-
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-            <div style="font-size:14px; font-weight:600; color:#191C21;">Review user</div>
-            <div style="font-size:12.5px; color:#647184;">{{ bulkPerUserAmountLabel }}/user &middot; Total <strong style="color:#191C21;">{{ bulkTotalAmountLabel }}</strong></div>
+            <div style="font-size:14px; font-weight:600; color:#191C21;">Topup Cart Summary</div>
+            <span style="font-size:11px; font-weight:600; color:#647184; background:#F4F5F7; padding:3px 10px; border-radius:999px;">{{ bulkRowsCount }} user</span>
           </div>
           <div style="border:1px solid #E6E7EB; border-radius:10px; max-height:240px; overflow-y:auto; margin-bottom:16px;">
             <sc-for list="{{ bulkRows }}" as="br" hint-placeholder-count="4">
@@ -1776,11 +1759,53 @@
             </sc-if>
           </div>
 
-          <sc-if value="{{ bulkStepError }}" hint-placeholder-val="{{ false }}">
-            <div style="color:#C22725; font-size:12px; margin-bottom:10px;">{{ bulkStepError }}</div>
-          </sc-if>
           <div style="display:flex; justify-content:flex-end; gap:10px;">
             <button onClick="{{ backToBulkInput }}" style="border:1px solid #CBD1D8; background:#fff; color:#1F2329; font-size:13px; font-weight:600; padding:10px 20px; border-radius:8px; cursor:pointer;"><i class="pi-arrow-left"></i> Back</button>
+            <button onClick="{{ goBulkPaymentStep }}" disabled="{{ bulkRowsEmpty }}" style="border:none; background:#191C21; color:#fff; font-size:13px; font-weight:600; padding:10px 22px; border-radius:8px; cursor:pointer;">Calculate order</button>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ bulkStepPayment }}" hint-placeholder-val="{{ false }}">
+          <sc-if value="{{ bulkIsFreeOrder }}" hint-placeholder-val="{{ false }}">
+            <div style="border:1px solid #FFE0AD; background:#FFFBF5; border-radius:12px; padding:18px 20px; margin-bottom:16px;">
+              <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+                <span style="font-size:10px; font-weight:700; color:#B37E00; background:#FFF7E5; border:1px solid #FFE7AD; padding:3px 9px; border-radius:999px; letter-spacing:0.3px;"><i class="pi-money" style="font-size:10px; margin-right:4px;"></i>FREE</span>
+                <div style="font-size:14px; font-weight:600; color:#191C21;">Free balance reason</div>
+              </div>
+              <textarea value="{{ bulkFreeReason }}" onInput="{{ onBulkFreeReason }}" placeholder="Alasan pemberian saldo gratis (wajib, masuk audit log)" rows="3" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px; resize:vertical;"></textarea>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ bulkShowPaymentSection }}" hint-placeholder-val="{{ true }}">
+          <div style="border:1px solid #E6E7EB; border-radius:12px; padding:18px 20px; margin-bottom:16px;">
+            <div style="font-size:14px; font-weight:600; color:#191C21; margin-bottom:10px;">Payment methods</div>
+            <select value="{{ bulkPaymentMethod }}" onChange="{{ onBulkPaymentMethod }}" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px;">
+              <option value="">Select payment method</option>
+              <option value="Diserahkan ke user">Diserahkan ke user</option>
+              <option value="BCA Virtual Account">BCA Virtual Account</option>
+              <option value="BRI Virtual Account">BRI Virtual Account</option>
+              <option value="BNI Virtual Account">BNI Virtual Account</option>
+              <option value="Mandiri Virtual Account">Mandiri Virtual Account</option>
+              <option value="QRIS">QRIS</option>
+              <option value="CC">CC</option>
+            </select>
+          </div>
+          </sc-if>
+
+          <div style="border:1px solid #E6E7EB; border-radius:12px; padding:18px 20px;">
+            <div style="font-size:14px; font-weight:600; color:#191C21; margin-bottom:14px;">Order Calculation Result</div>
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #F4F5F7;">
+              <div style="font-size:14px; font-weight:600; color:#191C21;">Personal Plan &mdash; {{ bulkRowsCount }} user</div>
+              <div style="font-size:14px; font-weight:700; color:#191C21;">{{ bulkPerUserAmountLabel }}/user</div>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:16px; font-weight:700; color:#191C21; padding-top:12px;"><span>Grand Total</span><span>{{ bulkTotalAmountLabel }}</span></div>
+          </div>
+
+          <sc-if value="{{ bulkStepError }}" hint-placeholder-val="{{ false }}">
+            <div style="color:#C22725; font-size:12px; margin-top:12px;">{{ bulkStepError }}</div>
+          </sc-if>
+          <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
+            <button onClick="{{ backToBulkConfigure }}" style="border:1px solid #CBD1D8; background:#fff; color:#1F2329; font-size:13px; font-weight:600; padding:10px 20px; border-radius:8px; cursor:pointer;"><i class="pi-arrow-left"></i> Back</button>
             <button onClick="{{ confirmBulkTopup }}" disabled="{{ !canConfirmBulkTopup }}" style="border:none; background:#E42E2C; color:#fff; font-size:13px; font-weight:600; padding:10px 22px; border-radius:8px; cursor:pointer;">Process batch</button>
           </div>
         </sc-if>
@@ -2461,10 +2486,15 @@ class Component extends DCLogic {
       if (pp) bulkRows.push({ privyId: pp.privyId, name: pp.name }); else bulkUnmatched.push(id);
     });
     if (bulkRows.length === 0) { this.setState({ bulkUnmatched, bulkStepError: 'Tidak ada PrivyID valid yang bisa diproses.' }); return; }
-    this.setState({ bulkRows, bulkUnmatched, bulkStep: 'review', bulkStepError: '' });
+    this.setState({ bulkRows, bulkUnmatched, bulkStep: 'configure', bulkStepError: '' });
   }
   removeBulkRow(privyId) { this.setState({ bulkRows: this.state.bulkRows.filter(r => r.privyId !== privyId) }); }
   backToBulkInput() { this.setState({ bulkStep: 'input', bulkStepError: '' }); }
+  goBulkPaymentStep() {
+    if (this.state.bulkRows.length === 0) return;
+    this.setState({ bulkStep: 'payment', bulkStepError: '' });
+  }
+  backToBulkConfigure() { this.setState({ bulkStep: 'configure', bulkStepError: '' }); }
   confirmBulkTopup() {
     const s = this.state;
     if (s.bulkRows.length === 0) return;
@@ -3257,11 +3287,12 @@ class Component extends DCLogic {
       personalResult,
 
       openBulkTopupModal: () => this.openBulkTopupModal(), showBulkTopupModal: s.modal === 'bulkTopup',
-      bulkStepInput: s.bulkStep === 'input', bulkStepReview: s.bulkStep === 'review', bulkStepResult: s.bulkStep === 'result',
+      bulkStepInput: s.bulkStep === 'input', bulkStepConfigure: s.bulkStep === 'configure', bulkStepPayment: s.bulkStep === 'payment', bulkStepResult: s.bulkStep === 'result',
       bulkStepError: s.bulkStepError,
       bulkStep1Bg: s.bulkStep === 'input' ? '#191C21' : '#34C759', bulkStep1Color: '#fff', bulkStep1TextColor: s.bulkStep === 'input' ? '#191C21' : '#647184',
-      bulkStep2Bg: s.bulkStep === 'review' ? '#191C21' : (s.bulkStep === 'result' ? '#34C759' : '#E6E7EB'), bulkStep2Color: s.bulkStep === 'input' ? '#939EAE' : '#fff', bulkStep2TextColor: s.bulkStep === 'review' ? '#191C21' : '#647184',
-      bulkStep3Bg: s.bulkStep === 'result' ? '#191C21' : '#E6E7EB', bulkStep3Color: s.bulkStep === 'result' ? '#fff' : '#939EAE', bulkStep3TextColor: s.bulkStep === 'result' ? '#191C21' : '#647184',
+      bulkStep2Bg: s.bulkStep === 'configure' ? '#191C21' : (s.bulkStep === 'input' ? '#E6E7EB' : '#34C759'), bulkStep2Color: s.bulkStep === 'input' ? '#939EAE' : '#fff', bulkStep2TextColor: s.bulkStep === 'configure' ? '#191C21' : '#647184',
+      bulkStep3Bg: s.bulkStep === 'payment' ? '#191C21' : (s.bulkStep === 'result' ? '#34C759' : '#E6E7EB'), bulkStep3Color: (s.bulkStep === 'input' || s.bulkStep === 'configure') ? '#939EAE' : '#fff', bulkStep3TextColor: s.bulkStep === 'payment' ? '#191C21' : '#647184',
+      bulkStep4Bg: s.bulkStep === 'result' ? '#191C21' : '#E6E7EB', bulkStep4Color: s.bulkStep === 'result' ? '#fff' : '#939EAE', bulkStep4TextColor: s.bulkStep === 'result' ? '#191C21' : '#647184',
       bulkInputIsManual: s.bulkInputMode === 'manual', bulkInputIsCsv: s.bulkInputMode === 'csv',
       setBulkInputMode_manual: () => this.setBulkInputMode('manual'), setBulkInputMode_csv: () => this.setBulkInputMode('csv'),
       bulkInputManualBg: s.bulkInputMode === 'manual' ? '#E5F3FF' : 'transparent', bulkInputManualColor: s.bulkInputMode === 'manual' ? '#0061B3' : '#647184',
@@ -3283,6 +3314,7 @@ class Component extends DCLogic {
       bulkPerUserAmountLabel: rp(s.bulkBalanceType === 'free' ? 0 : this.getPersonalTierPrice(s.bulkTier)),
       bulkTotalAmountLabel: rp((s.bulkBalanceType === 'free' ? 0 : this.getPersonalTierPrice(s.bulkTier)) * s.bulkRows.length),
       backToBulkInput: () => this.backToBulkInput(),
+      goBulkPaymentStep: () => this.goBulkPaymentStep(), backToBulkConfigure: () => this.backToBulkConfigure(),
       canConfirmBulkTopup: s.bulkRows.length > 0 && (s.bulkBalanceType === 'free' ? !!s.bulkFreeReason.trim() : !!s.bulkPaymentMethod),
       confirmBulkTopup: () => this.confirmBulkTopup(),
       bulkResultTitle: s.bulkBalanceType === 'free' && s.role === 'ebs' ? 'Request submitted' : (s.bulkBalanceType === 'free' ? 'Free balance granted' : 'Bulk top-up processed'),
