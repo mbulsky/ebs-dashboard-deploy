@@ -1673,11 +1673,20 @@
 <sc-if value="{{ showBulkTopupModal }}" hint-placeholder-val="{{ false }}">
   <div style="position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1050; display:flex; align-items:center; justify-content:center; padding:24px;" onClick="{{ closeModalBackdrop }}">
     <div style="background:#FBFCFD; border-radius:14px; width:100%; max-width:640px; max-height:88vh; overflow-y:auto;" onClick="{{ stopProp }}">
-      <div style="display:flex; justify-content:space-between; align-items:center; padding:22px 26px; border-bottom:1px solid #E6E7EB;">
-        <div style="font-size:18px; font-weight:500; color:#191C21;">Bulk Personal Top Up</div>
-        <button onClick="{{ closeModal }}" style="border:none; background:none; cursor:pointer;"><i class="pi-close" style="font-size:16px; color:#939EAE;"></i></button>
+      <div style="padding:22px 26px 0;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+          <div style="font-size:18px; font-weight:500; color:#191C21;">Bulk Personal Top Up</div>
+          <button onClick="{{ closeModal }}" style="border:none; background:none; cursor:pointer;"><i class="pi-close" style="font-size:16px; color:#939EAE;"></i></button>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:20px;">
+          <div style="display:flex; align-items:center; gap:7px;"><div style="width:22px; height:22px; border-radius:999px; background:{{ bulkStep1Bg }}; color:{{ bulkStep1Color }}; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700;">1</div><span style="font-size:12.5px; font-weight:600; color:{{ bulkStep1TextColor }};">Input users</span></div>
+          <div style="flex:1; height:1px; background:#E6E7EB;"></div>
+          <div style="display:flex; align-items:center; gap:7px;"><div style="width:22px; height:22px; border-radius:999px; background:{{ bulkStep2Bg }}; color:{{ bulkStep2Color }}; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700;">2</div><span style="font-size:12.5px; font-weight:600; color:{{ bulkStep2TextColor }};">Review &amp; configure</span></div>
+          <div style="flex:1; height:1px; background:#E6E7EB;"></div>
+          <div style="display:flex; align-items:center; gap:7px;"><div style="width:22px; height:22px; border-radius:999px; background:{{ bulkStep3Bg }}; color:{{ bulkStep3Color }}; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700;">3</div><span style="font-size:12.5px; font-weight:600; color:{{ bulkStep3TextColor }};">Done</span></div>
+        </div>
       </div>
-      <div style="padding:22px 26px;">
+      <div style="padding:0 26px 26px;">
 
         <sc-if value="{{ bulkStepInput }}" hint-placeholder-val="{{ true }}">
           <div style="display:flex; gap:8px; margin-bottom:16px; border:1px solid #E6E7EB; border-radius:8px; padding:4px;">
@@ -1706,7 +1715,10 @@
           <sc-if value="{{ hasBulkUnmatched }}" hint-placeholder-val="{{ false }}">
             <div style="background:#FFF0EF; border:1px solid #F6BCBB; border-radius:8px; padding:10px 14px; font-size:12.5px; color:#C22725; margin-bottom:14px;">PrivyID tidak ditemukan: {{ bulkUnmatchedLabel }}</div>
           </sc-if>
-          <div style="display:flex; justify-content:flex-end;">
+          <div style="display:flex; justify-content:flex-end; align-items:center; gap:14px;">
+            <sc-if value="{{ bulkStepError }}" hint-placeholder-val="{{ false }}">
+              <div style="color:#C22725; font-size:12px;">{{ bulkStepError }}</div>
+            </sc-if>
             <button onClick="{{ parseBulkList }}" style="border:none; background:#191C21; color:#fff; font-size:13px; font-weight:600; padding:10px 20px; border-radius:8px; cursor:pointer;">Validasi &amp; Lanjut</button>
           </div>
         </sc-if>
@@ -1764,6 +1776,9 @@
             </sc-if>
           </div>
 
+          <sc-if value="{{ bulkStepError }}" hint-placeholder-val="{{ false }}">
+            <div style="color:#C22725; font-size:12px; margin-bottom:10px;">{{ bulkStepError }}</div>
+          </sc-if>
           <div style="display:flex; justify-content:flex-end; gap:10px;">
             <button onClick="{{ backToBulkInput }}" style="border:1px solid #CBD1D8; background:#fff; color:#1F2329; font-size:13px; font-weight:600; padding:10px 20px; border-radius:8px; cursor:pointer;"><i class="pi-arrow-left"></i> Back</button>
             <button onClick="{{ confirmBulkTopup }}" disabled="{{ !canConfirmBulkTopup }}" style="border:none; background:#E42E2C; color:#fff; font-size:13px; font-weight:600; padding:10px 22px; border-radius:8px; cursor:pointer;">Process batch</button>
@@ -1778,7 +1793,31 @@
               <div style="font-size:13px; color:#495260;">{{ bulkResultSubtitle }}</div>
             </div>
           </div>
-          <div style="display:flex; justify-content:flex-end;">
+          <sc-if value="{{ bulkResultIsApprovalPending }}" hint-placeholder-val="{{ false }}">
+            <div style="border:1px solid #FFE0AD; background:#FFFBF5; border-radius:12px; padding:16px 20px; font-size:13px; color:#8C5700; margin-bottom:16px;">Request masuk ke antrian approval Lead EBS. Anda bisa memantau statusnya di halaman Approvals.</div>
+          </sc-if>
+          <sc-if value="{{ bulkResultIsPaymentDetails }}" hint-placeholder-val="{{ false }}">
+            <div style="font-size:13px; font-weight:600; color:#191C21; margin-bottom:10px;">Detail per user ({{ bulkRowsCount }})</div>
+            <div style="border:1px solid #E6E7EB; border-radius:10px; max-height:320px; overflow-y:auto;">
+              <sc-for list="{{ bulkLastOrders }}" as="bo" hint-placeholder-count="4">
+                <div style="padding:12px 14px; border-bottom:1px solid #F4F5F7;">
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                    <div><div style="font-size:13.5px; font-weight:600; color:#191C21;">{{ bo.custName }}</div><div style="font-size:11.5px; color:#939EAE;">{{ bo.privyId }}</div></div>
+                    <button onClick="{{ bo.viewDetail }}" style="border:1px solid #CBD1D8; background:#fff; color:#1F2329; font-size:11.5px; font-weight:600; padding:6px 12px; border-radius:7px; cursor:pointer;">Lihat Detail</button>
+                  </div>
+                  <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px 16px; font-size:12px; color:#495260;">
+                    <div>Invoice: <span style="color:#191C21; font-weight:500;">{{ bo.invoiceNumber }}</span></div>
+                    <div>Order ID: <span style="color:#191C21; font-weight:500;">{{ bo.orderId }}</span></div>
+                    <sc-if value="{{ bo.hasVaNumber }}" hint-placeholder-val="{{ false }}">
+                      <div>VA Number: <span style="color:#191C21; font-weight:500;">{{ bo.vaNumber }}</span></div>
+                    </sc-if>
+                    <div>Expired: <span style="color:#191C21; font-weight:500;">{{ bo.expiredAtLabel }}</span></div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+          <div style="display:flex; justify-content:flex-end; margin-top:20px;">
             <button onClick="{{ closeModal }}" style="border:none; background:#E42E2C; color:#fff; font-size:13px; font-weight:600; padding:10px 24px; border-radius:8px; cursor:pointer;">Done</button>
           </div>
         </sc-if>
@@ -2186,7 +2225,7 @@ class Component extends DCLogic {
     downloadSel: { invoice: false, receipt: false, taxInvoice: false },
     userPayOrderId: null, userPayMethod: '', userPayVaNumber: '', userPayAccordionOpen: null,
     userPayCardNumber: '', userPayCardExpiry: '', userPayCardCvv: '', nowTick: Date.now(),
-    bulkStep: 'input', bulkInputMode: 'manual', bulkText: '', bulkCsvFileName: '', bulkCsvRowCount: 0, bulkBalanceType: 'regular', bulkTier: 'monthly', bulkFreeReason: '', bulkPaymentMethod: '', bulkRows: [], bulkUnmatched: [], bulkLastBatchId: null,
+    bulkStep: 'input', bulkInputMode: 'manual', bulkText: '', bulkCsvFileName: '', bulkCsvRowCount: 0, bulkBalanceType: 'regular', bulkTier: 'monthly', bulkFreeReason: '', bulkPaymentMethod: '', bulkRows: [], bulkUnmatched: [], bulkStepError: '', bulkLastOrders: [], bulkLastBatchId: null,
     personalBulkRequests: [],
 
     // topup global filters
@@ -2391,9 +2430,9 @@ class Component extends DCLogic {
 
   // ---------- personal plan bulk top-up ----------
   openBulkTopupModal() {
-    this.setState({ modal: 'bulkTopup', bulkStep: 'input', bulkInputMode: 'manual', bulkText: '', bulkCsvFileName: '', bulkCsvRowCount: 0, bulkBalanceType: 'regular', bulkTier: 'monthly', bulkFreeReason: '', bulkPaymentMethod: '', bulkRows: [], bulkUnmatched: [] });
+    this.setState({ modal: 'bulkTopup', bulkStep: 'input', bulkInputMode: 'manual', bulkText: '', bulkCsvFileName: '', bulkCsvRowCount: 0, bulkBalanceType: 'regular', bulkTier: 'monthly', bulkFreeReason: '', bulkPaymentMethod: '', bulkRows: [], bulkUnmatched: [], bulkStepError: '', bulkLastOrders: [] });
   }
-  setBulkInputMode(m) { this.setState({ bulkInputMode: m, bulkUnmatched: [] }); }
+  setBulkInputMode(m) { this.setState({ bulkInputMode: m, bulkUnmatched: [], bulkStepError: '' }); }
   onBulkText(e) { this.setState({ bulkText: e.target.value }); }
   onBulkCsvFile(e) {
     const file = e.target.files && e.target.files[0];
@@ -2421,16 +2460,16 @@ class Component extends DCLogic {
       const pp = s.personalPlans.find(p => p.privyId.toUpperCase() === id);
       if (pp) bulkRows.push({ privyId: pp.privyId, name: pp.name }); else bulkUnmatched.push(id);
     });
-    if (bulkRows.length === 0) { this.setState({ bulkUnmatched }); return; }
-    this.setState({ bulkRows, bulkUnmatched, bulkStep: 'review' });
+    if (bulkRows.length === 0) { this.setState({ bulkUnmatched, bulkStepError: 'Tidak ada PrivyID valid yang bisa diproses.' }); return; }
+    this.setState({ bulkRows, bulkUnmatched, bulkStep: 'review', bulkStepError: '' });
   }
   removeBulkRow(privyId) { this.setState({ bulkRows: this.state.bulkRows.filter(r => r.privyId !== privyId) }); }
-  backToBulkInput() { this.setState({ bulkStep: 'input' }); }
+  backToBulkInput() { this.setState({ bulkStep: 'input', bulkStepError: '' }); }
   confirmBulkTopup() {
     const s = this.state;
     if (s.bulkRows.length === 0) return;
     const isFree = s.bulkBalanceType === 'free';
-    if (!isFree && !s.bulkPaymentMethod) return;
+    if (!isFree && !s.bulkPaymentMethod) { this.setState({ bulkStepError: 'Pilih payment method terlebih dahulu.' }); return; }
     const isEbsFree = isFree && s.role === 'ebs';
     const tierLabel = s.bulkTier === 'yearly' ? 'Yearly' : 'Monthly';
     const amount = isFree ? 0 : this.getPersonalTierPrice(s.bulkTier);
@@ -2442,7 +2481,7 @@ class Component extends DCLogic {
     if (isEbsFree) {
       const req = { id: batchId, batchId, users: s.bulkRows, tier: tierLabel, amount, freeReason: s.bulkFreeReason, createdBy: actor, createdAt: now, status: 'pending_approval', approvedBy: '' };
       this.addAudit(actor, 'Submitted bulk free personal top-up request', s.bulkRows.length + ' users \u2192 ' + tierLabel);
-      this.setState({ personalBulkRequests: [req, ...s.personalBulkRequests], bulkStep: 'result' });
+      this.setState({ personalBulkRequests: [req, ...s.personalBulkRequests], bulkStep: 'result', bulkLastOrders: [], bulkStepError: '' });
       return;
     }
 
@@ -2463,7 +2502,7 @@ class Component extends DCLogic {
       history: [{ action: 'Purchased ' + tierLabel + ' (bulk)', ts: now, tier: tierLabel }, ...pp.history]
     } : pp);
     this.addAudit(actor, isFree ? 'Granted bulk free personal balance (auto-approved as Lead)' : 'Bulk personal top-up', s.bulkRows.length + ' users \u2192 ' + tierLabel);
-    this.setState({ personalPlans, personalOrders: [...newOrders, ...s.personalOrders], bulkStep: 'result', bulkLastBatchId: batchId });
+    this.setState({ personalPlans, personalOrders: [...newOrders, ...s.personalOrders], bulkStep: 'result', bulkLastBatchId: batchId, bulkLastOrders: newOrders, bulkStepError: '' });
   }
   viewBulkOrder(orderId) { this.setState({ modal: 'personalOrderDetail', personalDetailOrderId: orderId }); }
   approveBulkRequest(id) {
@@ -3219,6 +3258,10 @@ class Component extends DCLogic {
 
       openBulkTopupModal: () => this.openBulkTopupModal(), showBulkTopupModal: s.modal === 'bulkTopup',
       bulkStepInput: s.bulkStep === 'input', bulkStepReview: s.bulkStep === 'review', bulkStepResult: s.bulkStep === 'result',
+      bulkStepError: s.bulkStepError,
+      bulkStep1Bg: s.bulkStep === 'input' ? '#191C21' : '#34C759', bulkStep1Color: '#fff', bulkStep1TextColor: s.bulkStep === 'input' ? '#191C21' : '#647184',
+      bulkStep2Bg: s.bulkStep === 'review' ? '#191C21' : (s.bulkStep === 'result' ? '#34C759' : '#E6E7EB'), bulkStep2Color: s.bulkStep === 'input' ? '#939EAE' : '#fff', bulkStep2TextColor: s.bulkStep === 'review' ? '#191C21' : '#647184',
+      bulkStep3Bg: s.bulkStep === 'result' ? '#191C21' : '#E6E7EB', bulkStep3Color: s.bulkStep === 'result' ? '#fff' : '#939EAE', bulkStep3TextColor: s.bulkStep === 'result' ? '#191C21' : '#647184',
       bulkInputIsManual: s.bulkInputMode === 'manual', bulkInputIsCsv: s.bulkInputMode === 'csv',
       setBulkInputMode_manual: () => this.setBulkInputMode('manual'), setBulkInputMode_csv: () => this.setBulkInputMode('csv'),
       bulkInputManualBg: s.bulkInputMode === 'manual' ? '#E5F3FF' : 'transparent', bulkInputManualColor: s.bulkInputMode === 'manual' ? '#0061B3' : '#647184',
@@ -3244,6 +3287,9 @@ class Component extends DCLogic {
       confirmBulkTopup: () => this.confirmBulkTopup(),
       bulkResultTitle: s.bulkBalanceType === 'free' && s.role === 'ebs' ? 'Request submitted' : (s.bulkBalanceType === 'free' ? 'Free balance granted' : 'Bulk top-up processed'),
       bulkResultSubtitle: s.bulkBalanceType === 'free' && s.role === 'ebs' ? ('Menunggu approval Lead EBS untuk ' + s.bulkRows.length + ' user.') : (s.bulkRows.length + ' user berhasil diproses.'),
+      bulkResultIsApprovalPending: s.bulkBalanceType === 'free' && s.role === 'ebs',
+      bulkResultIsPaymentDetails: s.bulkLastOrders.length > 0,
+      bulkLastOrders: s.bulkLastOrders.map(o => ({ ...o, amountLabel: rp(o.amount), expiredAtLabel: fmtDateTime(o.expiredAt), hasVaNumber: !!o.vaNumber, viewDetail: () => this.viewBulkOrder(o.id) })),
       personalCheckoutExpiryHours: s.personalCheckoutExpiryHours, onPersonalCheckoutExpiryHours: (e) => this.setState({ personalCheckoutExpiryHours: e.target.value }),
       openPersonalTopupModal: () => this.openPersonalTopupModal(),
       showPersonalTopupModal: s.modal === 'personalTopup',
