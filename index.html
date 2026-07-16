@@ -362,7 +362,7 @@
         <div data-screen-label="Log Top Up" style="max-width:1320px; margin:0 auto;">
           <div style="margin-bottom:20px;">
             <h1 style="font-size:24px; font-weight:500; color:#191C21; margin-bottom:5px;">Log Top Up</h1>
-            <p style="font-size:14px; color:#647184;">Riwayat transaksi top-up di seluruh enterprise, dengan filter dan export.</p>
+            <p style="font-size:14px; color:#647184;">Riwayat transaksi top-up di seluruh enterprise dan personal plan, dengan filter dan export.</p>
           </div>
 
           <div style="background:#FBFCFD; border:1px solid #E6E7EB; border-radius:14px; padding:20px 22px;">
@@ -390,7 +390,7 @@
             </div>
 
             <div style="display:grid; grid-template-columns:1.1fr 1.2fr 0.9fr 0.8fr 0.6fr 0.8fr 1.1fr 36px; padding:11px 16px; font-size:11px; font-weight:700; letter-spacing:0.3px; color:#939EAE; text-transform:uppercase; border-bottom:1px solid #F4F5F7;">
-              <div>Invoice</div><div>Enterprise</div><div>Balance type</div><div>Status</div><div>Items</div><div>Total</div><div>By</div><div></div>
+              <div>Invoice</div><div>Enterprise / Personal</div><div>Balance type</div><div>Status</div><div>Items</div><div>Total</div><div>By</div><div></div>
             </div>
             <sc-for list="{{ filteredTopupOrders }}" as="gord" hint-placeholder-count="6">
               <div class="row-card" style="display:grid; grid-template-columns:1.1fr 1.2fr 0.9fr 0.8fr 0.6fr 0.8fr 1.1fr 36px; padding:15px 16px; border-bottom:1px solid #F4F5F7; align-items:center; cursor:pointer;" onClick="{{ gord.openDetail }}">
@@ -3018,6 +3018,13 @@ class Component extends DCLogic {
     if (s.topupFilterStatus !== 'all') filteredTopupOrders = filteredTopupOrders.filter(o => o.status === s.topupFilterStatus);
     filteredTopupOrders = filteredTopupOrders.map(o => this.decorateOrder(o, true));
 
+    // personal + bulk personal top-ups aren't tied to an enterprise, so only fold them in when no specific enterprise is picked
+    let filteredPersonalLogOrders = s.topupFilterEnterprise === 'all' ? s.personalOrders : [];
+    if (s.topupFilterType !== 'all') filteredPersonalLogOrders = filteredPersonalLogOrders.filter(o => o.balanceType === s.topupFilterType);
+    if (s.topupFilterStatus !== 'all') filteredPersonalLogOrders = filteredPersonalLogOrders.filter(o => o.status === s.topupFilterStatus);
+    filteredTopupOrders = [...filteredTopupOrders, ...filteredPersonalLogOrders.map(o => this.decoratePersonalOrderForLog(o))]
+      .sort((a, b) => new Date(b.createdAt || b.ts) - new Date(a.createdAt || a.ts));
+
     // ---------- approvals ----------
     const relevantApprovals = isLead
       ? s.topupOrders.filter(o => o.balanceType === 'free' || o.balanceType === 'mixed')
@@ -3668,6 +3675,22 @@ class Component extends DCLogic {
       canCheckStatus: o.status === 'unpaid',
       checkStatus: (e) => { if (e && e.stopPropagation) e.stopPropagation(); this.checkOrderStatus(o.id); },
       openDetail: () => this.openOrderDetail(o)
+    };
+  }
+
+  decoratePersonalOrderForLog(o) {
+    const st = this.statusStyle(o.status);
+    const typeIsFree = o.balanceType === 'free';
+    return {
+      ...o, id: o.id, source: 'personal',
+      enterpriseName: (o.batchLabel ? 'Personal Plan (Bulk)' : 'Personal Plan') + ' — ' + o.custName,
+      itemCount: 1,
+      totalLabel: typeIsFree && o.amount === 0 ? 'Free' : rp(o.amount),
+      statusBg: st.bg, statusColor: st.color,
+      status: o.status === 'pending_approval' ? 'pending approval' : o.status,
+      typeLabel: typeIsFree ? 'Free' : 'Regular', typeBg: typeIsFree ? '#FFF7E5' : '#E5F3FF', typeColor: typeIsFree ? '#B37E00' : '#0061B3',
+      canRegenerate: false, createdBy: '-', approvedBy: '',
+      openDetail: () => this.openPersonalOrderDetail(o.id)
     };
   }
 
