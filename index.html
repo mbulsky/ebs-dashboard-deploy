@@ -1786,8 +1786,9 @@
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px;">
               <div><div style="font-size:12px; color:#647184; margin-bottom:5px;">Requester First Name</div><input value="{{ bulkReqFirstName }}" onInput="{{ onBulkReqFirstName }}" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:9px 12px; font-size:13px;" /></div>
               <div><div style="font-size:12px; color:#647184; margin-bottom:5px;">Requester Last Name</div><input value="{{ bulkReqLastName }}" onInput="{{ onBulkReqLastName }}" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:9px 12px; font-size:13px;" /></div>
+              <div><div style="font-size:12px; color:#647184; margin-bottom:5px;">PrivyID</div><input value="{{ bulkReqPrivyId }}" onInput="{{ onBulkReqPrivyId }}" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:9px 12px; font-size:13px;" /></div>
+              <div><div style="font-size:12px; color:#647184; margin-bottom:5px;">Requester Email</div><input value="{{ bulkReqEmail }}" onInput="{{ onBulkReqEmail }}" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:9px 12px; font-size:13px;" /></div>
             </div>
-            <div style="margin-bottom:14px;"><div style="font-size:12px; color:#647184; margin-bottom:5px;">Requester Email</div><input value="{{ bulkReqEmail }}" onInput="{{ onBulkReqEmail }}" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:9px 12px; font-size:13px;" /></div>
             <div style="display:flex; align-items:center; gap:8px; margin-bottom:14px;">
               <input type="checkbox" checked="{{ bulkNeedFracture }}" onChange="{{ onBulkNeedFracture }}" style="width:16px; height:16px;" />
               <span style="font-size:13px; color:#191C21;">Need fracture</span>
@@ -1898,7 +1899,12 @@
   <div style="position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1050; display:flex; align-items:center; justify-content:center; padding:24px;" onClick="{{ closeModalBackdrop }}">
     <div style="background:#FBFCFD; border-radius:14px; width:100%; max-width:460px; max-height:88vh; overflow-y:auto;" onClick="{{ stopProp }}">
       <div style="display:flex; justify-content:space-between; align-items:center; padding:22px 26px; border-bottom:1px solid #E6E7EB;">
-        <div style="font-size:18px; font-weight:500; color:#191C21;">Order detail</div>
+        <div style="display:flex; align-items:center; gap:12px;">
+          <sc-if value="{{ showBackFromOrderDetail }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ backFromOrderDetail }}" style="border:1px solid #CBD1D8; background:#fff; color:#1F2329; font-size:12.5px; font-weight:600; padding:7px 12px; border-radius:7px; cursor:pointer; display:flex; align-items:center; gap:6px;"><i class="pi-arrow-left"></i>Back</button>
+          </sc-if>
+          <div style="font-size:18px; font-weight:500; color:#191C21;">Order detail</div>
+        </div>
         <button onClick="{{ closeModal }}" style="border:none; background:none; cursor:pointer;"><i class="pi-close" style="font-size:16px; color:#939EAE;"></i></button>
       </div>
       <div style="padding:22px 26px;">
@@ -2281,7 +2287,7 @@ class Component extends DCLogic {
     personalTopupTier: 'monthly', personalTopupStep: 'tier', personalPaymentMethod: '', personalLastOrder: null,
     personalBalanceType: 'regular', personalFreeReason: '',
     personalCustFirstName: '', personalCustLastName: '', personalCustEmail: '', personalCcEmails: '', personalNeedFracture: false,
-    personalDetailOrderId: null,
+    personalDetailOrderId: null, personalDetailReturnTo: null,
     personalDetailTab: 'details',
     userLogSearch: '', userLogDate: '', userLogFilterField: 'actor', userLogFilterDropdownOpen: false,
     ebsUserFilterField: 'name', ebsUserFilterDropdownOpen: false, ebsUserSearchQuery: '',
@@ -2343,7 +2349,7 @@ class Component extends DCLogic {
     ebsUserSearchName: '', ebsUserSearchPrivyId: '',
     ebsAssignQuery: '', ebsAssignCandidate: null,
     checkoutExpiryHours: '24', personalCheckoutExpiryHours: '24', bulkCheckoutExpiryHours: '24',
-    bulkReqFirstName: '', bulkReqLastName: '', bulkReqEmail: '', bulkNeedFracture: false, bulkCcEmails: '',
+    bulkReqFirstName: '', bulkReqLastName: '', bulkReqPrivyId: '', bulkReqEmail: '', bulkNeedFracture: false, bulkCcEmails: '',
     configPriceItemCode: '', configPriceUpsell: '0', configPriceDiscount: '0', configPriceError: '',
     editingProductId: null, productFormName: '', productFormUnit: '', productFormCode: '', productFormPrice: '0', productFormError: '',
     productFormTier: '', productFormEaCount: ''
@@ -2498,12 +2504,13 @@ class Component extends DCLogic {
   // ---------- personal plan bulk top-up ----------
   openBulkTopupModal() {
     this.setState({ modal: 'bulkTopup', bulkStep: 'input', bulkInputMode: 'manual', bulkText: '', bulkCsvFileName: '', bulkCsvRowCount: 0, bulkBalanceType: 'regular', bulkTier: 'monthly', bulkFreeReason: '', bulkPaymentMethod: '', bulkCheckoutExpiryHours: String(this.state.paymentExpiryHours), bulkRows: [], bulkUnmatched: [], bulkStepError: '', bulkLastOrders: [],
-      bulkReqFirstName: '', bulkReqLastName: '', bulkReqEmail: '', bulkNeedFracture: false, bulkCcEmails: '' });
+      bulkReqFirstName: '', bulkReqLastName: '', bulkReqPrivyId: '', bulkReqEmail: '', bulkNeedFracture: false, bulkCcEmails: '' });
   }
   setBulkInputMode(m) { this.setState({ bulkInputMode: m, bulkUnmatched: [], bulkStepError: '' }); }
   onBulkText(e) { this.setState({ bulkText: e.target.value }); }
   onBulkReqFirstName(e) { this.setState({ bulkReqFirstName: e.target.value }); }
   onBulkReqLastName(e) { this.setState({ bulkReqLastName: e.target.value }); }
+  onBulkReqPrivyId(e) { this.setState({ bulkReqPrivyId: e.target.value }); }
   onBulkReqEmail(e) { this.setState({ bulkReqEmail: e.target.value }); }
   onBulkNeedFracture(e) { this.setState({ bulkNeedFracture: e.target.checked }); }
   onBulkCcEmails(e) { this.setState({ bulkCcEmails: e.target.value }); }
@@ -2583,7 +2590,8 @@ class Component extends DCLogic {
     this.addAudit(actor, isFree ? 'Granted bulk free personal balance (auto-approved as Lead)' : 'Bulk personal top-up', s.bulkRows.length + ' users \u2192 ' + tierLabel);
     this.setState({ personalPlans, personalOrders: [...newOrders, ...s.personalOrders], bulkStep: 'result', bulkLastBatchId: batchId, bulkLastOrders: newOrders, bulkStepError: '' });
   }
-  viewBulkOrder(orderId) { this.setState({ modal: 'personalOrderDetail', personalDetailOrderId: orderId }); }
+  viewBulkOrder(orderId) { this.setState({ modal: 'personalOrderDetail', personalDetailOrderId: orderId, personalDetailReturnTo: 'bulkTopup' }); }
+  backFromOrderDetail() { this.setState({ modal: this.state.personalDetailReturnTo, personalDetailReturnTo: null }); }
   approveBulkRequest(id) {
     const s = this.state;
     const req = s.personalBulkRequests.find(r => r.id === id);
@@ -2690,7 +2698,7 @@ class Component extends DCLogic {
     this.addAudit(this.currentActor(), 'Checked top-up status', o.invoiceNumber + ' \u00b7 ' + o.enterpriseName, o.enterpriseId);
     this.setState({ topupOrders });
   }
-  openPersonalOrderDetail(orderId) { this.setState({ modal: 'personalOrderDetail', personalDetailOrderId: orderId }); }
+  openPersonalOrderDetail(orderId) { this.setState({ modal: 'personalOrderDetail', personalDetailOrderId: orderId, personalDetailReturnTo: null }); }
   onUserLogSearch(e) { this.setState({ userLogSearch: e.target.value }); }
   onUserLogDate(e) { this.setState({ userLogDate: e.target.value }); }
   clearUserLogFilter() { this.setState({ userLogSearch: '', userLogDate: '' }); }
@@ -3365,6 +3373,7 @@ class Component extends DCLogic {
       bulkCheckoutExpiryHours: s.bulkCheckoutExpiryHours, onBulkCheckoutExpiryHours: (e) => this.onBulkCheckoutExpiryHours(e),
       bulkReqFirstName: s.bulkReqFirstName, onBulkReqFirstName: (e) => this.onBulkReqFirstName(e),
       bulkReqLastName: s.bulkReqLastName, onBulkReqLastName: (e) => this.onBulkReqLastName(e),
+      bulkReqPrivyId: s.bulkReqPrivyId, onBulkReqPrivyId: (e) => this.onBulkReqPrivyId(e),
       bulkReqEmail: s.bulkReqEmail, onBulkReqEmail: (e) => this.onBulkReqEmail(e),
       bulkNeedFracture: s.bulkNeedFracture, onBulkNeedFracture: (e) => this.onBulkNeedFracture(e),
       bulkCcEmails: s.bulkCcEmails, onBulkCcEmails: (e) => this.onBulkCcEmails(e),
@@ -3426,6 +3435,7 @@ class Component extends DCLogic {
       personalLastOrder: s.personalLastOrder ? { ...s.personalLastOrder, amountLabel: rp(s.personalLastOrder.amount), expiredAtLabel: fmtDateTime(s.personalLastOrder.expiredAt), copyInvoice: () => this.copyToClipboard(s.personalLastOrder.invoiceNumber), copyOrderId: () => this.copyToClipboard(s.personalLastOrder.orderId), copyCheckoutId: () => this.copyToClipboard(s.personalLastOrder.checkoutId), copyProductTrxId: () => this.copyToClipboard(s.personalLastOrder.productTrxId), copyVaNumber: () => this.copyToClipboard(s.personalLastOrder.vaNumber), hasVaNumber: !!s.personalLastOrder.vaNumber } : { invoiceNumber: '', orderId: '', checkoutId: '', productTrxId: '', paymentMethod: '', provider: '', paymentType: '', vaNumber: '', amountLabel: '', expiredAtLabel: '', hasVaNumber: false },
       personalOrdersForResult, noPersonalOrders: personalOrdersForResult.length === 0,
       showPersonalOrderDetailModal: s.modal === 'personalOrderDetail',
+      showBackFromOrderDetail: !!s.personalDetailReturnTo, backFromOrderDetail: () => this.backFromOrderDetail(),
       personalOrderDetail: personalOrderDetail || { invoiceNumber: '', orderId: '', status: '', statusBg: '#F4F5F7', statusColor: '#647184', discountLabel: '', taxLabel: '', grandTotalLabel: '', totalItems: 0, custName: '', custEmail: '', custPhone: '', paymentGateway: '', paymentType: '', paymentProvider: '', dueDateLabel: '', paidAtLabel: '', itemName: '', itemMeta: '', itemPriceLabel: '', itemUnitLabel: '', itemTaxLabel: '', checkoutId: '', productTrxId: '', custPrivyId: '', vaNumber: '', hasVaNumber: false },
       auditLogSorted, noAuditLog: auditLogSorted.length === 0,
       ebsUserList: ebsUserListFiltered.map(eu => ({
