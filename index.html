@@ -1781,6 +1781,20 @@
         </sc-if>
 
         <sc-if value="{{ bulkStepPayment }}" hint-placeholder-val="{{ false }}">
+          <div style="border:1px solid #E6E7EB; border-radius:12px; padding:18px 20px; margin-bottom:16px;">
+            <div style="font-size:14px; font-weight:600; color:#191C21; margin-bottom:14px;">Customer Details</div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px;">
+              <div><div style="font-size:12px; color:#647184; margin-bottom:5px;">Requester First Name</div><input value="{{ bulkReqFirstName }}" onInput="{{ onBulkReqFirstName }}" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:9px 12px; font-size:13px;" /></div>
+              <div><div style="font-size:12px; color:#647184; margin-bottom:5px;">Requester Last Name</div><input value="{{ bulkReqLastName }}" onInput="{{ onBulkReqLastName }}" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:9px 12px; font-size:13px;" /></div>
+            </div>
+            <div style="margin-bottom:14px;"><div style="font-size:12px; color:#647184; margin-bottom:5px;">Requester Email</div><input value="{{ bulkReqEmail }}" onInput="{{ onBulkReqEmail }}" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:9px 12px; font-size:13px;" /></div>
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:14px;">
+              <input type="checkbox" checked="{{ bulkNeedFracture }}" onChange="{{ onBulkNeedFracture }}" style="width:16px; height:16px;" />
+              <span style="font-size:13px; color:#191C21;">Need fracture</span>
+            </div>
+            <div><div style="font-size:12px; color:#647184; margin-bottom:5px;">CC Recipients (invoice)</div><input value="{{ bulkCcEmails }}" onInput="{{ onBulkCcEmails }}" placeholder="cc@email.com" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:9px 12px; font-size:13px;" /></div>
+          </div>
+
           <sc-if value="{{ bulkIsFreeOrder }}" hint-placeholder-val="{{ false }}">
             <div style="border:1px solid #FFE0AD; background:#FFFBF5; border-radius:12px; padding:18px 20px; margin-bottom:16px;">
               <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
@@ -2329,6 +2343,7 @@ class Component extends DCLogic {
     ebsUserSearchName: '', ebsUserSearchPrivyId: '',
     ebsAssignQuery: '', ebsAssignCandidate: null,
     checkoutExpiryHours: '24', personalCheckoutExpiryHours: '24', bulkCheckoutExpiryHours: '24',
+    bulkReqFirstName: '', bulkReqLastName: '', bulkReqEmail: '', bulkNeedFracture: false, bulkCcEmails: '',
     configPriceItemCode: '', configPriceUpsell: '0', configPriceDiscount: '0', configPriceError: '',
     editingProductId: null, productFormName: '', productFormUnit: '', productFormCode: '', productFormPrice: '0', productFormError: '',
     productFormTier: '', productFormEaCount: ''
@@ -2482,10 +2497,16 @@ class Component extends DCLogic {
 
   // ---------- personal plan bulk top-up ----------
   openBulkTopupModal() {
-    this.setState({ modal: 'bulkTopup', bulkStep: 'input', bulkInputMode: 'manual', bulkText: '', bulkCsvFileName: '', bulkCsvRowCount: 0, bulkBalanceType: 'regular', bulkTier: 'monthly', bulkFreeReason: '', bulkPaymentMethod: '', bulkCheckoutExpiryHours: String(this.state.paymentExpiryHours), bulkRows: [], bulkUnmatched: [], bulkStepError: '', bulkLastOrders: [] });
+    this.setState({ modal: 'bulkTopup', bulkStep: 'input', bulkInputMode: 'manual', bulkText: '', bulkCsvFileName: '', bulkCsvRowCount: 0, bulkBalanceType: 'regular', bulkTier: 'monthly', bulkFreeReason: '', bulkPaymentMethod: '', bulkCheckoutExpiryHours: String(this.state.paymentExpiryHours), bulkRows: [], bulkUnmatched: [], bulkStepError: '', bulkLastOrders: [],
+      bulkReqFirstName: '', bulkReqLastName: '', bulkReqEmail: '', bulkNeedFracture: false, bulkCcEmails: '' });
   }
   setBulkInputMode(m) { this.setState({ bulkInputMode: m, bulkUnmatched: [], bulkStepError: '' }); }
   onBulkText(e) { this.setState({ bulkText: e.target.value }); }
+  onBulkReqFirstName(e) { this.setState({ bulkReqFirstName: e.target.value }); }
+  onBulkReqLastName(e) { this.setState({ bulkReqLastName: e.target.value }); }
+  onBulkReqEmail(e) { this.setState({ bulkReqEmail: e.target.value }); }
+  onBulkNeedFracture(e) { this.setState({ bulkNeedFracture: e.target.checked }); }
+  onBulkCcEmails(e) { this.setState({ bulkCcEmails: e.target.value }); }
   onBulkCsvFile(e) {
     const file = e.target.files && e.target.files[0];
     if (!file) return;
@@ -3342,6 +3363,11 @@ class Component extends DCLogic {
       bulkShowPaymentSection: s.bulkBalanceType !== 'free',
       bulkPaymentMethod: s.bulkPaymentMethod, onBulkPaymentMethod: (e) => this.onBulkPaymentMethod(e),
       bulkCheckoutExpiryHours: s.bulkCheckoutExpiryHours, onBulkCheckoutExpiryHours: (e) => this.onBulkCheckoutExpiryHours(e),
+      bulkReqFirstName: s.bulkReqFirstName, onBulkReqFirstName: (e) => this.onBulkReqFirstName(e),
+      bulkReqLastName: s.bulkReqLastName, onBulkReqLastName: (e) => this.onBulkReqLastName(e),
+      bulkReqEmail: s.bulkReqEmail, onBulkReqEmail: (e) => this.onBulkReqEmail(e),
+      bulkNeedFracture: s.bulkNeedFracture, onBulkNeedFracture: (e) => this.onBulkNeedFracture(e),
+      bulkCcEmails: s.bulkCcEmails, onBulkCcEmails: (e) => this.onBulkCcEmails(e),
       bulkRows: s.bulkRows.map(r => ({ ...r, remove: () => this.removeBulkRow(r.privyId) })), bulkRowsCount: s.bulkRows.length, bulkRowsEmpty: s.bulkRows.length === 0,
       bulkPerUserAmountLabel: rp(bulkUnitAmount),
       bulkTotalAmountLabel: rp(bulkUnitAmount * s.bulkRows.length),
