@@ -2035,30 +2035,61 @@
       <div style="padding:22px 26px;">
         <div style="border:1px solid #E6E7EB; border-radius:10px; padding:16px 18px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center;">
           <div>
-            <div style="font-size:14px; font-weight:600; color:#191C21;">{{ bulkRequestDetail.usersCount }} users &mdash; {{ bulkRequestDetail.tier }}</div>
-            <div style="font-size:12px; color:#939EAE;">Requested by {{ bulkRequestDetail.requestedBy }} &middot; {{ bulkRequestDetail.createdAtLabel }}</div>
+            <div style="font-size:14px; font-weight:600; color:#191C21;">Batch {{ bulkRequestDetail.batchId }}</div>
+            <div style="font-size:12px; color:#939EAE;">{{ bulkRequestDetail.usersCount }} users &middot; {{ bulkRequestDetail.tier }}</div>
           </div>
           <span style="font-size:11px; font-weight:700; padding:3px 9px; border-radius:999px; background:{{ bulkRequestDetail.statusBg }}; color:{{ bulkRequestDetail.statusColor }};">{{ bulkRequestDetail.status }}</span>
         </div>
 
-        <div style="border:1px solid #E6E7EB; border-radius:10px; padding:16px 18px; margin-bottom:14px;">
-          <div style="font-size:12px; color:#647184; margin-bottom:5px;">Free balance reason</div>
-          <div style="font-size:13px; color:#191C21; font-weight:500;">{{ bulkRequestDetail.freeReason }}</div>
+        <div style="border:1px solid #E6E7EB; border-radius:10px; padding:16px 18px; margin-bottom:14px; display:grid; grid-template-columns:1fr 1fr; gap:14px; font-size:13px;">
+          <div><div style="color:#647184; margin-bottom:3px;">Balance Type</div><div style="color:#191C21; font-weight:500;">{{ bulkRequestDetail.balanceTypeLabel }}</div></div>
+          <div><div style="color:#647184; margin-bottom:3px;">Package</div><div style="color:#191C21; font-weight:500;">{{ bulkRequestDetail.tier }}</div></div>
+          <div><div style="color:#647184; margin-bottom:3px;">Total Users</div><div style="color:#191C21; font-weight:500;">{{ bulkRequestDetail.usersCount }}</div></div>
+          <div><div style="color:#647184; margin-bottom:3px;">Total</div><div style="color:#191C21; font-weight:500;">{{ bulkRequestDetail.totalLabel }}</div></div>
+        </div>
+
+        <div style="border:1px solid #E6E7EB; border-radius:10px; padding:16px 18px; margin-bottom:14px; display:grid; grid-template-columns:1fr 1fr; gap:14px; font-size:13px;">
+          <div><div style="color:#647184; margin-bottom:3px;">Requested By</div><div style="color:#191C21; font-weight:500;">{{ bulkRequestDetail.requestedBy }}</div></div>
+          <div><div style="color:#647184; margin-bottom:3px;">Requested At</div><div style="color:#191C21; font-weight:500;">{{ bulkRequestDetail.createdAtLabel }}</div></div>
+          <sc-if value="{{ bulkRequestDetail.showApprovedBy }}" hint-placeholder-val="{{ false }}">
+            <div><div style="color:#647184; margin-bottom:3px;">Decided By</div><div style="color:#191C21; font-weight:500;">{{ bulkRequestDetail.approvedBy }}</div></div>
+          </sc-if>
+        </div>
+
+        <div style="border:1px solid #FFE0AD; background:#FFFBF5; border-radius:10px; padding:16px 18px; margin-bottom:14px;">
+          <div style="font-size:12px; color:#8C5700; font-weight:600; margin-bottom:5px;">Free balance reason</div>
+          <div style="font-size:13px; color:#191C21;">{{ bulkRequestDetail.freeReason }}</div>
+        </div>
+
+        <div style="font-size:14px; font-weight:600; color:#191C21; margin-bottom:10px;">Invoice Items (1)</div>
+        <div style="border:1px solid #E6E7EB; border-radius:10px; padding:14px 16px; margin-bottom:14px; display:flex; justify-content:space-between;">
+          <div>
+            <div style="font-size:14px; font-weight:600; color:#191C21;">{{ bulkRequestDetail.itemName }}</div>
+            <div style="font-size:11px; color:#939EAE; text-transform:uppercase; margin-bottom:6px;">PLAN</div>
+            <div style="font-size:12px; color:#647184;">Qty: {{ bulkRequestDetail.itemQty }} &nbsp; Unit: Free &nbsp; Tax: Rp 0</div>
+          </div>
+          <div style="font-size:14px; font-weight:600; color:#191C21;">Free</div>
         </div>
 
         <div style="font-size:14px; font-weight:600; color:#191C21; margin-bottom:10px;">Users ({{ bulkRequestDetail.usersCount }})</div>
         <div style="border:1px solid #E6E7EB; border-radius:10px; max-height:260px; overflow-y:auto; margin-bottom:14px;">
           <sc-for list="{{ bulkRequestDetail.users }}" as="bu" hint-placeholder-count="3">
-            <div style="padding:11px 14px; border-bottom:1px solid #F4F5F7;">
-              <div style="font-size:13.5px; font-weight:600; color:#191C21;">{{ bu.name }}</div>
-              <div style="font-size:11.5px; color:#939EAE;">{{ bu.privyId }}</div>
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:11px 14px; border-bottom:1px solid #F4F5F7;">
+              <div>
+                <div style="font-size:13.5px; font-weight:600; color:#191C21;">{{ bu.name }}</div>
+                <div style="font-size:11.5px; color:#939EAE;">{{ bu.privyId }}</div>
+              </div>
+              <div style="text-align:right;">
+                <sc-if value="{{ bu.isNewPlan }}" hint-placeholder-val="{{ false }}">
+                  <span style="font-size:10px; font-weight:700; color:#0061B3; background:#E5F3FF; padding:2px 8px; border-radius:999px;">NEW PLAN</span>
+                </sc-if>
+                <sc-if value="{{ !bu.isNewPlan }}" hint-placeholder-val="{{ true }}">
+                  <div style="font-size:11.5px; color:#939EAE;">Current: {{ bu.currentTier }}</div>
+                </sc-if>
+              </div>
             </div>
           </sc-for>
         </div>
-
-        <sc-if value="{{ bulkRequestDetail.showApprovedBy }}" hint-placeholder-val="{{ false }}">
-          <div style="font-size:12px; color:#939EAE; margin-bottom:10px;">by {{ bulkRequestDetail.approvedBy }}</div>
-        </sc-if>
 
         <sc-if value="{{ bulkRequestDetail.canApprove }}" hint-placeholder-val="{{ false }}">
           <div style="border:1px solid #FFE0AD; background:#FFFBF5; border-radius:10px; padding:14px 16px; display:flex; align-items:center; justify-content:space-between; gap:14px;">
@@ -3104,7 +3135,9 @@ class Component extends DCLogic {
     const ent = this.getEnt(s.selectedEntId) || s.enterprises[0];
 
     // ---------- nav items ----------
-    const pendingCount = s.topupOrders.filter(o => o.status === 'pending_approval').length;
+    const pendingCount = s.topupOrders.filter(o => o.status === 'pending_approval').length
+      + s.personalOrders.filter(o => o.balanceType === 'free' && o.status === 'pending_approval').length
+      + s.personalBulkRequests.filter(r => r.status === 'pending_approval').length;
     const navDefs = [
       ...(isLead ? [{ key: 'products', label: 'Product List', icon: 'pi-archive-box', badge: null }] : []),
       { key: 'list', label: 'Enterprise List', icon: 'pi-apps', badge: null },
@@ -3237,13 +3270,20 @@ class Component extends DCLogic {
       const req = s.personalBulkRequests.find(r => r.id === s.approvalBulkRequestId);
       if (req) {
         const st = this.statusStyle(req.status);
+        const existingPrivyIds = new Set(s.personalPlans.map(pp => pp.privyId));
         bulkRequestDetail = {
-          id: req.id, usersCount: req.users.length, tier: req.tier,
-          users: req.users.map(u => ({ name: u.name, privyId: u.privyId })),
+          id: req.id, batchId: req.batchId, usersCount: req.users.length, tier: req.tier,
+          users: req.users.map(u => ({
+            name: u.name, privyId: u.privyId,
+            currentTier: (s.personalPlans.find(pp => pp.privyId === u.privyId) || {}).tier || '-',
+            isNewPlan: !existingPrivyIds.has(u.privyId)
+          })),
           freeReason: req.freeReason || '-', requestedBy: req.createdBy || '-', createdAtLabel: fmtDateTime(req.createdAt),
           status: req.status === 'pending_approval' ? 'pending approval' : req.status, statusBg: st.bg, statusColor: st.color,
           approvedBy: req.approvedBy || '', showApprovedBy: !isLead && !!req.approvedBy,
-          canApprove: isLead && req.status === 'pending_approval'
+          canApprove: isLead && req.status === 'pending_approval',
+          itemName: 'Personal Plan — ' + req.tier + ' (Free)', itemQty: req.users.length,
+          balanceTypeLabel: 'Free', totalLabel: 'Free grant'
         };
       }
     }
@@ -3530,7 +3570,7 @@ class Component extends DCLogic {
       approvalsFilterStatus: s.approvalsFilterStatus, onApprovalsFilterStatus: (e) => this.onApprovalsFilterStatus(e),
       approvalsSearch: s.approvalsSearch, onApprovalsSearch: (e) => this.onApprovalsSearch(e),
       showBulkRequestDetailModal: s.modal === 'bulkRequestDetail',
-      bulkRequestDetail: bulkRequestDetail || { usersCount: 0, tier: '', users: [], freeReason: '', requestedBy: '', createdAtLabel: '', status: '', statusBg: '#F4F5F7', statusColor: '#647184', approvedBy: '', showApprovedBy: false, canApprove: false },
+      bulkRequestDetail: bulkRequestDetail || { batchId: '', usersCount: 0, tier: '', users: [], freeReason: '', requestedBy: '', createdAtLabel: '', status: '', statusBg: '#F4F5F7', statusColor: '#647184', approvedBy: '', showApprovedBy: false, canApprove: false, itemName: '', itemQty: 0, balanceTypeLabel: '', totalLabel: '' },
       approveBulkRequestFromDetail: () => this.approveBulkRequestFromDetail(), rejectBulkRequestFromDetail: () => this.rejectBulkRequestFromDetail(),
 
       personalPlans,
