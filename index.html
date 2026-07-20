@@ -1594,6 +1594,7 @@
             <div style="font-size:14px; font-weight:600; color:#191C21; margin-bottom:10px;">Payment methods</div>
             <select value="{{ personalPaymentMethod }}" onChange="{{ onPersonalPaymentMethod }}" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px; margin-bottom:14px;">
               <option value="">Select payment method</option>
+              <option value="Diserahkan ke user">Diserahkan ke user</option>
               <option value="BCA Virtual Account">BCA Virtual Account</option>
               <option value="BRI Virtual Account">BRI Virtual Account</option>
               <option value="BNI Virtual Account">BNI Virtual Account</option>
@@ -1910,54 +1911,120 @@
       <div style="padding:22px 26px;">
         <div style="border:1px solid #E6E7EB; border-radius:10px; padding:16px 18px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center;">
           <div>
-            <div style="font-size:14px; font-weight:600; color:#191C21;">{{ personalOrderDetail.invoiceNumber }}</div>
-            <div style="font-size:12px; color:#939EAE;">Order ID: {{ personalOrderDetail.orderId }}</div>
+            <div style="font-size:14px; font-weight:600; color:#191C21;">{{ detailOrder.invoiceNumber }}</div>
+            <div style="font-size:12px; color:#939EAE;">Order ID: {{ detailOrder.orderId }}</div>
           </div>
-          <span style="font-size:11px; font-weight:700; padding:3px 9px; border-radius:999px; background:{{ personalOrderDetail.statusBg }}; color:{{ personalOrderDetail.statusColor }};">{{ personalOrderDetail.status }}</span>
+          <span style="font-size:11px; font-weight:700; padding:3px 9px; border-radius:999px; background:{{ detailOrder.statusBg }}; color:{{ detailOrder.statusColor }};">{{ detailOrder.status }}</span>
         </div>
 
         <div style="border:1px solid #E6E7EB; border-radius:10px; padding:16px 18px; margin-bottom:14px; display:grid; grid-template-columns:1fr 1fr; gap:14px; font-size:13px;">
-          <div><div style="color:#647184; margin-bottom:3px;">Checkout ID</div><div style="display:flex; align-items:center; gap:7px; color:#191C21; font-weight:500;">{{ personalOrderDetail.checkoutId }}<button onClick="{{ personalOrderDetail.copyCheckoutId }}" style="border:none; background:none; cursor:pointer; padding:0;"><i class="pi-document-copy" style="font-size:12px; color:#939EAE;"></i></button></div></div>
-          <div><div style="color:#647184; margin-bottom:3px;">Product Transaction ID</div><div style="display:flex; align-items:center; gap:7px; color:#191C21; font-weight:500;">{{ personalOrderDetail.productTrxId }}<button onClick="{{ personalOrderDetail.copyProductTrxId }}" style="border:none; background:none; cursor:pointer; padding:0;"><i class="pi-document-copy" style="font-size:12px; color:#939EAE;"></i></button></div></div>
-          <div><div style="color:#647184; margin-bottom:3px;">PrivyID</div><div style="color:#191C21; font-weight:500;">{{ personalOrderDetail.custPrivyId }}</div></div>
-          <sc-if value="{{ personalOrderDetail.hasVaNumber }}" hint-placeholder-val="{{ false }}">
-            <div><div style="color:#647184; margin-bottom:3px;">Virtual Account Number</div><div style="display:flex; align-items:center; gap:7px; color:#191C21; font-weight:500;">{{ personalOrderDetail.vaNumber }}<button onClick="{{ personalOrderDetail.copyVaNumber }}" style="border:none; background:none; cursor:pointer; padding:0;"><i class="pi-document-copy" style="font-size:12px; color:#939EAE;"></i></button></div></div>
+          <div><div style="color:#647184; margin-bottom:3px;">Checkout ID</div><div style="display:flex; align-items:center; gap:7px; color:#191C21; font-weight:500;">{{ detailOrder.checkoutId }}<button onClick="{{ detailOrder.copyCheckoutId }}" style="border:none; background:none; cursor:pointer; padding:0;"><i class="pi-document-copy" style="font-size:12px; color:#939EAE;"></i></button></div></div>
+          <div><div style="color:#647184; margin-bottom:3px;">Product Transaction ID</div><div style="display:flex; align-items:center; gap:7px; color:#191C21; font-weight:500;">{{ detailOrder.productTrxId }}<button onClick="{{ detailOrder.copyProductTrxId }}" style="border:none; background:none; cursor:pointer; padding:0;"><i class="pi-document-copy" style="font-size:12px; color:#939EAE;"></i></button></div></div>
+          <div><div style="color:#647184; margin-bottom:3px;">PrivyID</div><div style="color:#191C21; font-weight:500;">{{ detailOrder.custPrivyId }}</div></div>
+          <div><div style="color:#647184; margin-bottom:3px;">Payment Provider</div><div style="color:#191C21; font-weight:500;">{{ detailOrder.providerLabel }}</div></div>
+          <div><div style="color:#647184; margin-bottom:3px;">Payment Type</div><div style="color:#191C21; font-weight:500;">{{ detailOrder.paymentTypeLabel }}</div></div>
+          <sc-if value="{{ detailOrder.hasVaNumber }}" hint-placeholder-val="{{ false }}">
+            <div><div style="color:#647184; margin-bottom:3px;">Virtual Account Number</div><div style="display:flex; align-items:center; gap:7px; color:#191C21; font-weight:500;">{{ detailOrder.vaNumber }}<button onClick="{{ detailOrder.copyVaNumber }}" style="border:none; background:none; cursor:pointer; padding:0;"><i class="pi-document-copy" style="font-size:12px; color:#939EAE;"></i></button></div></div>
           </sc-if>
         </div>
 
         <div style="border:1px solid #E6E7EB; border-radius:10px; padding:16px 18px; margin-bottom:14px; display:grid; grid-template-columns:1fr 1fr; gap:14px; font-size:13px;">
-          <div><div style="color:#647184; margin-bottom:3px;">Discount</div><div style="color:#191C21; font-weight:500;">{{ personalOrderDetail.discountLabel }}</div></div>
-          <div><div style="color:#647184; margin-bottom:3px;">Tax (11%)</div><div style="color:#191C21; font-weight:500;">{{ personalOrderDetail.taxLabel }}</div></div>
-          <div><div style="color:#647184; margin-bottom:3px;">Grand Total</div><div style="color:#191C21; font-weight:500;">{{ personalOrderDetail.grandTotalLabel }}</div></div>
-          <div><div style="color:#647184; margin-bottom:3px;">Total Items</div><div style="color:#191C21; font-weight:500;">{{ personalOrderDetail.totalItems }}</div></div>
+          <div><div style="color:#647184; margin-bottom:3px;">Discount</div><div style="color:#191C21; font-weight:500;">{{ detailOrder.discountLabel }}</div></div>
+          <div><div style="color:#647184; margin-bottom:3px;">Tax (11%)</div><div style="color:#191C21; font-weight:500;">{{ detailOrder.taxLabel }}</div></div>
+          <div><div style="color:#647184; margin-bottom:3px;">Grand Total</div><div style="color:#191C21; font-weight:500;">{{ detailOrder.totalLabel }}</div></div>
+          <div><div style="color:#647184; margin-bottom:3px;">Total Items</div><div style="color:#191C21; font-weight:500;">{{ detailOrder.itemCount }}</div></div>
         </div>
 
         <div style="border:1px solid #E6E7EB; border-radius:10px; padding:16px 18px; margin-bottom:14px; display:grid; grid-template-columns:1fr 1fr; gap:14px; font-size:13px;">
-          <div><div style="color:#647184; margin-bottom:3px;">Customer Name</div><div style="color:#191C21; font-weight:500;">{{ personalOrderDetail.custName }}</div></div>
-          <div><div style="color:#647184; margin-bottom:3px;">Customer Email</div><div style="color:#191C21; font-weight:500;">{{ personalOrderDetail.custEmail }}</div></div>
-          <div><div style="color:#647184; margin-bottom:3px;">Customer Phone</div><div style="color:#191C21; font-weight:500;">{{ personalOrderDetail.custPhone }}</div></div>
-          <div><div style="color:#647184; margin-bottom:3px;">Status</div><div style="color:#191C21; font-weight:500;">{{ personalOrderDetail.status }}</div></div>
+          <div><div style="color:#647184; margin-bottom:3px;">Customer Name</div><div style="color:#191C21; font-weight:500;">{{ detailOrder.custName }}</div></div>
+          <div><div style="color:#647184; margin-bottom:3px;">Customer Email</div><div style="color:#191C21; font-weight:500;">{{ detailOrder.custEmail }}</div></div>
+          <div><div style="color:#647184; margin-bottom:3px;">CC Recipients</div><div style="color:#191C21; font-weight:500;">{{ detailOrder.ccLabel }}</div></div>
+          <div><div style="color:#647184; margin-bottom:3px;">Status</div><div style="color:#191C21; font-weight:500;">{{ detailOrder.status }}</div></div>
         </div>
 
-        <div style="border:1px solid #E6E7EB; border-radius:10px; padding:16px 18px; margin-bottom:14px; display:grid; grid-template-columns:1fr 1fr; gap:14px; font-size:13px;">
-          <div><div style="color:#647184; margin-bottom:3px;">Payment Gateway</div><div style="color:#191C21; font-weight:500;">{{ personalOrderDetail.paymentGateway }}</div></div>
-          <div><div style="color:#647184; margin-bottom:3px;">Payment Type</div><div style="color:#191C21; font-weight:500;">{{ personalOrderDetail.paymentType }}</div></div>
-          <div><div style="color:#647184; margin-bottom:3px;">Payment Provider</div><div style="color:#191C21; font-weight:500;">{{ personalOrderDetail.paymentProvider }}</div></div>
-          <div><div style="color:#647184; margin-bottom:3px;">Due Date</div><div style="color:#191C21; font-weight:500;">{{ personalOrderDetail.dueDateLabel }}</div></div>
-          <div><div style="color:#647184; margin-bottom:3px;">Paid At</div><div style="color:#191C21; font-weight:500;">{{ personalOrderDetail.paidAtLabel }}</div></div>
-        </div>
-
-        <div style="border:1px solid #E6E7EB; border-radius:10px; padding:16px 18px;">
-          <div style="font-size:14px; font-weight:600; color:#191C21; margin-bottom:12px;">Invoice Items ({{ personalOrderDetail.totalItems }})</div>
-          <div style="border:1px solid #E6E7EB; border-radius:8px; padding:12px 14px;">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-              <span style="font-size:13.5px; font-weight:700; color:#191C21;">{{ personalOrderDetail.itemName }}</span>
-              <span style="font-size:13.5px; font-weight:700; color:#191C21;">{{ personalOrderDetail.itemPriceLabel }}</span>
+        <sc-if value="{{ detailOrder.isUserPayFlow }}" hint-placeholder-val="{{ false }}">
+          <div style="border:1px solid #ADD9FF; background:#E5F3FF; border-radius:10px; padding:16px 18px; margin-bottom:14px; display:flex; align-items:center; justify-content:space-between; gap:14px;">
+            <div>
+              <div style="font-size:13.5px; font-weight:600; color:#191C21;">Payment diserahkan ke user</div>
+              <div style="font-size:12.5px; color:#495260;">Simulasikan alur pembayaran yang dilihat oleh user, mulai dari email invoice.</div>
             </div>
-            <div style="font-size:11.5px; color:#939EAE; margin-top:2px;">{{ personalOrderDetail.itemMeta }}</div>
-            <div style="font-size:12px; color:#647184; margin-top:6px;">Qty: 1 &nbsp; Unit: {{ personalOrderDetail.itemUnitLabel }} &nbsp; Tax: {{ personalOrderDetail.itemTaxLabel }}</div>
+            <button onClick="{{ openUserPayEmail }}" style="border:none; background:#0075D9; color:#fff; font-size:12.5px; font-weight:600; padding:9px 16px; border-radius:8px; cursor:pointer; display:flex; align-items:center; gap:6px; flex:none;"><i class="pi-envelope" style="font-size:12px;"></i>Preview invoice email</button>
           </div>
+        </sc-if>
+
+        <div style="border:1px solid #E6E7EB; border-radius:10px; padding:16px 18px; margin-bottom:14px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <div style="font-size:14px; font-weight:600; color:#191C21;">Documents</div>
+            <sc-if value="{{ detailOrder.docsAvailable }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ openDownloadModal }}" style="border:1px solid #CBD1D8; background:#fff; color:#1F2329; font-size:12px; font-weight:600; padding:7px 14px; border-radius:7px; cursor:pointer; display:flex; align-items:center; gap:6px;"><i class="pi-download" style="font-size:12px;"></i>Download</button>
+            </sc-if>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <sc-if value="{{ detailOrder.canPreviewInvoice }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex; align-items:center; justify-content:space-between; border:1px solid #E6E7EB; border-radius:10px; padding:12px 14px;">
+                <div style="display:flex; align-items:center; gap:12px;">
+                  <div style="width:36px; height:36px; border-radius:9px; background:#E5F3FF; display:flex; align-items:center; justify-content:center; flex:none;"><i class="pi-document-filled" style="color:#0061B3; font-size:16px;"></i></div>
+                  <div><div style="font-size:13.5px; font-weight:600; color:#191C21;">Invoice</div><div style="font-size:11.5px; color:#939EAE;">{{ detailOrder.invoiceNumber }}</div></div>
+                </div>
+                <div style="display:flex; align-items:center; gap:10px;">
+                  <span style="font-size:11px; font-weight:700; padding:3px 9px; border-radius:999px; background:{{ detailOrder.invoiceDeliveryFailed ? '#FFF0EF' : '#E9FBF0' }}; color:{{ detailOrder.invoiceDeliveryFailed ? '#C22725' : '#1C8A4B' }};">{{ detailOrder.invoiceDeliveryLabel }}</span>
+                  <sc-if value="{{ detailOrder.invoiceDeliveryFailed }}" hint-placeholder-val="{{ false }}">
+                    <button onClick="{{ resendInvoiceDoc }}" style="border:1px solid #ADD9FF; background:#E5F3FF; color:#0061B3; font-size:12px; font-weight:600; padding:5px 10px; border-radius:6px; cursor:pointer;"><i class="pi-refresh" style="font-size:11px;"></i> Resend</button>
+                  </sc-if>
+                  <button onClick="{{ viewInvoiceDoc }}" style="border:none; background:none; color:#0075D9; font-size:13px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:4px;">View<i class="pi-chevron-right" style="font-size:11px;"></i></button>
+                </div>
+              </div>
+            </sc-if>
+          <sc-if value="{{ detailOrder.docsAvailable }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex; align-items:center; justify-content:space-between; border:1px solid #E6E7EB; border-radius:10px; padding:12px 14px;">
+                <div style="display:flex; align-items:center; gap:12px;">
+                  <div style="width:36px; height:36px; border-radius:9px; background:#E9FBF0; display:flex; align-items:center; justify-content:center; flex:none;"><i class="pi-receipt" style="color:#1C8A4B; font-size:16px;"></i></div>
+                  <div><div style="font-size:13.5px; font-weight:600; color:#191C21;">Receipt</div><div style="font-size:11.5px; color:#939EAE;">Payment proof</div></div>
+                </div>
+                <div style="display:flex; align-items:center; gap:10px;">
+                  <span style="font-size:11px; font-weight:700; padding:3px 9px; border-radius:999px; background:{{ detailOrder.receiptDeliveryFailed ? '#FFF0EF' : '#E9FBF0' }}; color:{{ detailOrder.receiptDeliveryFailed ? '#C22725' : '#1C8A4B' }};">{{ detailOrder.receiptDeliveryLabel }}</span>
+                  <sc-if value="{{ detailOrder.receiptDeliveryFailed }}" hint-placeholder-val="{{ false }}">
+                    <button onClick="{{ resendReceiptDoc }}" style="border:1px solid #ADD9FF; background:#E5F3FF; color:#0061B3; font-size:12px; font-weight:600; padding:5px 10px; border-radius:6px; cursor:pointer;"><i class="pi-refresh" style="font-size:11px;"></i> Resend</button>
+                  </sc-if>
+                  <button onClick="{{ viewReceiptDoc }}" style="border:none; background:none; color:#0075D9; font-size:13px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:4px;">View<i class="pi-chevron-right" style="font-size:11px;"></i></button>
+                </div>
+              </div>
+              <div style="display:flex; align-items:center; justify-content:space-between; border:1px solid #E6E7EB; border-radius:10px; padding:12px 14px;">
+                <div style="display:flex; align-items:center; gap:12px;">
+                  <div style="width:36px; height:36px; border-radius:9px; background:#FFF7E5; display:flex; align-items:center; justify-content:center; flex:none;"><i class="pi-tax" style="color:#B37E00; font-size:16px;"></i></div>
+                  <div><div style="font-size:13.5px; font-weight:600; color:#191C21;">Tax invoice</div><div style="font-size:11.5px; color:#939EAE;">{{ detailOrder.taxInvoiceCode }}</div></div>
+                </div>
+                <div style="display:flex; align-items:center; gap:10px;">
+                  <span style="font-size:11px; font-weight:700; padding:3px 9px; border-radius:999px; background:{{ detailOrder.taxInvoiceDeliveryFailed ? '#FFF0EF' : '#E9FBF0' }}; color:{{ detailOrder.taxInvoiceDeliveryFailed ? '#C22725' : '#1C8A4B' }};">{{ detailOrder.taxInvoiceDeliveryLabel }}</span>
+                  <sc-if value="{{ detailOrder.taxInvoiceDeliveryFailed }}" hint-placeholder-val="{{ false }}">
+                    <button onClick="{{ resendTaxInvoiceDoc }}" style="border:1px solid #ADD9FF; background:#E5F3FF; color:#0061B3; font-size:12px; font-weight:600; padding:5px 10px; border-radius:6px; cursor:pointer;"><i class="pi-refresh" style="font-size:11px;"></i> Resend</button>
+                  </sc-if>
+                  <button onClick="{{ viewTaxInvoiceDoc }}" style="border:none; background:none; color:#0075D9; font-size:13px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:4px;">View<i class="pi-chevron-right" style="font-size:11px;"></i></button>
+                </div>
+              </div>
+            </sc-if>
+          </div>
+          <sc-if value="{{ detailOrder.docsUnavailableNote }}" hint-placeholder-val="{{ true }}">
+            <div style="font-size:12.5px; color:#939EAE;">Dokumen lain (receipt, tax invoice) tersedia setelah pembayaran berhasil.</div>
+          </sc-if>
         </div>
+
+        <div style="border:1px solid #E6E7EB; border-radius:10px; padding:16px 18px; margin-bottom:14px; display:grid; grid-template-columns:1fr 1fr; gap:14px; font-size:13px;">
+          <div><div style="color:#647184; margin-bottom:3px;">VAT Issued Date (e-Faktur)</div><div style="color:#191C21; font-weight:500;">{{ detailOrder.vatIssuedLabel }}</div></div>
+          <div><div style="color:#647184; margin-bottom:3px;">Due Date</div><div style="color:#191C21; font-weight:500;">{{ detailOrder.dueDateLabel }}</div></div>
+        </div>
+
+        <div style="font-size:14px; font-weight:600; color:#191C21; margin-bottom:10px;">Invoice Items ({{ detailOrder.itemCount }})</div>
+        <sc-for list="{{ detailOrder.items }}" as="di" hint-placeholder-count="1">
+          <div style="border:1px solid #E6E7EB; border-radius:10px; padding:14px 16px; margin-bottom:10px; display:flex; justify-content:space-between;">
+            <div>
+              <div style="font-size:14px; font-weight:600; color:#191C21;">{{ di.name }}</div>
+              <div style="font-size:11px; color:#939EAE; text-transform:uppercase; margin-bottom:6px;">{{ di.typeLabel }}</div>
+              <div style="font-size:12px; color:#647184;">Qty: {{ di.qty }} &nbsp; Unit: {{ di.priceLabel }} &nbsp; Tax: {{ di.taxLabel }}</div>
+            </div>
+            <div style="font-size:14px; font-weight:600; color:#191C21;">{{ di.totalLabel }}</div>
+          </div>
+        </sc-for>
       </div>
     </div>
   </div>
@@ -2580,7 +2647,7 @@ class Component extends DCLogic {
       provider: s.bulkPaymentMethod ? s.bulkPaymentMethod.split(' ')[0] : '-', paymentType: s.bulkPaymentMethod === 'QRIS' ? 'QRIS' : 'Bank Transfer',
       vaNumber: (!isFree && s.bulkPaymentMethod !== 'QRIS') ? String(Math.floor(1000000000000 + Math.random() * 8999999999999)) : '',
       status: isFree ? 'approved' : 'unpaid', expiredAt: new Date(now.getTime() + (parseInt(s.bulkCheckoutExpiryHours, 10) || s.paymentExpiryHours) * 3600 * 1000), paidAt: null,
-      custName: r.name, custEmail: r.privyId.toLowerCase() + '@example.com'
+      custName: r.name, custEmail: r.privyId.toLowerCase() + '@example.com', cc: s.bulkCcEmails
     }));
     const rowIds = new Set(s.bulkRows.map(r => r.privyId));
     const personalPlans = s.personalPlans.map(pp => rowIds.has(pp.privyId) ? {
@@ -2590,7 +2657,7 @@ class Component extends DCLogic {
     this.addAudit(actor, isFree ? 'Granted bulk free personal balance (auto-approved as Lead)' : 'Bulk personal top-up', s.bulkRows.length + ' users \u2192 ' + tierLabel);
     this.setState({ personalPlans, personalOrders: [...newOrders, ...s.personalOrders], bulkStep: 'result', bulkLastBatchId: batchId, bulkLastOrders: newOrders, bulkStepError: '' });
   }
-  viewBulkOrder(orderId) { this.setState({ modal: 'personalOrderDetail', personalDetailOrderId: orderId, personalDetailReturnTo: 'bulkTopup' }); }
+  viewBulkOrder(orderId) { this.setState({ modal: 'personalOrderDetail', detailOrderId: orderId, detailOrderSource: 'personal', personalDetailReturnTo: 'bulkTopup' }); }
   backFromOrderDetail() { this.setState({ modal: this.state.personalDetailReturnTo, personalDetailReturnTo: null }); }
   approveBulkRequest(id) {
     const s = this.state;
@@ -2673,7 +2740,7 @@ class Component extends DCLogic {
       paymentType: isQris ? 'QRIS' : 'Bank Transfer',
       vaNumber: (!isFree && !isQris) ? String(Math.floor(1000000000000 + Math.random() * 8999999999999)) : '',
       status, expiredAt: new Date(now.getTime() + (parseInt(s.personalCheckoutExpiryHours, 10) || s.paymentExpiryHours) * 3600 * 1000), paidAt: null,
-      custName: match.name, custEmail: s.personalCustEmail || match.privyId.toLowerCase() + '@example.com'
+      custName: match.name, custEmail: s.personalCustEmail || match.privyId.toLowerCase() + '@example.com', cc: s.personalCcEmails
     };
     const periodEndDate = new Date(now); periodEndDate.setMonth(periodEndDate.getMonth() + (tierLabel === 'Yearly' ? 12 : 1));
     const personalPlans = (isEbsFree) ? s.personalPlans : s.personalPlans.map(pp => pp.privyId === match.privyId ? {
@@ -2698,7 +2765,7 @@ class Component extends DCLogic {
     this.addAudit(this.currentActor(), 'Checked top-up status', o.invoiceNumber + ' \u00b7 ' + o.enterpriseName, o.enterpriseId);
     this.setState({ topupOrders });
   }
-  openPersonalOrderDetail(orderId) { this.setState({ modal: 'personalOrderDetail', personalDetailOrderId: orderId, personalDetailReturnTo: null }); }
+  openPersonalOrderDetail(orderId) { this.setState({ modal: 'personalOrderDetail', detailOrderId: orderId, detailOrderSource: 'personal', personalDetailReturnTo: null }); }
   onUserLogSearch(e) { this.setState({ userLogSearch: e.target.value }); }
   onUserLogDate(e) { this.setState({ userLogDate: e.target.value }); }
   clearUserLogFilter() { this.setState({ userLogSearch: '', userLogDate: '' }); }
@@ -2903,7 +2970,7 @@ class Component extends DCLogic {
     this.setState({ topupOrders: orders, modal: null });
   }
 
-  openOrderDetail(order) { this.setState({ modal: 'orderDetail', detailOrderId: order.id }); }
+  openOrderDetail(order) { this.setState({ modal: 'orderDetail', detailOrderId: order.id, detailOrderSource: 'enterprise' }); }
 
   approveRequest(orderId) {
     const orders = this.state.topupOrders.map(o => o.id === orderId ? { ...o, status: 'approved', approvedBy: this.currentActor() } : o);
@@ -3074,25 +3141,6 @@ class Component extends DCLogic {
       openDetail: () => this.openPersonalOrderDetail(o.id)
     })) : [];
 
-    let personalOrderDetail = null;
-    if (s.modal === 'personalOrderDetail' && s.personalDetailOrderId) {
-      const o = s.personalOrders.find(x => x.id === s.personalDetailOrderId);
-      if (o) {
-        personalOrderDetail = {
-          invoiceNumber: o.invoiceNumber, orderId: o.orderId, status: o.status,
-          statusBg: o.status === 'paid' ? '#EAF9EE' : (o.status === 'expired' ? '#F4F5F7' : '#E5F3FF'), statusColor: o.status === 'paid' ? '#248C3E' : (o.status === 'expired' ? '#647184' : '#0061B3'),
-          discountLabel: rp(o.discount), taxLabel: rp(o.tax), grandTotalLabel: rp(o.amount), totalItems: 1,
-          custName: o.custName, custEmail: o.custEmail, custPhone: '-',
-          checkoutId: o.checkoutId || '-', productTrxId: o.productTrxId || '-', custPrivyId: o.privyId,
-          vaNumber: o.vaNumber || '', hasVaNumber: !!o.vaNumber,
-          copyOrderId: () => this.copyToClipboard(o.orderId), copyCheckoutId: () => this.copyToClipboard(o.checkoutId), copyProductTrxId: () => this.copyToClipboard(o.productTrxId), copyVaNumber: () => this.copyToClipboard(o.vaNumber),
-          paymentGateway: 'doku', paymentType: o.provider ? o.provider.toLowerCase() : '-', paymentProvider: o.provider ? o.provider.toLowerCase() : '-',
-          dueDateLabel: fmtDateTime(o.expiredAt), paidAtLabel: o.paidAt ? fmtDateTime(o.paidAt) : '01 Jan 0001',
-          itemName: 'Personal Plan (' + o.tier + ')', itemMeta: 'PLAN \u2022 SERVICE', itemPriceLabel: rp(o.amount), itemUnitLabel: rp(o.baseAmount), itemTaxLabel: rp(o.tax)
-        };
-      }
-    }
-
     // ---------- audit log ----------
     let auditLogSorted = [...s.auditLog].sort((a, b) => b.ts - a.ts);
     if (s.userLogSearch.trim()) {
@@ -3162,9 +3210,15 @@ class Component extends DCLogic {
 
     let detailOrder = null;
     const userPayModals = ['userPayEmail', 'userPayMethods', 'userPayDetail'];
-    if ((s.modal === 'orderDetail' || s.modal === 'docPreview' || s.modal === 'downloadDocs' || userPayModals.includes(s.modal)) && s.detailOrderId) {
-      const o = s.topupOrders.find(x => x.id === s.detailOrderId);
-      if (o) detailOrder = this.decorateOrderFull(o);
+    const detailModals = ['orderDetail', 'personalOrderDetail', 'docPreview', 'downloadDocs', ...userPayModals];
+    if (detailModals.includes(s.modal) && s.detailOrderId) {
+      if (s.detailOrderSource === 'personal') {
+        const o = s.personalOrders.find(x => x.id === s.detailOrderId);
+        if (o) detailOrder = this.decoratePersonalOrderFull(o);
+      } else {
+        const o = s.topupOrders.find(x => x.id === s.detailOrderId);
+        if (o) detailOrder = this.decorateOrderFull(o);
+      }
     }
     const docPreview = (s.modal === 'docPreview' && detailOrder) ? this.buildDocPreview(detailOrder, s.docModalType) : null;
     const userPayEmailPreview = (userPayModals.includes(s.modal) && detailOrder) ? this.buildDocPreview(detailOrder, 'invoice') : null;
@@ -3443,7 +3497,6 @@ class Component extends DCLogic {
       personalOrdersForResult, noPersonalOrders: personalOrdersForResult.length === 0,
       showPersonalOrderDetailModal: s.modal === 'personalOrderDetail',
       showBackFromOrderDetail: !!s.personalDetailReturnTo, backFromOrderDetail: () => this.backFromOrderDetail(),
-      personalOrderDetail: personalOrderDetail || { invoiceNumber: '', orderId: '', status: '', statusBg: '#F4F5F7', statusColor: '#647184', discountLabel: '', taxLabel: '', grandTotalLabel: '', totalItems: 0, custName: '', custEmail: '', custPhone: '', paymentGateway: '', paymentType: '', paymentProvider: '', dueDateLabel: '', paidAtLabel: '', itemName: '', itemMeta: '', itemPriceLabel: '', itemUnitLabel: '', itemTaxLabel: '', checkoutId: '', productTrxId: '', custPrivyId: '', vaNumber: '', hasVaNumber: false },
       auditLogSorted, noAuditLog: auditLogSorted.length === 0,
       ebsUserList: ebsUserListFiltered.map(eu => ({
         ...eu, roleLabel: eu.role === 'lead' ? 'Lead EBS' : 'EBS',
@@ -3574,7 +3627,7 @@ class Component extends DCLogic {
   }
 
   openDocPreview(type) { this.setState({ modal: 'docPreview', docModalType: type }); }
-  backToOrderDetailFromDoc() { this.setState({ modal: 'orderDetail' }); }
+  backToOrderDetailFromDoc() { this.setState({ modal: this.state.detailOrderSource === 'personal' ? 'personalOrderDetail' : 'orderDetail' }); }
   openDownloadModal() { this.setState({ modal: 'downloadDocs', downloadSel: { invoice: false, receipt: false, taxInvoice: false } }); }
   toggleDownloadSel(key) { this.setState({ downloadSel: { ...this.state.downloadSel, [key]: !this.state.downloadSel[key] } }); }
 
@@ -3616,11 +3669,13 @@ class Component extends DCLogic {
     setTimeout(() => URL.revokeObjectURL(url), 2000);
   }
   downloadDoc(type) {
-    const o = this.state.topupOrders.find(x => x.id === this.state.detailOrderId);
+    const s = this.state;
+    const isPersonal = s.detailOrderSource === 'personal';
+    const o = (isPersonal ? s.personalOrders : s.topupOrders).find(x => x.id === s.detailOrderId);
     if (!o) return;
-    const dp = this.buildDocPreview(this.decorateOrderFull(o), type);
+    const dp = this.buildDocPreview(isPersonal ? this.decoratePersonalOrderFull(o) : this.decorateOrderFull(o), type);
     this.triggerDownload(dp.docTitle.replace(/\s+/g, '_') + '_' + dp.docNumber.replace(/[^\w]+/g, '_') + '.html', this.htmlDocTemplate(dp));
-    this.addAudit(this.currentActor(), 'Downloaded ' + dp.docTitle.toLowerCase(), o.invoiceNumber, o.enterpriseId);
+    this.addAudit(this.currentActor(), 'Downloaded ' + dp.docTitle.toLowerCase(), o.invoiceNumber, isPersonal ? null : o.enterpriseId);
   }
   openUserPayEmail() { this.setState({ modal: 'userPayEmail' }); }
   openUserPayMethods() { this.setState({ modal: 'userPayMethods' }); }
@@ -3636,14 +3691,31 @@ class Component extends DCLogic {
   onUserPayCardCvv(e) { this.setState({ userPayCardCvv: e.target.value }); }
   confirmUserPaymentSuccess() {
     const s = this.state;
+    const isPersonal = s.detailOrderSource === 'personal';
+    const backModal = isPersonal ? 'personalOrderDetail' : 'orderDetail';
+    if (isPersonal) {
+      const personalOrders = s.personalOrders.map(o => o.id === s.detailOrderId ? { ...o, status: 'paid', paidAt: new Date() } : o);
+      const o = personalOrders.find(x => x.id === s.detailOrderId);
+      this.addAudit('User (' + (o ? o.custName : '') + ')', 'Paid invoice via ' + s.userPayMethod, o ? o.invoiceNumber : '');
+      this.setState({ personalOrders, modal: backModal });
+      return;
+    }
     const topupOrders = s.topupOrders.map(o => o.id === s.detailOrderId ? { ...o, status: 'paid', paidAt: new Date() } : o);
     const o = topupOrders.find(x => x.id === s.detailOrderId);
     this.addAudit('User (' + (o ? o.custName : '') + ')', 'Paid invoice via ' + s.userPayMethod, o ? o.invoiceNumber : '', o ? o.enterpriseId : null);
-    this.setState({ topupOrders, modal: 'orderDetail' });
+    this.setState({ topupOrders, modal: backModal });
   }
   resendDoc(type) {
     const s = this.state;
     const key = type === 'tax_invoice' ? 'taxInvoice' : type;
+    const isPersonal = s.detailOrderSource === 'personal';
+    if (isPersonal) {
+      const personalOrders = s.personalOrders.map(o => o.id === s.detailOrderId ? { ...o, docDelivery: { ...(o.docDelivery || {}), [key]: 'delivered' } } : o);
+      const o = personalOrders.find(x => x.id === s.detailOrderId);
+      this.addAudit(this.currentActor(), 'Resent ' + type.replace('_', ' '), o ? o.invoiceNumber : '');
+      this.setState({ personalOrders });
+      return;
+    }
     const topupOrders = s.topupOrders.map(o => o.id === s.detailOrderId ? { ...o, docDelivery: { ...(o.docDelivery || {}), [key]: 'delivered' } } : o);
     const o = topupOrders.find(x => x.id === s.detailOrderId);
     this.addAudit(this.currentActor(), 'Resent ' + type.replace('_', ' '), o ? o.invoiceNumber : '', o ? o.enterpriseId : null);
@@ -3654,7 +3726,7 @@ class Component extends DCLogic {
     if (sel.invoice) this.downloadDoc('invoice');
     if (sel.receipt) this.downloadDoc('receipt');
     if (sel.taxInvoice) this.downloadDoc('tax_invoice');
-    this.setState({ modal: 'orderDetail' });
+    this.setState({ modal: this.state.detailOrderSource === 'personal' ? 'personalOrderDetail' : 'orderDetail' });
   }
 
   emptyDetailOrder() {
@@ -3722,6 +3794,39 @@ class Component extends DCLogic {
       checkoutId: o.checkoutId || '-', productTrxId: o.productTrxId || '-',
       custPrivyId: o.custPrivyId || '-', providerLabel: o.provider ? (o.provider.charAt(0).toUpperCase() + o.provider.slice(1)) : '-',
       paymentTypeLabel: o.type === 'qr' ? 'QRIS' : (o.type === 'grant' ? 'Free grant' : 'Bank Transfer'),
+      vaNumber: o.vaNumber || '', hasVaNumber: !!o.vaNumber,
+      copyOrderId: () => this.copyToClipboard(o.orderId), copyCheckoutId: () => this.copyToClipboard(o.checkoutId), copyProductTrxId: () => this.copyToClipboard(o.productTrxId), copyVaNumber: () => this.copyToClipboard(o.vaNumber)
+    };
+  }
+
+  decoratePersonalOrderFull(o) {
+    const st = this.statusStyle(o.status);
+    const item = { name: 'Personal Plan (' + o.tier + ')', typeLabel: 'PLAN', qty: 1, unit: o.baseAmount, tax: o.tax, total: o.amount };
+    return {
+      ...o, id: o.id, total: o.amount, createdAt: o.ts, custPrivyId: o.privyId,
+      status: o.status === 'pending_approval' ? 'pending approval' : o.status,
+      statusBg: st.bg, statusColor: st.color,
+      discountLabel: rp(o.discount || 0), taxLabel: rp(o.tax), totalLabel: o.balanceType === 'free' ? 'Free' : rp(o.amount), itemCount: 1,
+      ccLabel: o.cc && o.cc.trim() ? o.cc : '-',
+      invoiceDocLabel: o.status === 'paid' ? fmtDate(o.ts) : '-',
+      receiptDocLabel: o.status === 'paid' ? fmtDate(o.ts) : '-',
+      docsAvailable: o.status === 'paid' || o.status === 'pending_approval' || o.status === 'approved', docsUnavailableNote: !['paid', 'pending_approval', 'approved'].includes(o.status),
+      canPreviewInvoice: true,
+      isUserPayFlow: o.paymentMethod === 'Diserahkan ke user' && o.status === 'unpaid',
+      invoiceDeliveryFailed: (o.docDelivery && o.docDelivery.invoice) === 'failed',
+      receiptDeliveryFailed: (o.docDelivery && o.docDelivery.receipt) === 'failed',
+      taxInvoiceDeliveryFailed: (o.docDelivery && o.docDelivery.taxInvoice) === 'failed',
+      invoiceDeliveryLabel: (o.docDelivery && o.docDelivery.invoice) === 'failed' ? 'Failed to deliver' : 'Delivered',
+      receiptDeliveryLabel: (o.docDelivery && o.docDelivery.receipt) === 'failed' ? 'Failed to deliver' : 'Delivered',
+      taxInvoiceDeliveryLabel: (o.docDelivery && o.docDelivery.taxInvoice) === 'failed' ? 'Failed to deliver' : 'Delivered',
+      taxInvoiceCode: '04' + String(o.id).replace(/\D/g, '').padStart(8, '0').slice(0, 8) + '001426696',
+      vatIssuedLabel: o.status === 'paid' ? fmtDate(new Date(o.ts.getTime() + 2 * 24 * 3600 * 1000)) : 'Belum terbit',
+      dueDateLabel: fmtDateTime(o.expiredAt), expiredAtRaw: o.expiredAt,
+      items: [{ ...item, priceLabel: rp(item.unit), taxLabel: rp(item.tax), totalLabel: item.total ? rp(item.total) : '-' }],
+      canRegenerate: false, canApprove: false,
+      checkoutId: o.checkoutId || '-', productTrxId: o.productTrxId || '-',
+      providerLabel: o.provider ? (o.provider.charAt(0).toUpperCase() + o.provider.slice(1)) : '-',
+      paymentTypeLabel: o.paymentType || '-',
       vaNumber: o.vaNumber || '', hasVaNumber: !!o.vaNumber,
       copyOrderId: () => this.copyToClipboard(o.orderId), copyCheckoutId: () => this.copyToClipboard(o.checkoutId), copyProductTrxId: () => this.copyToClipboard(o.productTrxId), copyVaNumber: () => this.copyToClipboard(o.vaNumber)
     };
