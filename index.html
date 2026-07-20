@@ -453,15 +453,7 @@
                 <div style="font-size:13px; color:#191C21; font-weight:600;">{{ ap.totalLabel }}</div>
                 <div>
                   <sc-if value="{{ ap.showActions }}" hint-placeholder-val="{{ false }}">
-                    <sc-if value="{{ ap.reviewOnly }}" hint-placeholder-val="{{ false }}">
-                      <button onClick="{{ ap.openDetail }}" style="border:1px solid #ADD9FF; background:#E5F3FF; color:#0061B3; font-size:12px; font-weight:600; padding:7px 14px; border-radius:7px; cursor:pointer; display:flex; align-items:center; gap:6px;"><i class="pi-view" style="font-size:12px;"></i>Review &amp; decide</button>
-                    </sc-if>
-                    <sc-if value="{{ !ap.reviewOnly }}" hint-placeholder-val="{{ true }}">
-                      <div style="display:flex; gap:8px;">
-                        <button onClick="{{ ap.reject }}" style="border:1px solid #F6BCBB; background:#fff; color:#C22725; font-size:12px; font-weight:600; padding:7px 14px; border-radius:7px; cursor:pointer;">Reject</button>
-                        <button onClick="{{ ap.approve }}" style="border:none; background:#E42E2C; color:#fff; font-size:12px; font-weight:600; padding:7px 14px; border-radius:7px; cursor:pointer;">Approve</button>
-                      </div>
-                    </sc-if>
+                    <button onClick="{{ ap.openDetail }}" style="border:1px solid #ADD9FF; background:#E5F3FF; color:#0061B3; font-size:12px; font-weight:600; padding:7px 14px; border-radius:7px; cursor:pointer; display:flex; align-items:center; gap:6px;"><i class="pi-view" style="font-size:12px;"></i>Review &amp; decide</button>
                   </sc-if>
                   <sc-if value="{{ ap.showStatusOnly }}" hint-placeholder-val="{{ true }}">
                     <span style="font-size:11px; font-weight:700; padding:3px 9px; border-radius:999px; background:{{ ap.statusBg }}; color:{{ ap.statusColor }};">{{ ap.statusLabel }}</span>
@@ -2017,6 +2009,66 @@
             <div style="font-size:14px; font-weight:600; color:#191C21;">{{ di.totalLabel }}</div>
           </div>
         </sc-for>
+
+        <sc-if value="{{ detailOrder.canApprove }}" hint-placeholder-val="{{ false }}">
+          <div style="border:1px solid #FFE0AD; background:#FFFBF5; border-radius:10px; padding:14px 16px; margin-top:14px; display:flex; align-items:center; justify-content:space-between; gap:14px;">
+            <div style="font-size:12.5px; color:#8C5700;">Review detail order sebelum menyetujui permintaan free top-up ini.</div>
+            <div style="display:flex; gap:8px; flex:none;">
+              <button onClick="{{ rejectFromDetail }}" style="border:1px solid #F6BCBB; background:#fff; color:#C22725; font-size:13px; font-weight:600; padding:9px 16px; border-radius:8px; cursor:pointer;">Reject</button>
+              <button onClick="{{ approveFromDetail }}" style="border:none; background:#E42E2C; color:#fff; font-size:13px; font-weight:600; padding:9px 18px; border-radius:8px; cursor:pointer;">Approve</button>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<!-- ================= MODAL: BULK REQUEST DETAIL (approvals) ================= -->
+<sc-if value="{{ showBulkRequestDetailModal }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1050; display:flex; align-items:center; justify-content:center; padding:24px;" onClick="{{ closeModalBackdrop }}">
+    <div style="background:#FBFCFD; border-radius:14px; width:100%; max-width:460px; max-height:88vh; overflow-y:auto;" onClick="{{ stopProp }}">
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:22px 26px; border-bottom:1px solid #E6E7EB;">
+        <div style="font-size:18px; font-weight:500; color:#191C21;">Bulk request detail</div>
+        <button onClick="{{ closeModal }}" style="border:none; background:none; cursor:pointer;"><i class="pi-close" style="font-size:16px; color:#939EAE;"></i></button>
+      </div>
+      <div style="padding:22px 26px;">
+        <div style="border:1px solid #E6E7EB; border-radius:10px; padding:16px 18px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <div style="font-size:14px; font-weight:600; color:#191C21;">{{ bulkRequestDetail.usersCount }} users &mdash; {{ bulkRequestDetail.tier }}</div>
+            <div style="font-size:12px; color:#939EAE;">Requested by {{ bulkRequestDetail.requestedBy }} &middot; {{ bulkRequestDetail.createdAtLabel }}</div>
+          </div>
+          <span style="font-size:11px; font-weight:700; padding:3px 9px; border-radius:999px; background:{{ bulkRequestDetail.statusBg }}; color:{{ bulkRequestDetail.statusColor }};">{{ bulkRequestDetail.status }}</span>
+        </div>
+
+        <div style="border:1px solid #E6E7EB; border-radius:10px; padding:16px 18px; margin-bottom:14px;">
+          <div style="font-size:12px; color:#647184; margin-bottom:5px;">Free balance reason</div>
+          <div style="font-size:13px; color:#191C21; font-weight:500;">{{ bulkRequestDetail.freeReason }}</div>
+        </div>
+
+        <div style="font-size:14px; font-weight:600; color:#191C21; margin-bottom:10px;">Users ({{ bulkRequestDetail.usersCount }})</div>
+        <div style="border:1px solid #E6E7EB; border-radius:10px; max-height:260px; overflow-y:auto; margin-bottom:14px;">
+          <sc-for list="{{ bulkRequestDetail.users }}" as="bu" hint-placeholder-count="3">
+            <div style="padding:11px 14px; border-bottom:1px solid #F4F5F7;">
+              <div style="font-size:13.5px; font-weight:600; color:#191C21;">{{ bu.name }}</div>
+              <div style="font-size:11.5px; color:#939EAE;">{{ bu.privyId }}</div>
+            </div>
+          </sc-for>
+        </div>
+
+        <sc-if value="{{ bulkRequestDetail.showApprovedBy }}" hint-placeholder-val="{{ false }}">
+          <div style="font-size:12px; color:#939EAE; margin-bottom:10px;">by {{ bulkRequestDetail.approvedBy }}</div>
+        </sc-if>
+
+        <sc-if value="{{ bulkRequestDetail.canApprove }}" hint-placeholder-val="{{ false }}">
+          <div style="border:1px solid #FFE0AD; background:#FFFBF5; border-radius:10px; padding:14px 16px; display:flex; align-items:center; justify-content:space-between; gap:14px;">
+            <div style="font-size:12.5px; color:#8C5700;">Review detail batch sebelum menyetujui permintaan free top-up ini.</div>
+            <div style="display:flex; gap:8px; flex:none;">
+              <button onClick="{{ rejectBulkRequestFromDetail }}" style="border:1px solid #F6BCBB; background:#fff; color:#C22725; font-size:13px; font-weight:600; padding:9px 16px; border-radius:8px; cursor:pointer;">Reject</button>
+              <button onClick="{{ approveBulkRequestFromDetail }}" style="border:none; background:#E42E2C; color:#fff; font-size:13px; font-weight:600; padding:9px 18px; border-radius:8px; cursor:pointer;">Approve</button>
+            </div>
+          </div>
+        </sc-if>
       </div>
     </div>
   </div>
@@ -2347,6 +2399,7 @@ class Component extends DCLogic {
     personalBalanceType: 'regular', personalFreeReason: '',
     personalCustFirstName: '', personalCustLastName: '', personalCustEmail: '', personalCcEmails: '', personalNeedFracture: false,
     personalDetailOrderId: null, personalDetailReturnTo: null,
+    approvalBulkRequestId: null,
     personalDetailTab: 'details',
     userLogSearch: '', userLogDate: '', userLogFilterField: 'actor', userLogFilterDropdownOpen: false,
     ebsUserFilterField: 'name', ebsUserFilterDropdownOpen: false, ebsUserSearchQuery: '',
@@ -2672,7 +2725,7 @@ class Component extends DCLogic {
       id: uid('pord-'), privyId: u.privyId, invoiceNumber: Math.floor(1000000 + Math.random() * 900000) + '/PID-PERS/INV/' + (now.getMonth() + 1) + '/' + String(now.getFullYear()).slice(-2),
       orderId: uid('019f' + Math.random().toString(16).slice(2, 6) + '-'), checkoutId: uid('019f' + Math.random().toString(16).slice(2, 6) + '-'), productTrxId: 'ebs.' + uid('019f' + Math.random().toString(16).slice(2, 6) + '-'),
       ts: now, tier: req.tier, amount: 0, baseAmount: 0, tax: 0, discount: 0, paymentMethod: 'Diserahkan ke user', balanceType: 'free', freeReason: req.freeReason, batchId: req.batchId,
-      provider: '-', paymentType: 'Bank Transfer', vaNumber: '', status: 'approved', expiredAt: now, paidAt: now, custName: u.name, custEmail: u.privyId.toLowerCase() + '@example.com', createdBy: req.createdBy
+      provider: '-', paymentType: 'Bank Transfer', vaNumber: '', status: 'approved', expiredAt: now, paidAt: now, custName: u.name, custEmail: u.privyId.toLowerCase() + '@example.com', createdBy: req.createdBy, approvedBy: actor
     }));
     const personalBulkRequests = s.personalBulkRequests.map(r => r.id === id ? { ...r, status: 'approved', approvedBy: actor } : r);
     this.addAudit(actor, 'Approved bulk free personal top-up', req.users.length + ' users \u2192 ' + req.tier);
@@ -2685,6 +2738,9 @@ class Component extends DCLogic {
     this.addAudit(actor, 'Rejected bulk free personal top-up', req ? (req.users.length + ' users \u2192 ' + req.tier) : '');
     this.setState({ personalBulkRequests });
   }
+  openBulkRequestDetail(id) { this.setState({ modal: 'bulkRequestDetail', approvalBulkRequestId: id }); }
+  approveBulkRequestFromDetail() { this.approveBulkRequest(this.state.approvalBulkRequestId); this.closeModal(); }
+  rejectBulkRequestFromDetail() { this.rejectBulkRequest(this.state.approvalBulkRequestId); this.closeModal(); }
 
   // ---------- personal plan search ----------
   getPersonalTierPrice(tier) {
@@ -2768,7 +2824,7 @@ class Component extends DCLogic {
   clearUserLogFilter() { this.setState({ userLogSearch: '', userLogDate: '' }); }
 
   currentActor() {
-    return this.state.role === 'lead' ? 'Lead EBS - Verent' : 'EBS - ' + this.state.custFirstName;
+    return this.state.role === 'lead' ? 'Lead EBS - Verent' : 'EBS - Dimas Aprilian';
   }
 
   // ---------- nav ----------
@@ -3145,10 +3201,9 @@ class Component extends DCLogic {
         totalLabel: 'Free grant',
         status: o.status, statusLabel: o.status === 'pending_approval' ? 'pending approval' : o.status,
         statusBg: st.bg, statusColor: st.color,
-        showActions: isLead && o.status === 'pending_approval', reviewOnly: false,
+        showActions: isLead && o.status === 'pending_approval', reviewOnly: true,
         showStatusOnly: !(isLead && o.status === 'pending_approval'),
         approvedBy: o.approvedBy || '', showApprovedBy: !isLead && !!o.approvedBy && (o.status === 'approved' || o.status === 'rejected'),
-        approve: () => this.approvePersonalOrder(o.id), reject: () => this.rejectPersonalOrder(o.id),
         openDetail: () => this.openPersonalOrderDetail(o.id), ts: o.ts
       };
     });
@@ -3162,11 +3217,10 @@ class Component extends DCLogic {
         totalLabel: 'Free grant',
         status: r.status, statusLabel: r.status === 'pending_approval' ? 'pending approval' : r.status,
         statusBg: st.bg, statusColor: st.color,
-        showActions: isLead && r.status === 'pending_approval', reviewOnly: false,
+        showActions: isLead && r.status === 'pending_approval', reviewOnly: true,
         showStatusOnly: !(isLead && r.status === 'pending_approval'),
         approvedBy: r.approvedBy || '', showApprovedBy: !isLead && !!r.approvedBy,
-        approve: () => this.approveBulkRequest(r.id), reject: () => this.rejectBulkRequest(r.id),
-        openDetail: null, ts: r.createdAt
+        openDetail: () => this.openBulkRequestDetail(r.id), ts: r.createdAt
       };
     });
     let approvalList = [...enterpriseApprovalRows, ...personalApprovalRows, ...personalBulkApprovalRows]
@@ -3176,6 +3230,22 @@ class Component extends DCLogic {
     if (s.approvalsSearch.trim()) {
       const q = s.approvalsSearch.trim().toLowerCase();
       approvalList = approvalList.filter(r => (r.refLabel + ' ' + r.detailLabel + ' ' + r.subLabel + ' ' + r.requestedBy).toLowerCase().includes(q));
+    }
+
+    let bulkRequestDetail = null;
+    if (s.modal === 'bulkRequestDetail' && s.approvalBulkRequestId) {
+      const req = s.personalBulkRequests.find(r => r.id === s.approvalBulkRequestId);
+      if (req) {
+        const st = this.statusStyle(req.status);
+        bulkRequestDetail = {
+          id: req.id, usersCount: req.users.length, tier: req.tier,
+          users: req.users.map(u => ({ name: u.name, privyId: u.privyId })),
+          freeReason: req.freeReason || '-', requestedBy: req.createdBy || '-', createdAtLabel: fmtDateTime(req.createdAt),
+          status: req.status === 'pending_approval' ? 'pending approval' : req.status, statusBg: st.bg, statusColor: st.color,
+          approvedBy: req.approvedBy || '', showApprovedBy: !isLead && !!req.approvedBy,
+          canApprove: isLead && req.status === 'pending_approval'
+        };
+      }
     }
 
     // ---------- personal plans ----------
@@ -3459,6 +3529,9 @@ class Component extends DCLogic {
       approvalsFilterType: s.approvalsFilterType, onApprovalsFilterType: (e) => this.onApprovalsFilterType(e),
       approvalsFilterStatus: s.approvalsFilterStatus, onApprovalsFilterStatus: (e) => this.onApprovalsFilterStatus(e),
       approvalsSearch: s.approvalsSearch, onApprovalsSearch: (e) => this.onApprovalsSearch(e),
+      showBulkRequestDetailModal: s.modal === 'bulkRequestDetail',
+      bulkRequestDetail: bulkRequestDetail || { usersCount: 0, tier: '', users: [], freeReason: '', requestedBy: '', createdAtLabel: '', status: '', statusBg: '#F4F5F7', statusColor: '#647184', approvedBy: '', showApprovedBy: false, canApprove: false },
+      approveBulkRequestFromDetail: () => this.approveBulkRequestFromDetail(), rejectBulkRequestFromDetail: () => this.rejectBulkRequestFromDetail(),
 
       personalPlans,
       personalSearchQuery: s.personalSearchQuery, onPersonalSearchQuery: (e) => this.onPersonalSearchQuery(e),
@@ -3648,8 +3721,8 @@ class Component extends DCLogic {
       // order detail modal
       showOrderDetailModal: s.modal === 'orderDetail', detailOrder: detailOrder || this.emptyDetailOrder(),
       regenerateFromDetail: () => detailOrder && this.regenerateOrder(detailOrder.id),
-      approveFromDetail: () => { if (detailOrder) { this.approveRequest(detailOrder.id); this.closeModal(); } },
-      rejectFromDetail: () => { if (detailOrder) { this.rejectRequest(detailOrder.id); this.closeModal(); } },
+      approveFromDetail: () => { if (detailOrder) { (s.detailOrderSource === 'personal' ? this.approvePersonalOrder(detailOrder.id) : this.approveRequest(detailOrder.id)); this.closeModal(); } },
+      rejectFromDetail: () => { if (detailOrder) { (s.detailOrderSource === 'personal' ? this.rejectPersonalOrder(detailOrder.id) : this.rejectRequest(detailOrder.id)); this.closeModal(); } },
       viewInvoiceDoc: () => this.openDocPreview('invoice'), viewReceiptDoc: () => this.openDocPreview('receipt'), viewTaxInvoiceDoc: () => this.openDocPreview('tax_invoice'),
       resendInvoiceDoc: () => this.resendDoc('invoice'), resendReceiptDoc: () => this.resendDoc('receipt'), resendTaxInvoiceDoc: () => this.resendDoc('tax_invoice'),
       showDocPreviewModal: s.modal === 'docPreview', docPreview: docPreview || { docTitle: '', docNumber: '', items: [] },
@@ -3882,7 +3955,7 @@ class Component extends DCLogic {
       vatIssuedLabel: o.status === 'paid' ? fmtDate(new Date(o.ts.getTime() + 2 * 24 * 3600 * 1000)) : 'Belum terbit',
       dueDateLabel: fmtDateTime(o.expiredAt), expiredAtRaw: o.expiredAt,
       items: [{ ...item, priceLabel: rp(item.unit), taxLabel: rp(item.tax), totalLabel: item.total ? rp(item.total) : '-' }],
-      canRegenerate: false, canApprove: false,
+      canRegenerate: false, canApprove: o.status === 'pending_approval' && this.state.role === 'lead',
       checkoutId: o.checkoutId || '-', productTrxId: o.productTrxId || '-',
       providerLabel: o.provider ? (o.provider.charAt(0).toUpperCase() + o.provider.slice(1)) : '-',
       paymentTypeLabel: o.paymentType || '-',
