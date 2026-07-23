@@ -133,7 +133,7 @@
             <p style="font-size:14px; color:#647184;">Monitor enterprise records and jump into balance &amp; pricing detail.</p>
           </div>
 
-          <div style="display:flex; gap:10px; margin-bottom:18px; position:relative;">
+          <div style="display:flex; gap:10px; margin-bottom:12px; position:relative; flex-wrap:wrap;">
             <div style="position:relative;">
               <button onClick="{{ toggleFilterDropdown }}" style="display:flex; align-items:center; gap:10px; border:1px solid #CBD1D8; background:#FBFCFD; color:#1F2329; font-size:13px; font-weight:600; padding:10px 16px; border-radius:8px; cursor:pointer; min-width:150px; justify-content:space-between;">{{ filterFieldLabel }}<i class="{{ filterDropdownIcon }}" style="font-size:11px; color:#939EAE;"></i></button>
               <sc-if value="{{ filterDropdownOpen }}" hint-placeholder-val="{{ false }}">
@@ -144,16 +144,47 @@
                 </div>
               </sc-if>
             </div>
+            <div style="position:relative;">
+              <button onClick="{{ toggleExpiryFilterDropdown }}" style="display:flex; align-items:center; gap:10px; border:1px solid #CBD1D8; background:#FBFCFD; color:#1F2329; font-size:13px; font-weight:600; padding:10px 16px; border-radius:8px; cursor:pointer; min-width:190px; justify-content:space-between;">{{ entExpiryFilterLabel }}<i class="{{ expiryFilterDropdownIcon }}" style="font-size:11px; color:#939EAE;"></i></button>
+              <sc-if value="{{ expiryFilterDropdownOpen }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute; top:calc(100% + 4px); left:0; background:#FBFCFD; border:1px solid #E6E7EB; border-radius:10px; box-shadow:0 10px 15px -3px rgba(25,28,33,0.10); width:210px; z-index:20; padding:6px;">
+                  <sc-for list="{{ entExpiryFilterOptions }}" as="ef" hint-placeholder-count="4">
+                    <button onClick="{{ ef.select }}" style="display:flex; align-items:center; justify-content:space-between; width:100%; border:none; background:{{ ef.bg }}; color:#1F2329; font-size:13px; padding:9px 10px; border-radius:7px; cursor:pointer; text-align:left;">{{ ef.label }}<sc-if value="{{ ef.active }}" hint-placeholder-val="{{ false }}"><i class="pi-check" style="color:#0075D9; font-size:12px;"></i></sc-if></button>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </div>
             <input value="{{ searchQuery }}" onInput="{{ onSearchInput }}" placeholder="{{ searchPlaceholder }}" style="flex:1; max-width:420px; border:1px solid #CBD1D8; background:#FBFCFD; border-radius:8px; padding:10px 14px; font-size:13px; color:#1F2329; outline:none;" />
             <button style="border:none; background:#191C21; color:#fff; font-size:13px; font-weight:600; padding:10px 20px; border-radius:8px; cursor:pointer;">Search</button>
           </div>
 
+          <sc-if value="{{ showEntExpiryOptions }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap; margin-bottom:16px;">
+              <sc-if value="{{ isEntExpiryCustom }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <span style="font-size:12.5px; color:#647184;">From</span>
+                  <input type="date" value="{{ entExpiryFrom }}" onInput="{{ onEntExpiryFrom }}" style="border:1px solid #CBD1D8; background:#FBFCFD; border-radius:8px; padding:8px 10px; font-size:13px; color:#1F2329;" />
+                  <span style="font-size:12.5px; color:#647184;">To</span>
+                  <input type="date" value="{{ entExpiryTo }}" onInput="{{ onEntExpiryTo }}" style="border:1px solid #CBD1D8; background:#FBFCFD; border-radius:8px; padding:8px 10px; font-size:13px; color:#1F2329;" />
+                </div>
+              </sc-if>
+              <label style="display:flex; align-items:center; gap:8px; font-size:12.5px; color:#495260; cursor:pointer;">
+                <input type="checkbox" checked="{{ entExpiryIncludeExpired }}" onChange="{{ onEntExpiryIncludeExpired }}" style="width:15px; height:15px;" />
+                Include already expired
+              </label>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ showExpiryCounter }}" hint-placeholder-val="{{ false }}">
+            <div style="font-size:13px; font-weight:600; color:#495260; margin-bottom:10px;">{{ expiryCounterLabel }}</div>
+          </sc-if>
+
           <div style="background:#FBFCFD; border:1px solid #E6E7EB; border-radius:14px; overflow:hidden;">
-            <div style="display:grid; grid-template-columns:1.8fr 1.3fr 1.3fr 0.9fr 1.1fr 32px; padding:13px 20px; font-size:11px; font-weight:700; letter-spacing:0.3px; color:#939EAE; text-transform:uppercase; border-bottom:1px solid #F4F5F7;">
-              <div>Enterprise name</div><div>Enterprise ID</div><div>NPWP number</div><div>Status</div><div>Created at</div><div></div>
+            <div style="display:grid; grid-template-columns:1.6fr 1.1fr 1.1fr 0.8fr 1.1fr 1fr 32px; padding:13px 20px; font-size:11px; font-weight:700; letter-spacing:0.3px; color:#939EAE; text-transform:uppercase; border-bottom:1px solid #F4F5F7;">
+              <div>Enterprise name</div><div>Enterprise ID</div><div>NPWP number</div><div>Status</div><div>Plan Expiry</div><div>Created at</div><div></div>
             </div>
             <sc-for list="{{ filteredEnterprises }}" as="ent" hint-placeholder-count="5">
-              <div class="row-card" style="display:grid; grid-template-columns:1.8fr 1.3fr 1.3fr 0.9fr 1.1fr 32px; padding:16px 20px; border-bottom:1px solid #F4F5F7; align-items:center; cursor:pointer;" onClick="{{ ent.openDetail }}">
+              <div class="row-card" style="display:grid; grid-template-columns:1.6fr 1.1fr 1.1fr 0.8fr 1.1fr 1fr 32px; padding:16px 20px; border-bottom:1px solid #F4F5F7; align-items:center; cursor:pointer; background:{{ ent.rowBg }};" onClick="{{ ent.openDetail }}">
                 <div style="display:flex; align-items:center; gap:12px;">
                   <div style="width:36px; height:36px; border-radius:9px; background:#E5F3FF; color:#0061B3; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; flex:none;">{{ ent.initials }}</div>
                   <div>
@@ -164,10 +195,19 @@
                 <div style="display:flex; align-items:center; gap:8px; font-size:12.5px; color:#495260; font-family:'DM Mono',monospace;">{{ ent.uuid }}<button onClick="{{ ent.copyId }}" title="Copy" style="border:none; background:none; cursor:pointer; padding:2px;"><i class="pi-document-copy" style="font-size:12px; color:#939EAE;"></i></button></div>
                 <div style="font-size:13px; color:#495260;">{{ ent.npwp }}</div>
                 <div><span style="font-size:11px; font-weight:700; color:#248C3E; background:#EAF9EE; padding:3px 9px; border-radius:999px;">VERIFIED</span></div>
+                <div>
+                  <div style="font-size:13px; color:#495260;">{{ ent.planExpiryLabel }}</div>
+                  <sc-if value="{{ ent.expiryBadgeShow }}" hint-placeholder-val="{{ false }}">
+                    <span style="font-size:10px; font-weight:700; padding:2px 8px; border-radius:999px; background:{{ ent.expiryBadgeBg }}; color:{{ ent.expiryBadgeColor }};">{{ ent.expiryBadgeLabel }}</span>
+                  </sc-if>
+                </div>
                 <div style="font-size:13px; color:#495260;">{{ ent.createdAtLabel }}</div>
                 <div style="display:flex; justify-content:center;"><i class="pi-chevron-right" style="font-size:13px; color:#CBD1D8;"></i></div>
               </div>
             </sc-for>
+            <sc-if value="{{ noExpiringEnterprises }}" hint-placeholder-val="{{ false }}">
+              <div style="text-align:center; padding:44px 0; color:#939EAE; font-size:14px;">Tidak ada enterprise dengan masa aktif berakhir pada periode ini.</div>
+            </sc-if>
             <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 20px; font-size:12.5px; color:#647184;">
               <span>Page 1 of 1</span>
               <div style="display:flex; align-items:center; gap:14px;">
@@ -2395,6 +2435,7 @@ class Component extends DCLogic {
     searchQuery: '',
     filterField: 'name',
     filterDropdownOpen: false,
+    entExpiryFilter: 'all', expiryFilterDropdownOpen: false, entExpiryIncludeExpired: false, entExpiryFrom: '', entExpiryTo: '',
 
     enterprises: [
       { id: 'ent-bina', uuid: '26d66937-9223-49c7-be81-537667a1', name: 'Bina Harati Pama', pid: 'EIDIA4221', ownerPid: 'DIM0001', npwp: '415593060711000', syncBy: 'AB360538', createdAt: new Date('2026-06-19T02:20:00'), registeredBy: '-', updatedAt: new Date('2026-06-19T02:20:00'), updatedBy: 'AB360538',
@@ -3177,6 +3218,11 @@ class Component extends DCLogic {
 
   toggleFilterDropdown() { this.setState({ filterDropdownOpen: !this.state.filterDropdownOpen }); }
   setFilterField(f) { this.setState({ filterField: f, filterDropdownOpen: false }); }
+  toggleExpiryFilterDropdown() { this.setState({ expiryFilterDropdownOpen: !this.state.expiryFilterDropdownOpen }); }
+  setEntExpiryFilter(f) { this.setState({ entExpiryFilter: f, expiryFilterDropdownOpen: false }); }
+  onEntExpiryIncludeExpired(e) { this.setState({ entExpiryIncludeExpired: e.target.checked }); }
+  onEntExpiryFrom(e) { this.setState({ entExpiryFrom: e.target.value }); }
+  onEntExpiryTo(e) { this.setState({ entExpiryTo: e.target.value }); }
   copyToClipboard(text) { if (navigator.clipboard) navigator.clipboard.writeText(text).catch(() => {}); }
   setTab_details() { this.setState({ detailTab: 'details', companyProfileOpen: true }); }
   setTab_config() { this.setState({ detailTab: 'config', companyProfileOpen: false }); }
@@ -3263,8 +3309,50 @@ class Component extends DCLogic {
     const filterFieldOptions = ['name', 'enterprise_id', 'privy_id'].map(f => ({
       label: filterFieldMeta[f], active: s.filterField === f, bg: s.filterField === f ? '#E5F3FF' : 'transparent', select: () => this.setFilterField(f)
     }));
-    const filteredEnterprises = s.enterprises.filter(fieldMatch).map(e => ({
-      ...e, initials: initialsOf(e.name), createdAtLabel: fmtDateTime(e.createdAt), orderIdLike: e.id, openDetail: () => this.openEnterprise(e.id), copyId: (ev) => { if (ev && ev.stopPropagation) ev.stopPropagation(); this.copyToClipboard(e.pid); } }));
+
+    const entExpiryFilterMeta = { all: 'All', week: 'Expiring in 1 week', month: 'Expiring in 1 month', custom: 'Custom range' };
+    const entExpiryFilterOptions = ['all', 'week', 'month', 'custom'].map(f => ({
+      label: entExpiryFilterMeta[f], active: s.entExpiryFilter === f, bg: s.entExpiryFilter === f ? '#E5F3FF' : 'transparent', select: () => this.setEntExpiryFilter(f)
+    }));
+    const todayStart = new Date(); todayStart.setHours(0, 0, 0, 0);
+    const dayMs = 24 * 3600 * 1000;
+    const expiryMatch = (e) => {
+      if (s.entExpiryFilter === 'all') return true;
+      if (!e.regularExpiredAt) return false;
+      const expDay = new Date(e.regularExpiredAt); expDay.setHours(0, 0, 0, 0);
+      const isExpired = expDay.getTime() < todayStart.getTime();
+      if (isExpired) return s.entExpiryIncludeExpired;
+      if (s.entExpiryFilter === 'week') return expDay.getTime() <= todayStart.getTime() + 7 * dayMs;
+      if (s.entExpiryFilter === 'month') return expDay.getTime() <= todayStart.getTime() + 30 * dayMs;
+      if (s.entExpiryFilter === 'custom') {
+        if (!s.entExpiryFrom || !s.entExpiryTo) return true;
+        const from = new Date(s.entExpiryFrom).getTime();
+        const to = new Date(s.entExpiryTo).getTime();
+        return expDay.getTime() >= from && expDay.getTime() <= to;
+      }
+      return true;
+    };
+    const listExpiryBadge = (expiredAt) => {
+      if (!expiredAt) return { show: false, label: '', bg: '', color: '' };
+      const expDay = new Date(expiredAt); expDay.setHours(0, 0, 0, 0);
+      const days = Math.round((expDay.getTime() - todayStart.getTime()) / dayMs);
+      if (days < 0) return { show: true, label: 'Expired', bg: '#FCEAE9', color: '#C22725' };
+      if (days <= 7) return { show: true, label: 'Expiring soon', bg: '#FFF5E5', color: '#B37E00' };
+      return { show: false, label: '', bg: '', color: '' };
+    };
+    const filteredEnterprises = s.enterprises.filter(fieldMatch).filter(expiryMatch).map(e => {
+      const badge = s.entExpiryFilter !== 'all' ? listExpiryBadge(e.regularExpiredAt) : { show: false, label: '', bg: '', color: '' };
+      return {
+        ...e, initials: initialsOf(e.name), createdAtLabel: fmtDateTime(e.createdAt), orderIdLike: e.id, openDetail: () => this.openEnterprise(e.id), copyId: (ev) => { if (ev && ev.stopPropagation) ev.stopPropagation(); this.copyToClipboard(e.pid); },
+        planExpiryLabel: e.regularExpiredAt ? fmtDate(e.regularExpiredAt) : '-',
+        expiryBadgeShow: badge.show, expiryBadgeLabel: badge.label, expiryBadgeBg: badge.bg, expiryBadgeColor: badge.color,
+        rowBg: badge.show ? (badge.label === 'Expired' ? '#FFF7F6' : '#FFFDF5') : 'transparent'
+      };
+    });
+    const showExpiryCounter = s.entExpiryFilter !== 'all';
+    const expiryCounterWindowLabel = s.entExpiryFilter === 'week' ? '1 week' : (s.entExpiryFilter === 'month' ? '1 month' : 'the selected range');
+    const expiryCounterLabel = filteredEnterprises.length + ' enterprise(s) expiring within ' + expiryCounterWindowLabel;
+    const noExpiringEnterprises = showExpiryCounter && filteredEnterprises.length === 0;
 
     // ---------- selected enterprise detail ----------
     const selectedEnt = {
@@ -3635,6 +3723,15 @@ class Component extends DCLogic {
       searchQuery: s.searchQuery, onSearchInput: (e) => this.onSearchInput(e), filteredEnterprises, syncEnterprise: () => this.syncEnterprise(),
       filterFieldLabel: filterFieldMeta[s.filterField], filterFieldOptions, filterDropdownOpen: s.filterDropdownOpen, toggleFilterDropdown: () => this.toggleFilterDropdown(),
       filterDropdownIcon: s.filterDropdownOpen ? 'pi-chevron-up' : 'pi-chevron-down', searchPlaceholder: searchPlaceholderMap[s.filterField],
+
+      entExpiryFilterLabel: entExpiryFilterMeta[s.entExpiryFilter], entExpiryFilterOptions,
+      expiryFilterDropdownOpen: s.expiryFilterDropdownOpen, toggleExpiryFilterDropdown: () => this.toggleExpiryFilterDropdown(),
+      expiryFilterDropdownIcon: s.expiryFilterDropdownOpen ? 'pi-chevron-up' : 'pi-chevron-down',
+      isEntExpiryCustom: s.entExpiryFilter === 'custom', showEntExpiryOptions: s.entExpiryFilter !== 'all',
+      entExpiryFrom: s.entExpiryFrom, onEntExpiryFrom: (e) => this.onEntExpiryFrom(e),
+      entExpiryTo: s.entExpiryTo, onEntExpiryTo: (e) => this.onEntExpiryTo(e),
+      entExpiryIncludeExpired: s.entExpiryIncludeExpired, onEntExpiryIncludeExpired: (e) => this.onEntExpiryIncludeExpired(e),
+      showExpiryCounter, expiryCounterLabel, noExpiringEnterprises,
 
       checkoutExpiryHours: s.checkoutExpiryHours, onCheckoutExpiryHours: (e) => this.setState({ checkoutExpiryHours: e.target.value }),
       selectedEnt, backToList: () => this.go('list'), openTopupModal: () => this.openTopupModal(), viewTopupHistory: () => this.viewTopupHistory(),
