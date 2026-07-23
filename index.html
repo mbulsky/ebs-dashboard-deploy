@@ -248,10 +248,10 @@
             <div style="background:#FBFCFD; border:1px solid #E6E7EB; border-radius:14px; padding:20px 22px; margin-bottom:16px;">
               <div style="font-size:15px; font-weight:600; color:#191C21; margin-bottom:16px;">Company profile</div>
               <div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Enterprise name</div>
-              <input value="{{ entEditName }}" onInput="{{ onEntEditName }}" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:11px 14px; font-size:14px; color:#191C21; margin-bottom:16px;" />
+              <input value="{{ entEditName }}" disabled="{{ true }}" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:11px 14px; font-size:14px; margin-bottom:16px; background:#F4F5F7; color:#647184; cursor:not-allowed;" />
               <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
-                <div><div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Email</div><input value="{{ entEditEmail }}" onInput="{{ onEntEditEmail }}" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:11px 14px; font-size:14px; color:#191C21;" /></div>
-                <div><div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Phone</div><input value="{{ entEditPhone }}" onInput="{{ onEntEditPhone }}" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:11px 14px; font-size:14px; color:#191C21;" /></div>
+                <div><div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Email</div><input value="{{ entEditEmail }}" disabled="{{ true }}" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:11px 14px; font-size:14px; background:#F4F5F7; color:#647184; cursor:not-allowed;" /></div>
+                <div><div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Phone</div><input value="{{ entEditPhone }}" disabled="{{ true }}" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:11px 14px; font-size:14px; background:#F4F5F7; color:#647184; cursor:not-allowed;" /></div>
               </div>
               <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:18px;">
                 <div>
@@ -261,7 +261,7 @@
                     <span style="font-size:13.5px; color:#495260;">{{ selectedEnt.ownerName }}</span>
                   </div>
                 </div>
-                <div><div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Address</div><textarea value="{{ entEditAddress }}" onInput="{{ onEntEditAddress }}" rows="2" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:9px 14px; font-size:13px; color:#191C21; resize:vertical;"></textarea></div>
+                <div><div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Address</div><textarea value="{{ entEditAddress }}" disabled="{{ true }}" rows="2" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:9px 14px; font-size:13px; resize:vertical; background:#F4F5F7; color:#647184; cursor:not-allowed;"></textarea></div>
               </div>
             </div>
 
@@ -421,7 +421,7 @@
           </div>
 
           <div style="background:#FBFCFD; border:1px solid #E6E7EB; border-radius:14px; padding:20px 22px;">
-            <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:18px;">
+            <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:12px;">
               <select value="{{ topupFilterEnterprise }}" onChange="{{ onFilterEnterprise }}" style="border:1px solid #CBD1D8; border-radius:999px; padding:8px 14px; font-size:13px; color:#1F2329;">
                 <option value="all">All enterprises</option>
                 <sc-for list="{{ enterprises }}" as="feo" hint-placeholder-count="3"><option value="{{ feo.id }}">{{ feo.name }}</option></sc-for>
@@ -440,10 +440,35 @@
                 <option value="approved">Approved</option>
                 <option value="rejected">Rejected</option>
               </select>
+              <div style="position:relative;">
+                <button onClick="{{ toggleTopupDatePresetDropdown }}" style="display:flex; align-items:center; gap:10px; border:1px solid #CBD1D8; background:#FBFCFD; color:#1F2329; font-size:13px; font-weight:600; padding:9px 14px; border-radius:999px; cursor:pointer; min-width:150px; justify-content:space-between;">{{ topupDatePresetLabel }}<i class="{{ topupDatePresetDropdownIcon }}" style="font-size:11px; color:#939EAE;"></i></button>
+                <sc-if value="{{ topupDatePresetDropdownOpen }}" hint-placeholder-val="{{ false }}">
+                  <div style="position:absolute; top:calc(100% + 4px); left:0; background:#FBFCFD; border:1px solid #E6E7EB; border-radius:10px; box-shadow:0 10px 15px -3px rgba(25,28,33,0.10); width:180px; z-index:20; padding:6px;">
+                    <sc-for list="{{ topupDatePresetOptions }}" as="dp" hint-placeholder-count="5">
+                      <button onClick="{{ dp.select }}" style="display:flex; align-items:center; justify-content:space-between; width:100%; border:none; background:{{ dp.bg }}; color:#1F2329; font-size:13px; padding:9px 10px; border-radius:7px; cursor:pointer; text-align:left;">{{ dp.label }}<sc-if value="{{ dp.active }}" hint-placeholder-val="{{ false }}"><i class="pi-check" style="color:#0075D9; font-size:12px;"></i></sc-if></button>
+                    </sc-for>
+                  </div>
+                </sc-if>
+              </div>
               <div style="flex:1;"></div>
               <button onClick="{{ exportTopup }}" disabled="{{ topupExportBusy }}" style="display:flex; align-items:center; gap:7px; border:1px solid #CBD1D8; background:#FBFCFD; color:#1F2329; font-size:13px; font-weight:600; padding:9px 16px; border-radius:8px; cursor:pointer;"><i class="pi-download"></i>{{ exportButtonLabel }}</button>
               <sc-if value="{{ topupExportError }}" hint-placeholder-val="{{ false }}">
                 <span style="color:#C22725; font-size:12px;">{{ topupExportError }}</span>
+              </sc-if>
+            </div>
+
+            <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:12px;">
+              <input value="{{ topupFilterActor }}" onInput="{{ onTopupFilterActor }}" placeholder="Filter by actor (name or PrivyID)" style="border:1px solid #CBD1D8; background:#FBFCFD; border-radius:8px; padding:9px 14px; font-size:13px; color:#1F2329; outline:none; width:220px;" />
+              <input value="{{ topupSearchQuery }}" onInput="{{ onTopupSearchQuery }}" placeholder="Search invoice / enterprise / PrivyID" style="flex:1; max-width:320px; border:1px solid #CBD1D8; background:#FBFCFD; border-radius:8px; padding:9px 14px; font-size:13px; color:#1F2329; outline:none;" />
+              <sc-if value="{{ isTopupDateCustom }}" hint-placeholder-val="{{ false }}">
+                <span style="font-size:12.5px; color:#647184;">From</span>
+                <input type="date" value="{{ topupDateFrom }}" onInput="{{ onTopupDateFrom }}" style="border:1px solid #CBD1D8; background:#FBFCFD; border-radius:8px; padding:8px 10px; font-size:13px; color:#1F2329;" />
+                <span style="font-size:12.5px; color:#647184;">To</span>
+                <input type="date" value="{{ topupDateTo }}" onInput="{{ onTopupDateTo }}" style="border:1px solid #CBD1D8; background:#FBFCFD; border-radius:8px; padding:8px 10px; font-size:13px; color:#1F2329;" />
+              </sc-if>
+              <button onClick="{{ setTopupQuickFilterFreePending }}" style="border:1px solid #FFE0AD; background:#FFFBF5; color:#8C5700; font-size:12px; font-weight:600; padding:8px 14px; border-radius:999px; cursor:pointer; display:flex; align-items:center; gap:6px;"><i class="pi-shield-on" style="font-size:11px;"></i>Free + Pending approval</button>
+              <sc-if value="{{ isTopupFilterActive }}" hint-placeholder-val="{{ false }}">
+                <button onClick="{{ resetTopupFilters }}" style="border:none; background:none; color:#0075D9; font-size:12.5px; font-weight:600; cursor:pointer; padding:8px 4px;">Reset filters</button>
               </sc-if>
             </div>
 
@@ -951,7 +976,7 @@
               <option value="CC">CC</option>
             </select>
             <div style="font-size:12px; color:#647184; margin-bottom:5px;">Payment expiry (jam)</div>
-            <input type="number" min="1" value="{{ checkoutExpiryHours }}" onInput="{{ onCheckoutExpiryHours }}" style="width:120px; border:1px solid #CBD1D8; border-radius:8px; padding:9px 12px; font-size:13px;" />
+            <input type="number" value="{{ checkoutExpiryHours }}" disabled="{{ true }}" style="width:120px; border:1px solid #CBD1D8; border-radius:8px; padding:9px 12px; font-size:13px; background:#F4F5F7; color:#647184; cursor:not-allowed;" />
           </div>
           </sc-if>
 
@@ -1652,7 +1677,7 @@
               <option value="CC">CC</option>
             </select>
             <div style="font-size:12px; color:#647184; margin-bottom:5px;">Payment expiry (jam)</div>
-            <input type="number" min="1" value="{{ personalCheckoutExpiryHours }}" onInput="{{ onPersonalCheckoutExpiryHours }}" style="width:120px; border:1px solid #CBD1D8; border-radius:8px; padding:9px 12px; font-size:13px;" />
+            <input type="number" value="{{ personalCheckoutExpiryHours }}" disabled="{{ true }}" style="width:120px; border:1px solid #CBD1D8; border-radius:8px; padding:9px 12px; font-size:13px; background:#F4F5F7; color:#647184; cursor:not-allowed;" />
           </div>
           </sc-if>
 
@@ -1872,7 +1897,7 @@
               <option value="CC">CC</option>
             </select>
             <div style="font-size:12px; color:#647184; margin-top:14px; margin-bottom:5px;">Payment expiry (jam)</div>
-            <input type="number" min="1" value="{{ bulkCheckoutExpiryHours }}" onInput="{{ onBulkCheckoutExpiryHours }}" style="width:120px; border:1px solid #CBD1D8; border-radius:8px; padding:9px 12px; font-size:13px;" />
+            <input type="number" value="{{ bulkCheckoutExpiryHours }}" disabled="{{ true }}" style="width:120px; border:1px solid #CBD1D8; border-radius:8px; padding:9px 12px; font-size:13px; background:#F4F5F7; color:#647184; cursor:not-allowed;" />
           </div>
           </sc-if>
 
@@ -2533,6 +2558,8 @@ class Component extends DCLogic {
     topupFilterEnterprise: 'all',
     topupFilterType: 'all',
     topupFilterStatus: 'all',
+    topupFilterActor: '', topupSearchQuery: '',
+    topupDatePreset: '30d', topupDatePresetDropdownOpen: false, topupDateFrom: '', topupDateTo: '',
 
     // approvals filters
     approvalsFilterType: 'all',
@@ -2775,7 +2802,6 @@ class Component extends DCLogic {
   setBulkTier(t) { this.setState({ bulkTier: t }); }
   onBulkFreeReason(e) { this.setState({ bulkFreeReason: e.target.value }); }
   onBulkPaymentMethod(e) { this.setState({ bulkPaymentMethod: e.target.value }); }
-  onBulkCheckoutExpiryHours(e) { this.setState({ bulkCheckoutExpiryHours: e.target.value }); }
   parseBulkList() {
     const s = this.state;
     const ids = Array.from(new Set(s.bulkText.split(/[\n,]+/).map(x => x.trim()).filter(Boolean).map(x => x.toUpperCase())));
@@ -3233,26 +3259,67 @@ class Component extends DCLogic {
   onFilterEnterprise(e) { this.setState({ topupFilterEnterprise: e.target.value }); }
   onFilterType(e) { this.setState({ topupFilterType: e.target.value }); }
   onFilterStatus(e) { this.setState({ topupFilterStatus: e.target.value }); }
+  onTopupFilterActor(e) { this.setState({ topupFilterActor: e.target.value }); }
+  onTopupSearchQuery(e) { this.setState({ topupSearchQuery: e.target.value }); }
+  toggleTopupDatePresetDropdown() { this.setState({ topupDatePresetDropdownOpen: !this.state.topupDatePresetDropdownOpen }); }
+  setTopupDatePreset(v) { this.setState({ topupDatePreset: v, topupDatePresetDropdownOpen: false }); }
+  onTopupDateFrom(e) { this.setState({ topupDateFrom: e.target.value }); }
+  onTopupDateTo(e) { this.setState({ topupDateTo: e.target.value }); }
+  setTopupQuickFilterFreePending() { this.setState({ topupFilterType: 'free', topupFilterStatus: 'pending_approval' }); }
+  resetTopupFilters() {
+    this.setState({
+      topupFilterEnterprise: 'all', topupFilterType: 'all', topupFilterStatus: 'all',
+      topupFilterActor: '', topupSearchQuery: '', topupDatePreset: '30d', topupDateFrom: '', topupDateTo: ''
+    });
+  }
   onApprovalsFilterType(e) { this.setState({ approvalsFilterType: e.target.value }); }
   onApprovalsFilterStatus(e) { this.setState({ approvalsFilterStatus: e.target.value }); }
   onApprovalsSearch(e) { this.setState({ approvalsSearch: e.target.value }); }
+  getFilteredTopupOrders() {
+    const s = this.state;
+    let orders = s.topupOrders;
+    if (s.topupFilterEnterprise !== 'all') orders = orders.filter(o => o.enterpriseId === s.topupFilterEnterprise);
+    if (s.topupFilterType !== 'all') orders = orders.filter(o => o.balanceType === s.topupFilterType);
+    if (s.topupFilterStatus !== 'all') orders = orders.filter(o => o.status === s.topupFilterStatus);
+    const decorated = orders.map(o => this.decorateOrder(o, true));
+
+    let personalOrders = s.topupFilterEnterprise === 'all' ? s.personalOrders : [];
+    if (s.topupFilterType !== 'all') personalOrders = personalOrders.filter(o => o.balanceType === s.topupFilterType);
+    if (s.topupFilterStatus !== 'all') personalOrders = personalOrders.filter(o => o.status === s.topupFilterStatus);
+    const decoratedPersonal = personalOrders.map(o => this.decoratePersonalOrderForLog(o));
+
+    let rows = [...decorated, ...decoratedPersonal].sort((a, b) => new Date(b.createdAt || b.ts) - new Date(a.createdAt || a.ts));
+
+    const actorQ = s.topupFilterActor.trim().toLowerCase();
+    if (actorQ) rows = rows.filter(o => (o.createdBy || '').toLowerCase().includes(actorQ) || (o.approvedBy || '').toLowerCase().includes(actorQ));
+
+    const searchQ = s.topupSearchQuery.trim().toLowerCase();
+    if (searchQ) rows = rows.filter(o =>
+      (o.invoiceNumber || '').toLowerCase().includes(searchQ) ||
+      (o.enterpriseName || '').toLowerCase().includes(searchQ) ||
+      (o.custPrivyId || o.privyId || '').toLowerCase().includes(searchQ)
+    );
+
+    const now = new Date();
+    let dateFrom = null, dateTo = null;
+    if (s.topupDatePreset === '7d') dateFrom = new Date(now.getTime() - 7 * 24 * 3600 * 1000);
+    else if (s.topupDatePreset === '30d') dateFrom = new Date(now.getTime() - 30 * 24 * 3600 * 1000);
+    else if (s.topupDatePreset === 'month') dateFrom = new Date(now.getFullYear(), now.getMonth(), 1);
+    else if (s.topupDatePreset === 'custom') {
+      dateFrom = s.topupDateFrom ? new Date(s.topupDateFrom) : null;
+      dateTo = s.topupDateTo ? new Date(s.topupDateTo) : null;
+      if (dateTo) dateTo.setHours(23, 59, 59, 999);
+    }
+    if (dateFrom) rows = rows.filter(o => new Date(o.createdAt || o.ts).getTime() >= dateFrom.getTime());
+    if (dateTo) rows = rows.filter(o => new Date(o.createdAt || o.ts).getTime() <= dateTo.getTime());
+
+    return rows;
+  }
   exportTopup() {
     this.setState({ topupExportBusy: true });
     setTimeout(() => {
       try {
-        const s = this.state;
-        let orders = s.topupOrders;
-        if (s.topupFilterEnterprise !== 'all') orders = orders.filter(o => o.enterpriseId === s.topupFilterEnterprise);
-        if (s.topupFilterType !== 'all') orders = orders.filter(o => o.balanceType === s.topupFilterType);
-        if (s.topupFilterStatus !== 'all') orders = orders.filter(o => o.status === s.topupFilterStatus);
-        const decorated = orders.map(o => this.decorateOrder(o, true));
-
-        let personalOrders = s.topupFilterEnterprise === 'all' ? s.personalOrders : [];
-        if (s.topupFilterType !== 'all') personalOrders = personalOrders.filter(o => o.balanceType === s.topupFilterType);
-        if (s.topupFilterStatus !== 'all') personalOrders = personalOrders.filter(o => o.status === s.topupFilterStatus);
-        const decoratedPersonal = personalOrders.map(o => this.decoratePersonalOrderForLog(o));
-
-        const rows = [...decorated, ...decoratedPersonal].sort((a, b) => new Date(b.createdAt || b.ts) - new Date(a.createdAt || a.ts));
+        const rows = this.getFilteredTopupOrders();
         const escapeCsv = (v) => { const str = String(v === null || v === undefined ? '' : v); return /[",\n]/.test(str) ? '"' + str.replace(/"/g, '""') + '"' : str; };
         const header = ['Invoice', 'Enterprise / Personal', 'Balance Type', 'Status', 'Items', 'Total', 'By', 'Approved By'];
         const lines = [header.map(escapeCsv).join(',')];
@@ -3373,18 +3440,13 @@ class Component extends DCLogic {
     const entAuditLog = s.auditLog.filter(a => a.enterpriseId === ent.id).sort((a, b) => b.ts - a.ts).map(a => ({ ...a, tsLabel: fmtDateTime(a.ts) }));
 
     // ---------- global topup list ----------
-    let filteredTopupOrders = s.topupOrders;
-    if (s.topupFilterEnterprise !== 'all') filteredTopupOrders = filteredTopupOrders.filter(o => o.enterpriseId === s.topupFilterEnterprise);
-    if (s.topupFilterType !== 'all') filteredTopupOrders = filteredTopupOrders.filter(o => o.balanceType === s.topupFilterType);
-    if (s.topupFilterStatus !== 'all') filteredTopupOrders = filteredTopupOrders.filter(o => o.status === s.topupFilterStatus);
-    filteredTopupOrders = filteredTopupOrders.map(o => this.decorateOrder(o, true));
-
-    // personal + bulk personal top-ups aren't tied to an enterprise, so only fold them in when no specific enterprise is picked
-    let filteredPersonalLogOrders = s.topupFilterEnterprise === 'all' ? s.personalOrders : [];
-    if (s.topupFilterType !== 'all') filteredPersonalLogOrders = filteredPersonalLogOrders.filter(o => o.balanceType === s.topupFilterType);
-    if (s.topupFilterStatus !== 'all') filteredPersonalLogOrders = filteredPersonalLogOrders.filter(o => o.status === s.topupFilterStatus);
-    filteredTopupOrders = [...filteredTopupOrders, ...filteredPersonalLogOrders.map(o => this.decoratePersonalOrderForLog(o))]
-      .sort((a, b) => new Date(b.createdAt || b.ts) - new Date(a.createdAt || a.ts));
+    const filteredTopupOrders = this.getFilteredTopupOrders();
+    const topupDatePresetMeta = { '7d': 'Last 7 days', '30d': 'Last 30 days', month: 'This month', custom: 'Custom range', all: 'All time' };
+    const topupDatePresetOptions = ['7d', '30d', 'month', 'custom', 'all'].map(p => ({
+      label: topupDatePresetMeta[p], active: s.topupDatePreset === p, bg: s.topupDatePreset === p ? '#E5F3FF' : 'transparent', select: () => this.setTopupDatePreset(p)
+    }));
+    const isTopupFilterActive = s.topupFilterEnterprise !== 'all' || s.topupFilterType !== 'all' || s.topupFilterStatus !== 'all' ||
+      !!s.topupFilterActor.trim() || !!s.topupSearchQuery.trim() || s.topupDatePreset !== '30d';
 
     // ---------- approvals (unified: enterprise + personal single + personal bulk) ----------
     const relevantApprovals = isLead
@@ -3733,7 +3795,7 @@ class Component extends DCLogic {
       entExpiryIncludeExpired: s.entExpiryIncludeExpired, onEntExpiryIncludeExpired: (e) => this.onEntExpiryIncludeExpired(e),
       showExpiryCounter, expiryCounterLabel, noExpiringEnterprises,
 
-      checkoutExpiryHours: s.checkoutExpiryHours, onCheckoutExpiryHours: (e) => this.setState({ checkoutExpiryHours: e.target.value }),
+      checkoutExpiryHours: s.checkoutExpiryHours,
       selectedEnt, backToList: () => this.go('list'), openTopupModal: () => this.openTopupModal(), viewTopupHistory: () => this.viewTopupHistory(),
       companyProfileOpen: s.companyProfileOpen, closeCompanyProfile: () => this.closeCompanyProfile(), showDefaultDetails: !s.companyProfileOpen,
       entEditName: s.entEditName, onEntEditName: (e) => this.onEntEditName(e),
@@ -3762,6 +3824,17 @@ class Component extends DCLogic {
       enterprises: s.enterprises, filteredTopupOrders, noFilteredOrders: filteredTopupOrders.length === 0, exportTopup: () => this.exportTopup(),
       topupExportBusy: s.topupExportBusy, topupExportError: s.topupExportError,
       exportButtonLabel: s.topupExportBusy ? 'Generating export…' : 'Export',
+
+      topupFilterActor: s.topupFilterActor, onTopupFilterActor: (e) => this.onTopupFilterActor(e),
+      topupSearchQuery: s.topupSearchQuery, onTopupSearchQuery: (e) => this.onTopupSearchQuery(e),
+      topupDatePresetLabel: topupDatePresetMeta[s.topupDatePreset], topupDatePresetOptions,
+      topupDatePresetDropdownOpen: s.topupDatePresetDropdownOpen, toggleTopupDatePresetDropdown: () => this.toggleTopupDatePresetDropdown(),
+      topupDatePresetDropdownIcon: s.topupDatePresetDropdownOpen ? 'pi-chevron-up' : 'pi-chevron-down',
+      isTopupDateCustom: s.topupDatePreset === 'custom',
+      topupDateFrom: s.topupDateFrom, onTopupDateFrom: (e) => this.onTopupDateFrom(e),
+      topupDateTo: s.topupDateTo, onTopupDateTo: (e) => this.onTopupDateTo(e),
+      setTopupQuickFilterFreePending: () => this.setTopupQuickFilterFreePending(),
+      resetTopupFilters: () => this.resetTopupFilters(), isTopupFilterActive,
 
       approvalsTitle: isLead ? 'Approvals' : 'My free top-up requests',
       approvalsSubtitle: isLead ? 'Setiap top-up free (enterprise maupun personal) membutuhkan persetujuan Lead EBS sebelum saldo diberikan.' : 'Pantau status permintaan top-up saldo gratis (enterprise maupun personal) yang Anda ajukan.',
@@ -3804,7 +3877,7 @@ class Component extends DCLogic {
       bulkFreeReason: s.bulkFreeReason, onBulkFreeReason: (e) => this.onBulkFreeReason(e),
       bulkShowPaymentSection: s.bulkBalanceType !== 'free',
       bulkPaymentMethod: s.bulkPaymentMethod, onBulkPaymentMethod: (e) => this.onBulkPaymentMethod(e),
-      bulkCheckoutExpiryHours: s.bulkCheckoutExpiryHours, onBulkCheckoutExpiryHours: (e) => this.onBulkCheckoutExpiryHours(e),
+      bulkCheckoutExpiryHours: s.bulkCheckoutExpiryHours,
       bulkReqFirstName: s.bulkReqFirstName, onBulkReqFirstName: (e) => this.onBulkReqFirstName(e),
       bulkReqLastName: s.bulkReqLastName, onBulkReqLastName: (e) => this.onBulkReqLastName(e),
       bulkReqPrivyId: s.bulkReqPrivyId, onBulkReqPrivyId: (e) => this.onBulkReqPrivyId(e),
@@ -3829,7 +3902,7 @@ class Component extends DCLogic {
       bulkResultIsApprovalPending: s.bulkBalanceType === 'free' && s.role === 'ebs',
       bulkResultIsPaymentDetails: s.bulkLastOrders.length > 0,
       bulkLastOrders: s.bulkLastOrders.map(o => ({ ...o, amountLabel: rp(o.amount), expiredAtLabel: fmtDateTime(o.expiredAt), hasVaNumber: !!o.vaNumber, viewDetail: () => this.viewBulkOrder(o.id) })),
-      personalCheckoutExpiryHours: s.personalCheckoutExpiryHours, onPersonalCheckoutExpiryHours: (e) => this.setState({ personalCheckoutExpiryHours: e.target.value }),
+      personalCheckoutExpiryHours: s.personalCheckoutExpiryHours,
       openPersonalTopupModal: () => this.openPersonalTopupModal(),
       showPersonalTopupModal: s.modal === 'personalTopup',
       personalTopupStepTier: s.personalTopupStep === 'tier', personalTopupStepCustomer: s.personalTopupStep === 'customer', personalTopupStepResult: s.personalTopupStep === 'result',
