@@ -262,19 +262,32 @@
             <div style="background:#FBFCFD; border:1px solid #E6E7EB; border-radius:14px; padding:20px 22px; margin-bottom:16px;">
               <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px;">
                 <div style="border:1px solid #E6E7EB; border-radius:12px; padding:16px 18px;">
-                  <div style="font-size:13px; color:#191C21; margin-bottom:10px;">Enterprise Plan</div>
+                  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+                    <div style="font-size:13px; color:#191C21;">Enterprise Plan</div>
+                    <sc-if value="{{ selectedEnt.regularExpiryBadge.show }}" hint-placeholder-val="{{ false }}">
+                      <span style="font-size:10px; font-weight:700; padding:2px 8px; border-radius:999px; background:{{ selectedEnt.regularExpiryBadge.bg }}; color:{{ selectedEnt.regularExpiryBadge.color }};">{{ selectedEnt.regularExpiryBadge.label }}</span>
+                    </sc-if>
+                  </div>
                   <div style="font-size:22px; font-weight:700; color:#0075D9;">Active</div>
                   <div style="font-size:12px; color:#939EAE; margin-top:10px;">Expired at {{ selectedEnt.regularExpiredLabel }}</div>
                 </div>
                 <div style="border:1px solid #E6E7EB; border-radius:12px; padding:16px 18px;">
-                  <div style="margin-bottom:10px;">
+                  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
                     <div style="font-size:13px; color:#191C21;">Employee account</div>
+                    <sc-if value="{{ selectedEnt.regularExpiryBadge.show }}" hint-placeholder-val="{{ false }}">
+                      <span style="font-size:10px; font-weight:700; padding:2px 8px; border-radius:999px; background:{{ selectedEnt.regularExpiryBadge.bg }}; color:{{ selectedEnt.regularExpiryBadge.color }};">{{ selectedEnt.regularExpiryBadge.label }}</span>
+                    </sc-if>
                   </div>
                   <div style="font-size:26px; font-weight:700; color:#0075D9;">{{ selectedEnt.combinedAvailable }}</div>
                   <div style="font-size:12px; color:#939EAE; margin-top:10px;">Expired at {{ selectedEnt.regularExpiredLabel }}</div>
                 </div>
                 <div style="border:1px solid #E6E7EB; border-radius:12px; padding:16px 18px;">
-                  <div style="font-size:13px; color:#191C21; margin-bottom:10px;">e-Meterai</div>
+                  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+                    <div style="font-size:13px; color:#191C21;">e-Meterai</div>
+                    <sc-if value="{{ selectedEnt.stampExpiryBadge.show }}" hint-placeholder-val="{{ false }}">
+                      <span style="font-size:10px; font-weight:700; padding:2px 8px; border-radius:999px; background:{{ selectedEnt.stampExpiryBadge.bg }}; color:{{ selectedEnt.stampExpiryBadge.color }};">{{ selectedEnt.stampExpiryBadge.label }}</span>
+                    </sc-if>
+                  </div>
                   <div style="font-size:26px; font-weight:700; color:#0075D9;">{{ selectedEnt.stampAvailable }}</div>
                   <div style="font-size:12px; color:#939EAE; margin-top:10px;">Expired at {{ selectedEnt.stampExpiredLabel }}</div>
                 </div>
@@ -348,7 +361,9 @@
                   </div>
                   <div style="text-align:right; display:flex; flex-direction:column; align-items:flex-end; gap:6px;">
                     <div style="font-size:15px; font-weight:700; color:#0061B3; background:#E5F3FF; padding:6px 14px; border-radius:8px;">{{ pitem.baseLabel }}</div>
-                    <button onClick="{{ pitem.openSpecial }}" style="border:none; background:none; color:#0075D9; font-size:12px; font-weight:600; cursor:pointer; padding:0;">Edit price</button>
+                    <sc-if value="{{ isLead }}" hint-placeholder-val="{{ false }}">
+                      <button onClick="{{ pitem.openSpecial }}" style="border:none; background:none; color:#0075D9; font-size:12px; font-weight:600; cursor:pointer; padding:0;">Edit price</button>
+                    </sc-if>
                   </div>
                 </div>
               </sc-for>
@@ -386,7 +401,10 @@
                 <option value="rejected">Rejected</option>
               </select>
               <div style="flex:1;"></div>
-              <button onClick="{{ exportTopup }}" style="display:flex; align-items:center; gap:7px; border:1px solid #CBD1D8; background:#FBFCFD; color:#1F2329; font-size:13px; font-weight:600; padding:9px 16px; border-radius:8px; cursor:pointer;"><i class="pi-download"></i>Export</button>
+              <button onClick="{{ exportTopup }}" disabled="{{ topupExportBusy }}" style="display:flex; align-items:center; gap:7px; border:1px solid #CBD1D8; background:#FBFCFD; color:#1F2329; font-size:13px; font-weight:600; padding:9px 16px; border-radius:8px; cursor:pointer;"><i class="pi-download"></i>{{ exportButtonLabel }}</button>
+              <sc-if value="{{ topupExportError }}" hint-placeholder-val="{{ false }}">
+                <span style="color:#C22725; font-size:12px;">{{ topupExportError }}</span>
+              </sc-if>
             </div>
 
             <div style="display:grid; grid-template-columns:1.1fr 1.2fr 0.9fr 0.8fr 0.6fr 0.8fr 1.1fr 36px; padding:11px 16px; font-size:11px; font-weight:700; letter-spacing:0.3px; color:#939EAE; text-transform:uppercase; border-bottom:1px solid #F4F5F7;">
@@ -829,7 +847,7 @@
                       <span style="font-size:10px; font-weight:700; color:#B37E00; background:#FFF7E5; border:1px solid #FFE7AD; padding:2px 8px; border-radius:999px;"><i class="pi-money" style="font-size:9px;"></i> FREE</span>
                     </sc-if>
                   </div>
-                  <div style="font-size:12px; color:#939EAE;">{{ ci.typeLabel }} &middot; Qty {{ ci.qty }} &middot; {{ ci.priceLabel }}</div>
+                  <div style="font-size:12px; color:#939EAE;">{{ ci.typeLabel }} &middot; Qty {{ ci.qty }} &middot; Duration {{ ci.durationLabel }} &middot; {{ ci.priceLabel }}</div>
                 </div>
                 <button onClick="{{ ci.remove }}" style="border:none; background:none; cursor:pointer;"><i class="pi-trash" style="color:#C22725; font-size:14px;"></i></button>
               </div>
@@ -902,12 +920,12 @@
               <div style="font-size:14px; font-weight:600; color:#191C21;">Order Calculation Result</div>
               <span style="font-size:11px; font-weight:600; color:#0075D9; background:#E5F3FF; padding:3px 10px; border-radius:999px;">{{ cart.length }} item(s)</span>
             </div>
-            <div style="display:grid; grid-template-columns:1.4fr 0.8fr 0.9fr 1fr 0.7fr 1fr; font-size:11px; font-weight:700; color:#939EAE; text-transform:uppercase; padding-bottom:8px; border-bottom:1px solid #E6E7EB; margin-bottom:6px;">
-              <div>Nama</div><div>Type</div><div>Qty</div><div>Price/unit</div><div>Tax</div><div>Total</div>
+            <div style="display:grid; grid-template-columns:1.2fr 0.7fr 0.6fr 0.8fr 1fr 0.7fr 1fr; font-size:11px; font-weight:700; color:#939EAE; text-transform:uppercase; padding-bottom:8px; border-bottom:1px solid #E6E7EB; margin-bottom:6px;">
+              <div>Nama</div><div>Type</div><div>Qty</div><div>Duration</div><div>Price/unit</div><div>Tax</div><div>Total</div>
             </div>
             <sc-for list="{{ cart }}" as="cci" hint-placeholder-count="2">
-              <div style="display:grid; grid-template-columns:1.4fr 0.8fr 0.9fr 1fr 0.7fr 1fr; font-size:13px; color:#191C21; padding:10px 0; border-bottom:1px solid #F4F5F7; align-items:center;">
-                <div style="font-weight:600; display:flex; align-items:center; gap:6px;">{{ cci.name }}<sc-if value="{{ cci.isFree }}" hint-placeholder-val="{{ false }}"><span style="font-size:9.5px; font-weight:700; color:#B37E00; background:#FFF7E5; border:1px solid #FFE7AD; padding:1px 6px; border-radius:999px;">FREE</span></sc-if></div><div>{{ cci.typeLabel }}</div><div>{{ cci.qty }}</div><div>{{ cci.priceLabel }}</div><div>{{ cci.taxLabel }}</div><div style="font-weight:700;">{{ cci.totalLabel }}</div>
+              <div style="display:grid; grid-template-columns:1.2fr 0.7fr 0.6fr 0.8fr 1fr 0.7fr 1fr; font-size:13px; color:#191C21; padding:10px 0; border-bottom:1px solid #F4F5F7; align-items:center;">
+                <div style="font-weight:600; display:flex; align-items:center; gap:6px;">{{ cci.name }}<sc-if value="{{ cci.isFree }}" hint-placeholder-val="{{ false }}"><span style="font-size:9.5px; font-weight:700; color:#B37E00; background:#FFF7E5; border:1px solid #FFE7AD; padding:1px 6px; border-radius:999px;">FREE</span></sc-if></div><div>{{ cci.typeLabel }}</div><div>{{ cci.qty }}</div><div>{{ cci.durationLabel }}</div><div>{{ cci.priceLabel }}</div><div>{{ cci.taxLabel }}</div><div style="font-weight:700;">{{ cci.totalLabel }}</div>
               </div>
             </sc-for>
             <div style="margin-top:12px; display:flex; flex-direction:column; gap:6px; font-size:13px; color:#495260;">
@@ -1084,6 +1102,9 @@
           </div>
           <sc-if value="{{ detailOrder.docsUnavailableNote }}" hint-placeholder-val="{{ true }}">
             <div style="font-size:12.5px; color:#939EAE;">Dokumen lain (receipt, tax invoice) tersedia setelah pembayaran berhasil.</div>
+          </sc-if>
+          <sc-if value="{{ detailOrder.docsPendingApprovalNote }}" hint-placeholder-val="{{ false }}">
+            <div style="font-size:12.5px; color:#939EAE;">Dokumen belum tersedia — menunggu approval Lead EBS.</div>
           </sc-if>
         </div>
         <div style="border:1px solid #E6E7EB; border-radius:10px; padding:16px 18px; margin-bottom:14px; display:grid; grid-template-columns:1fr 1fr; gap:14px; font-size:13px;">
@@ -1438,6 +1459,9 @@
         <input type="number" value="{{ specialPriceValue }}" onInput="{{ onSpecialPriceValue }}" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px; margin-bottom:14px;" />
         <div style="font-size:12px; color:#647184; margin-bottom:5px;">Notes / alasan (wajib, masuk audit log)</div>
         <textarea value="{{ specialPriceNotes }}" onInput="{{ onSpecialPriceNotes }}" rows="3" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px; resize:vertical;"></textarea>
+        <sc-if value="{{ specialPriceError }}" hint-placeholder-val="{{ false }}">
+          <div style="color:#C22725; font-size:12px; margin-top:10px;">{{ specialPriceError }}</div>
+        </sc-if>
         <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:18px;">
           <button onClick="{{ closeModal }}" style="border:1px solid #CBD1D8; background:#fff; color:#1F2329; font-size:13px; font-weight:600; padding:9px 18px; border-radius:8px; cursor:pointer;">Cancel</button>
           <button onClick="{{ saveSpecialPrice }}" style="border:none; background:#E42E2C; color:#fff; font-size:13px; font-weight:600; padding:9px 20px; border-radius:8px; cursor:pointer;">Save</button>
@@ -1596,11 +1620,14 @@
             <div style="font-size:14px; font-weight:600; color:#191C21; margin-bottom:14px;">Order Calculation Result</div>
             <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #F4F5F7;">
               <div style="font-size:14px; font-weight:600; color:#191C21;">Personal Plan &mdash; {{ personalTierLabel }}</div>
-              <div style="font-size:14px; font-weight:700; color:#191C21;">{{ personalTierAmountLabel }}</div>
+              <div style="font-size:14px; font-weight:700; color:#191C21;">{{ personalGrandTotalLabel }}</div>
             </div>
-            <div style="display:flex; justify-content:space-between; font-size:16px; font-weight:700; color:#191C21; padding-top:12px;"><span>Grand Total</span><span>{{ personalTierAmountLabel }}</span></div>
+            <div style="display:flex; justify-content:space-between; font-size:16px; font-weight:700; color:#191C21; padding-top:12px;"><span>Grand Total</span><span>{{ personalGrandTotalLabel }}</span></div>
           </div>
 
+          <sc-if value="{{ personalCustomerStepError }}" hint-placeholder-val="{{ false }}">
+            <div style="color:#C22725; font-size:12px; margin-top:12px;">{{ personalCustomerStepError }}</div>
+          </sc-if>
           <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
             <button onClick="{{ backToPersonalTier }}" style="border:1px solid #CBD1D8; background:#fff; color:#1F2329; font-size:13px; font-weight:600; padding:10px 20px; border-radius:8px; cursor:pointer;"><i class="pi-arrow-left"></i> Back</button>
             <button onClick="{{ processPersonalOrder }}" disabled="{{ !canProcessPersonalOrder }}" style="border:none; background:#E42E2C; color:#fff; font-size:13px; font-weight:600; padding:10px 22px; border-radius:8px; cursor:pointer;">Process order</button>
@@ -1991,6 +2018,9 @@
           <sc-if value="{{ detailOrder.docsUnavailableNote }}" hint-placeholder-val="{{ true }}">
             <div style="font-size:12.5px; color:#939EAE;">Dokumen lain (receipt, tax invoice) tersedia setelah pembayaran berhasil.</div>
           </sc-if>
+          <sc-if value="{{ detailOrder.docsPendingApprovalNote }}" hint-placeholder-val="{{ false }}">
+            <div style="font-size:12.5px; color:#939EAE;">Dokumen belum tersedia — menunggu approval Lead EBS.</div>
+          </sc-if>
         </div>
 
         <div style="border:1px solid #E6E7EB; border-radius:10px; padding:16px 18px; margin-bottom:14px; display:grid; grid-template-columns:1fr 1fr; gap:14px; font-size:13px;">
@@ -2205,7 +2235,7 @@
         <sc-if value="{{ ebsAssignShowResults }}" hint-placeholder-val="{{ false }}">
           <div style="border:1px solid #E6E7EB; border-radius:10px; margin-bottom:14px; overflow:hidden;">
             <sc-for list="{{ ebsAssignResults }}" as="cand" hint-placeholder-count="1">
-              <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 14px; border-bottom:1px solid #F4F5F7;">
+              <div onClick="{{ cand.select }}" style="display:flex; align-items:center; justify-content:space-between; padding:12px 14px; border-bottom:1px solid #F4F5F7; cursor:pointer;">
                 <div style="display:flex; align-items:center; gap:12px;">
                   <div style="width:40px; height:40px; border-radius:999px; background:{{ cand.avatarBg }}; color:#fff; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:700; flex:none;">{{ cand.avatarInitials }}</div>
                   <div>
@@ -2213,7 +2243,7 @@
                     <div style="font-size:12.5px; color:#939EAE;">{{ cand.privyId }}</div>
                   </div>
                 </div>
-                <button onClick="{{ cand.select }}" style="border:none; background:none; cursor:pointer; color:#0075D9; width:26px; height:26px; display:flex; align-items:center; justify-content:center;"><i class="pi-add-plus" style="font-size:18px;"></i></button>
+                <button onClick="{{ cand.select }}" style="border:none; background:none; cursor:pointer; color:#0075D9; width:26px; height:26px; display:flex; align-items:center; justify-content:center; pointer-events:none;"><i class="pi-add-plus" style="font-size:18px;"></i></button>
               </div>
             </sc-for>
           </div>
@@ -2443,7 +2473,7 @@ class Component extends DCLogic {
     personalSearchQuery: '', personalSearchSubmitted: '',
     personalTopupTier: 'monthly', personalTopupStep: 'tier', personalPaymentMethod: '', personalLastOrder: null,
     personalBalanceType: 'regular', personalFreeReason: '',
-    personalCustFirstName: '', personalCustLastName: '', personalCustEmail: '', personalCcEmails: '', personalNeedFracture: false,
+    personalCustFirstName: '', personalCustLastName: '', personalCustEmail: '', personalCcEmails: '', personalNeedFracture: false, personalCustomerStepError: '',
     personalDetailOrderId: null, personalDetailReturnTo: null,
     approvalBulkRequestId: null, bulkRequestExpandedUser: null,
     personalDetailTab: 'details',
@@ -2467,6 +2497,7 @@ class Component extends DCLogic {
     approvalsFilterType: 'all',
     approvalsFilterStatus: 'all',
     approvalsSearch: '',
+    topupExportBusy: false, topupExportError: '',
 
     // topup wizard modal
     modal: null, // 'topup' | 'orderDetail' | 'specialPrice' | 'planHistory'
@@ -2490,6 +2521,7 @@ class Component extends DCLogic {
     specialPriceItem: null,
     specialPriceValue: '',
     specialPriceNotes: '',
+    specialPriceError: '',
     planHistoryUser: null,
 
     products: INITIAL_PRODUCTS_ACCOUNT.concat(INITIAL_PRODUCTS_STAMP).concat(INITIAL_PRODUCTS_BULKSIGN).map((p, i) => ({ ...p, id: uid('prod-'), createdAt: new Date(2026, 4, 20, 12, 20 - i) })),
@@ -2531,6 +2563,13 @@ class Component extends DCLogic {
       rejected: { bg: '#FCEAE9', color: '#C22725' }
     };
     return map[status] || map.unpaid;
+  }
+  expiryBadge(expiredAt) {
+    if (!expiredAt) return { show: false, label: '', bg: '', color: '' };
+    const days = Math.ceil((expiredAt.getTime() - new Date().getTime()) / (24 * 3600 * 1000));
+    if (days < 0) return { show: true, label: 'Expired', bg: '#FCEAE9', color: '#C22725' };
+    if (days <= 30) return { show: true, label: days + ' hari lagi', bg: '#FFF5E5', color: '#B37E00' };
+    return { show: false, label: '', bg: '', color: '' };
   }
 
   addAudit(actor, action, detail, enterpriseId) {
@@ -2802,7 +2841,7 @@ class Component extends DCLogic {
     const parts = match ? match.name.split(' ') : ['', ''];
     this.setState({ modal: 'personalTopup', personalTopupTier: 'monthly', personalTopupStep: 'tier', personalPaymentMethod: '', personalCheckoutExpiryHours: String(this.state.paymentExpiryHours),
       personalBalanceType: 'regular', personalFreeReason: '',
-      personalCustFirstName: parts[0] || '', personalCustLastName: parts.slice(1).join(' ') || '', personalCustEmail: '', personalCcEmails: '', personalNeedFracture: false });
+      personalCustFirstName: parts[0] || '', personalCustLastName: parts.slice(1).join(' ') || '', personalCustEmail: '', personalCcEmails: '', personalNeedFracture: false, personalCustomerStepError: '' });
   }
   setPersonalTopupTier(tier) { this.setState({ personalTopupTier: tier }); }
   onPersonalPaymentMethod(e) { this.setState({ personalPaymentMethod: e.target.value }); }
@@ -2820,7 +2859,10 @@ class Component extends DCLogic {
     const match = s.personalPlans.find(pp => pp.privyId.toLowerCase() === s.personalSearchSubmitted.toLowerCase());
     if (!match) return;
     const isFree = s.personalBalanceType === 'free';
-    if (!isFree && !s.personalPaymentMethod) return;
+    if (isFree && !s.personalFreeReason.trim()) { this.setState({ personalCustomerStepError: 'Alasan pemberian saldo gratis wajib diisi.' }); return; }
+    if (!isFree && !s.personalPaymentMethod) { this.setState({ personalCustomerStepError: 'Pilih payment method terlebih dahulu.' }); return; }
+    if (!s.personalCustEmail.trim()) { this.setState({ personalCustomerStepError: 'Email customer wajib diisi.' }); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s.personalCustEmail.trim())) { this.setState({ personalCustomerStepError: 'Format email tidak valid.' }); return; }
     const isEbsFree = isFree && s.role === 'ebs';
     const tierLabel = s.personalTopupTier === 'yearly' ? 'Yearly' : 'Monthly';
     const amount = isFree ? 0 : (s.personalTopupTier === 'yearly' ? 395000 : 54000);
@@ -2840,7 +2882,7 @@ class Component extends DCLogic {
       paymentType: isQris ? 'QRIS' : 'Bank Transfer',
       vaNumber: (!isFree && !isQris) ? String(Math.floor(1000000000000 + Math.random() * 8999999999999)) : '',
       status, expiredAt: new Date(now.getTime() + (parseInt(s.personalCheckoutExpiryHours, 10) || s.paymentExpiryHours) * 3600 * 1000), paidAt: null,
-      custName: match.name, custEmail: s.personalCustEmail || match.privyId.toLowerCase() + '@example.com', cc: s.personalCcEmails, createdBy: actor
+      custName: match.name, custEmail: s.personalCustEmail, cc: s.personalCcEmails, createdBy: actor
     };
     const periodEndDate = new Date(now); periodEndDate.setMonth(periodEndDate.getMonth() + (tierLabel === 'Yearly' ? 12 : 1));
     const personalPlans = (isEbsFree) ? s.personalPlans : s.personalPlans.map(pp => pp.privyId === match.privyId ? {
@@ -2852,7 +2894,7 @@ class Component extends DCLogic {
     } else {
       this.addAudit(actor, isFree ? 'Granted free personal balance (auto-approved as Lead)' : 'Personal top-up', tierLabel + ' \u2192 ' + match.name);
     }
-    this.setState({ personalPlans, personalOrders: [order, ...s.personalOrders], personalLastOrder: order, personalTopupStep: 'result' });
+    this.setState({ personalPlans, personalOrders: [order, ...s.personalOrders], personalLastOrder: order, personalTopupStep: 'result', personalCustomerStepError: '' });
   }
   checkPersonalOrderStatus(orderId) {
     const personalOrders = this.state.personalOrders.map(o => o.id === orderId ? { ...o, status: 'paid', paidAt: new Date() } : o);
@@ -3020,6 +3062,10 @@ class Component extends DCLogic {
     const hasRegular = s.cart.some(c => c.balanceType === 'regular');
     if (hasFree && !s.freeReason.trim()) { this.setState({ customerStepError: 'Alasan pemberian saldo gratis wajib diisi.' }); return; }
     if (hasRegular && !s.paymentMethod) { this.setState({ customerStepError: 'Pilih payment method terlebih dahulu.' }); return; }
+    if (!s.custFirstName.trim() || !s.custLastName.trim()) { this.setState({ customerStepError: 'Nama depan dan nama belakang customer wajib diisi.' }); return; }
+    if (!s.custEmail.trim()) { this.setState({ customerStepError: 'Email customer wajib diisi.' }); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s.custEmail.trim())) { this.setState({ customerStepError: 'Format email tidak valid.' }); return; }
+    if (s.custPrivyId.trim() && !/^[A-Za-z0-9]{4,}$/.test(s.custPrivyId.trim())) { this.setState({ customerStepError: 'Format PrivyID tidak valid.' }); return; }
 
     const ent = this.getEnt(s.selectedEntId);
     const subTotal = s.cart.reduce((a, c) => a + c.unit * c.qty * (c.months || 1) - c.discount, 0);
@@ -3108,13 +3154,15 @@ class Component extends DCLogic {
   }
 
   openSpecialPriceModal(item) {
-    this.setState({ modal: 'specialPrice', specialPriceItemName: item.name, specialPriceValue: item.hasSpecial ? String(item.special) : '', specialPriceNotes: '' });
+    if (this.state.role !== 'lead') return;
+    this.setState({ modal: 'specialPrice', specialPriceItemName: item.name, specialPriceValue: item.hasSpecial ? String(item.special) : '', specialPriceNotes: '', specialPriceError: '' });
   }
   onSpecialPriceValue(e) { this.setState({ specialPriceValue: e.target.value }); }
   onSpecialPriceNotes(e) { this.setState({ specialPriceNotes: e.target.value }); }
   saveSpecialPrice() {
     const s = this.state;
-    if (!s.specialPriceValue || !s.specialPriceNotes.trim()) return;
+    if (s.role !== 'lead') return;
+    if (!s.specialPriceValue || !s.specialPriceNotes.trim()) { this.setState({ specialPriceError: 'Harga dan catatan wajib diisi.' }); return; }
     const enterprises = s.enterprises.map(ent => {
       if (ent.id !== s.selectedEntId) return ent;
       return { ...ent, items: ent.items.map(it => it.name === s.specialPriceItemName ? { ...it, hasSpecial: true, special: parseInt(s.specialPriceValue, 10) } : it) };
@@ -3142,7 +3190,37 @@ class Component extends DCLogic {
   onApprovalsFilterType(e) { this.setState({ approvalsFilterType: e.target.value }); }
   onApprovalsFilterStatus(e) { this.setState({ approvalsFilterStatus: e.target.value }); }
   onApprovalsSearch(e) { this.setState({ approvalsSearch: e.target.value }); }
-  exportTopup() { window.alert('Export CSV/Excel — format kolom akan dikonfirmasi bersama tim EBS.'); }
+  exportTopup() {
+    this.setState({ topupExportBusy: true });
+    setTimeout(() => {
+      try {
+        const s = this.state;
+        let orders = s.topupOrders;
+        if (s.topupFilterEnterprise !== 'all') orders = orders.filter(o => o.enterpriseId === s.topupFilterEnterprise);
+        if (s.topupFilterType !== 'all') orders = orders.filter(o => o.balanceType === s.topupFilterType);
+        if (s.topupFilterStatus !== 'all') orders = orders.filter(o => o.status === s.topupFilterStatus);
+        const decorated = orders.map(o => this.decorateOrder(o, true));
+
+        let personalOrders = s.topupFilterEnterprise === 'all' ? s.personalOrders : [];
+        if (s.topupFilterType !== 'all') personalOrders = personalOrders.filter(o => o.balanceType === s.topupFilterType);
+        if (s.topupFilterStatus !== 'all') personalOrders = personalOrders.filter(o => o.status === s.topupFilterStatus);
+        const decoratedPersonal = personalOrders.map(o => this.decoratePersonalOrderForLog(o));
+
+        const rows = [...decorated, ...decoratedPersonal].sort((a, b) => new Date(b.createdAt || b.ts) - new Date(a.createdAt || a.ts));
+        const escapeCsv = (v) => { const str = String(v === null || v === undefined ? '' : v); return /[",\n]/.test(str) ? '"' + str.replace(/"/g, '""') + '"' : str; };
+        const header = ['Invoice', 'Enterprise / Personal', 'Balance Type', 'Status', 'Items', 'Total', 'By', 'Approved By'];
+        const lines = [header.map(escapeCsv).join(',')];
+        rows.forEach(r => {
+          lines.push([r.invoiceNumber, r.enterpriseName, r.typeLabel, r.status, r.itemCount, r.totalLabel, r.createdBy || '-', r.approvedBy || ''].map(escapeCsv).join(','));
+        });
+        this.triggerDownload('log-top-up-' + Date.now() + '.csv', lines.join('\n'), 'text/csv');
+        this.addAudit(this.currentActor(), 'Exported top-up log', rows.length + ' rows');
+        this.setState({ topupExportBusy: false });
+      } catch (e) {
+        this.setState({ topupExportBusy: false, topupExportError: 'Export gagal, coba lagi.' });
+      }
+    }, 0);
+  }
   syncEnterprise() { window.alert('Sync enterprise dijalankan.'); }
 
   renderVals() {
@@ -3194,6 +3272,7 @@ class Component extends DCLogic {
       picSummary: ent.pic ? ((ent.pic.firstName + ' ' + ent.pic.lastName).trim() + (ent.pic.email ? ' \u00b7 ' + ent.pic.email : '')) : '',
       combinedAvailable: ent.regularAvailable + ent.freeAvailable, combinedQuota: ent.regularQuota + ent.freeQuota, combinedUsage: ent.regularUsage + ent.freeUsage,
       regularExpiredLabel: fmtDate(ent.regularExpiredAt), freeExpiredLabel: fmtDate(ent.freeExpiredAt), stampExpiredLabel: fmtDate(ent.stampExpiredAt),
+      regularExpiryBadge: this.expiryBadge(ent.regularExpiredAt), stampExpiryBadge: this.expiryBadge(ent.stampExpiredAt),
       createdAtLabel: fmtDate(ent.createdAt), updatedAtLabel: fmtDate(ent.updatedAt),
       items: ent.items.map(it => ({
         ...it, code: it.code, unit: it.unit,
@@ -3367,8 +3446,10 @@ class Component extends DCLogic {
     const userLogFilterFieldOptions = ['actor', 'action'].map(f => ({
       label: userLogFilterFieldMeta[f], active: s.userLogFilterField === f, bg: s.userLogFilterField === f ? '#E5F3FF' : 'transparent', select: () => this.setUserLogFilterField(f)
     }));
+    const existingEbsPrivyIds = new Set(s.ebsUsers.map(u => u.privyId.toUpperCase()));
     const ebsAssignResultsComputed = (!s.ebsAssignCandidate && s.ebsAssignQuery.trim()) ? PRIVY_DIRECTORY.filter(c =>
-      c.privyId.toLowerCase().includes(s.ebsAssignQuery.trim().toLowerCase()) || c.name.toLowerCase().includes(s.ebsAssignQuery.trim().toLowerCase())
+      !existingEbsPrivyIds.has(c.privyId.toUpperCase()) &&
+      (c.privyId.toLowerCase().includes(s.ebsAssignQuery.trim().toLowerCase()) || c.name.toLowerCase().includes(s.ebsAssignQuery.trim().toLowerCase()))
     ) : [];
 
     // ---------- modal: topup wizard derived ----------
@@ -3395,7 +3476,8 @@ class Component extends DCLogic {
     });
 
     const cart = s.cart.map(c => ({
-      ...c, isFree: c.balanceType === 'free', remove: () => this.removeCartItem(c.id)
+      ...c, isFree: c.balanceType === 'free', remove: () => this.removeCartItem(c.id),
+      durationLabel: (c.months && c.months > 1) ? (c.months + ' bulan') : '-'
     }));
 
     const subTotalNum = s.cart.reduce((a, c) => a + c.unit * c.qty * (c.months || 1) - c.discount, 0);
@@ -3581,6 +3663,8 @@ class Component extends DCLogic {
       topupFilterEnterprise: s.topupFilterEnterprise, topupFilterType: s.topupFilterType, topupFilterStatus: s.topupFilterStatus,
       onFilterEnterprise: (e) => this.onFilterEnterprise(e), onFilterType: (e) => this.onFilterType(e), onFilterStatus: (e) => this.onFilterStatus(e),
       enterprises: s.enterprises, filteredTopupOrders, noFilteredOrders: filteredTopupOrders.length === 0, exportTopup: () => this.exportTopup(),
+      topupExportBusy: s.topupExportBusy, topupExportError: s.topupExportError,
+      exportButtonLabel: s.topupExportBusy ? 'Generating export…' : 'Export',
 
       approvalsTitle: isLead ? 'Approvals' : 'My free top-up requests',
       approvalsSubtitle: isLead ? 'Setiap top-up free (enterprise maupun personal) membutuhkan persetujuan Lead EBS sebelum saldo diberikan.' : 'Pantau status permintaan top-up saldo gratis (enterprise maupun personal) yang Anda ajukan.',
@@ -3672,7 +3756,9 @@ class Component extends DCLogic {
       personalStep2Bg: s.personalTopupStep === 'customer' ? '#191C21' : (s.personalTopupStep === 'result' ? '#34C759' : '#E6E7EB'), personalStep2Color: s.personalTopupStep === 'tier' ? '#939EAE' : '#fff', personalStep2TextColor: s.personalTopupStep === 'customer' ? '#191C21' : '#647184',
       personalStep3Bg: s.personalTopupStep === 'result' ? '#191C21' : '#E6E7EB', personalStep3Color: s.personalTopupStep === 'result' ? '#fff' : '#939EAE', personalStep3TextColor: s.personalTopupStep === 'result' ? '#191C21' : '#647184',
       personalTierLabel: personalTierIsMonthly ? '1 bulan' : '1 tahun', personalTierAmountLabel: rp(personalTierAmount),
+      personalGrandTotalLabel: s.personalBalanceType === 'free' ? (rp(personalTierAmount) + ' (FREE — tidak dibebankan)') : rp(personalTierAmount),
       personalPaymentMethod: s.personalPaymentMethod, onPersonalPaymentMethod: (e) => this.onPersonalPaymentMethod(e),
+      personalCustomerStepError: s.personalCustomerStepError,
       personalBalTypeRegularBorder: s.personalBalanceType === 'regular' ? '#E42E2C' : '#CBD1D8', personalBalTypeRegularBg: s.personalBalanceType === 'regular' ? '#FCEAE9' : '#fff', personalBalTypeRegularColor: s.personalBalanceType === 'regular' ? '#C22725' : '#1F2329',
       personalBalTypeFreeBorder: s.personalBalanceType === 'free' ? '#FFB400' : '#CBD1D8', personalBalTypeFreeBg: s.personalBalanceType === 'free' ? '#FFF7E5' : '#fff', personalBalTypeFreeColor: s.personalBalanceType === 'free' ? '#B37E00' : '#1F2329',
       setPersonalBalanceType_regular: () => this.setPersonalBalanceType('regular'), setPersonalBalanceType_free: () => this.setPersonalBalanceType('free'),
@@ -3811,6 +3897,7 @@ class Component extends DCLogic {
       showSpecialPriceModal: s.modal === 'specialPrice', specialPriceItem: specialPriceItem || { name: '' },
       specialPriceValue: s.specialPriceValue, onSpecialPriceValue: (e) => this.onSpecialPriceValue(e),
       specialPriceNotes: s.specialPriceNotes, onSpecialPriceNotes: (e) => this.onSpecialPriceNotes(e),
+      specialPriceError: s.specialPriceError,
       saveSpecialPrice: () => this.saveSpecialPrice(),
 
       // plan history modal
@@ -3852,8 +3939,8 @@ class Component extends DCLogic {
       '<table><thead><tr><th>Item</th><th>Qty</th><th>Unit</th><th>Amount</th></tr></thead><tbody>' + rows + '</tbody></table>' +
       '<p>Subtotal: ' + dp.subtotalLabel + '<br/>Discount: ' + dp.discountLabel + '<br/>DPP: ' + dp.dppLabel + '<br/>PPN 12%: ' + dp.ppnLabel + '<br/><b>Total: ' + dp.totalLabel + '</b></p></body></html>';
   }
-  triggerDownload(filename, content) {
-    const blob = new Blob([content], { type: 'text/html' });
+  triggerDownload(filename, content, mimeType) {
+    const blob = new Blob([content], { type: mimeType || 'text/html' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url; a.download = filename;
@@ -3968,8 +4055,8 @@ class Component extends DCLogic {
       ccLabel: o.cc && o.cc.trim() ? o.cc : '-',
       invoiceDocLabel: o.status === 'paid' ? fmtDate(o.createdAt) : '-',
       receiptDocLabel: o.status === 'paid' ? fmtDate(o.createdAt) : '-',
-      docsAvailable: o.status === 'paid' || o.status === 'pending_approval' || o.status === 'approved', docsUnavailableNote: !['paid', 'pending_approval', 'approved'].includes(o.status),
-      canPreviewInvoice: true,
+      docsAvailable: o.status === 'paid' || o.status === 'approved', docsUnavailableNote: !['paid', 'approved'].includes(o.status) && o.status !== 'pending_approval',
+      canPreviewInvoice: o.status !== 'pending_approval', docsPendingApprovalNote: o.status === 'pending_approval',
       isUserPayFlow: o.paymentMethod === 'Diserahkan ke user' && o.status === 'unpaid',
       invoiceDeliveryFailed: (o.docDelivery && o.docDelivery.invoice) === 'failed',
       receiptDeliveryFailed: (o.docDelivery && o.docDelivery.receipt) === 'failed',
@@ -4002,8 +4089,8 @@ class Component extends DCLogic {
       ccLabel: o.cc && o.cc.trim() ? o.cc : '-',
       invoiceDocLabel: o.status === 'paid' ? fmtDate(o.ts) : '-',
       receiptDocLabel: o.status === 'paid' ? fmtDate(o.ts) : '-',
-      docsAvailable: o.status === 'paid' || o.status === 'pending_approval' || o.status === 'approved', docsUnavailableNote: !['paid', 'pending_approval', 'approved'].includes(o.status),
-      canPreviewInvoice: true,
+      docsAvailable: o.status === 'paid' || o.status === 'approved', docsUnavailableNote: !['paid', 'approved'].includes(o.status) && o.status !== 'pending_approval',
+      canPreviewInvoice: o.status !== 'pending_approval', docsPendingApprovalNote: o.status === 'pending_approval',
       isUserPayFlow: o.paymentMethod === 'Diserahkan ke user' && o.status === 'unpaid',
       invoiceDeliveryFailed: (o.docDelivery && o.docDelivery.invoice) === 'failed',
       receiptDeliveryFailed: (o.docDelivery && o.docDelivery.receipt) === 'failed',
