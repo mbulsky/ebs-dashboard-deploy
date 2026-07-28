@@ -156,6 +156,7 @@
             </div>
             <input value="{{ searchQuery }}" onInput="{{ onSearchInput }}" placeholder="{{ searchPlaceholder }}" style="flex:1; max-width:420px; border:1px solid #CBD1D8; background:#FBFCFD; border-radius:8px; padding:10px 14px; font-size:13px; color:#1F2329; outline:none;" />
             <button style="border:none; background:#191C21; color:#fff; font-size:13px; font-weight:600; padding:10px 20px; border-radius:8px; cursor:pointer;">Search</button>
+            <button onClick="{{ startNewRegistration }}" style="border:none; cursor:pointer; display:flex; align-items:center; gap:7px; background:#E42E2C; color:#fff; font-size:13px; font-weight:600; padding:10px 18px; border-radius:8px;"><i class="pi-add-circle" style="font-size:14px;"></i>Registrasi Enterprise Baru</button>
           </div>
 
           <sc-if value="{{ showEntExpiryOptions }}" hint-placeholder-val="{{ false }}">
@@ -213,6 +214,352 @@
               <div style="display:flex; align-items:center; gap:14px;">
                 <span style="display:flex; align-items:center; gap:6px;">Show rows <select style="border:1px solid #CBD1D8; border-radius:6px; padding:4px 8px; font-size:12.5px;"><option>15</option><option>25</option><option>50</option></select></span>
                 <span style="display:flex; align-items:center; gap:10px; color:#CBD1D8;">First <i class="pi-chevron-left" style="font-size:11px;"></i> <i class="pi-chevron-right" style="font-size:11px;"></i> Last</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ============ PAGE: ENTERPRISE REGISTRATION LIST ============ -->
+      <sc-if value="{{ isEntRegListPage }}" hint-placeholder-val="{{ false }}">
+        <div data-screen-label="Enterprise Registration" style="max-width:1320px; margin:0 auto;">
+          <div style="display:flex; align-items:center; gap:8px; font-size:13px; color:#939EAE; margin-bottom:16px;">
+            <span style="color:#0075D9; font-weight:600; cursor:default;">EBS Dashboard</span>
+            <i class="pi-chevron-right" style="font-size:10px;"></i>
+            <span style="color:#191C21; font-weight:600;">Enterprise Registration</span>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px; gap:14px;">
+            <div>
+              <h1 style="font-size:24px; font-weight:500; color:#191C21; margin-bottom:5px;">Enterprise Registration</h1>
+              <p style="font-size:14px; color:#647184;">Kelola pengajuan registrasi enterprise baru beserta status verifikasinya.</p>
+            </div>
+            <button onClick="{{ startNewRegistration }}" style="border:none; cursor:pointer; display:flex; align-items:center; gap:7px; background:#E42E2C; color:#fff; font-size:13px; font-weight:600; padding:10px 18px; border-radius:8px; flex:none;"><i class="pi-add-circle" style="font-size:14px;"></i>Registrasi Enterprise Baru</button>
+          </div>
+
+          <div style="background:#FBFCFD; border:1px solid #E6E7EB; border-radius:14px; overflow:hidden;">
+            <div style="display:grid; grid-template-columns:1.6fr 1fr 1.3fr 1fr 1fr 0.9fr; padding:13px 20px; font-size:11px; font-weight:700; letter-spacing:0.3px; color:#939EAE; text-transform:uppercase; border-bottom:1px solid #F4F5F7;">
+              <div>Nama Perusahaan</div><div>Owner PrivyID</div><div>Status</div><div>Dibuat</div><div>Diperbarui</div><div>Actor</div>
+            </div>
+            <sc-for list="{{ regListRows }}" as="rr" hint-placeholder-count="2">
+              <div class="row-card" style="display:grid; grid-template-columns:1.6fr 1fr 1.3fr 1fr 1fr 0.9fr; padding:16px 20px; border-bottom:1px solid #F4F5F7; align-items:center; cursor:pointer;" onClick="{{ rr.open }}">
+                <div style="font-size:14px; font-weight:500; color:#191C21;">{{ rr.companyName }}</div>
+                <div style="font-size:13px; color:#495260;">{{ rr.ownerPrivyId }}</div>
+                <div><span style="font-size:11px; font-weight:700; padding:3px 9px; border-radius:999px; background:{{ rr.statusBg }}; color:{{ rr.statusColor }};">{{ rr.statusLabel }}</span></div>
+                <div style="font-size:12.5px; color:#647184;">{{ rr.createdAtLabel }}</div>
+                <div style="font-size:12.5px; color:#647184;">{{ rr.updatedAtLabel }}</div>
+                <div style="font-size:12.5px; color:#647184;">{{ rr.createdBy }}</div>
+              </div>
+            </sc-for>
+            <sc-if value="{{ noRegListRows }}" hint-placeholder-val="{{ true }}">
+              <div style="text-align:center; padding:44px 0; color:#939EAE; font-size:14px;">Belum ada pengajuan registrasi enterprise.</div>
+            </sc-if>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ============ PAGE: ENTERPRISE REGISTRATION WIZARD ============ -->
+      <sc-if value="{{ isEntRegisterPage }}" hint-placeholder-val="{{ false }}">
+        <div data-screen-label="Enterprise Registration Wizard" style="max-width:900px; margin:0 auto;">
+          <button onClick="{{ backToRegList }}" style="border:none; background:none; cursor:pointer; display:flex; align-items:center; gap:6px; color:#0075D9; font-size:13px; font-weight:600; padding:0; margin-bottom:16px;"><i class="pi-arrow-left"></i>Back to Enterprise Registration list</button>
+
+          <div style="margin-bottom:20px;">
+            <h1 style="font-size:22px; font-weight:500; color:#191C21; margin-bottom:5px;">Registrasi Enterprise Baru</h1>
+            <p style="font-size:14px; color:#647184;">Lengkapi data awal, formulir pendaftaran, lalu submit untuk verifikasi.</p>
+          </div>
+
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:22px;">
+            <div style="display:flex; align-items:center; gap:7px;"><div style="width:22px; height:22px; border-radius:999px; background:{{ regStep1Bg }}; color:{{ regStep1Color }}; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700;">1</div><span style="font-size:12.5px; font-weight:600; color:{{ regStep1TextColor }};">Data Awal &amp; Dokumen</span></div>
+            <div style="flex:1; height:1px; background:#E6E7EB;"></div>
+            <div style="display:flex; align-items:center; gap:7px;"><div style="width:22px; height:22px; border-radius:999px; background:{{ regStep2Bg }}; color:{{ regStep2Color }}; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700;">2</div><span style="font-size:12.5px; font-weight:600; color:{{ regStep2TextColor }};">Formulir Pendaftaran</span></div>
+            <div style="flex:1; height:1px; background:#E6E7EB;"></div>
+            <div style="display:flex; align-items:center; gap:7px;"><div style="width:22px; height:22px; border-radius:999px; background:{{ regStep3Bg }}; color:{{ regStep3Color }}; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700;">3</div><span style="font-size:12.5px; font-weight:600; color:{{ regStep3TextColor }};">Submit &amp; Status</span></div>
+          </div>
+
+          <sc-if value="{{ reg.hasRejectReason }}" hint-placeholder-val="{{ false }}">
+            <div style="border:1px solid #F6BCBB; background:#FCEAE9; border-radius:10px; padding:14px 16px; margin-bottom:18px;">
+              <div style="font-size:13px; font-weight:600; color:#C22725; margin-bottom:4px;"><i class="pi-warning" style="margin-right:6px;"></i>Registrasi ini ditolak</div>
+              <div style="font-size:12.5px; color:#8C2320;">{{ reg.rejectReason }}</div>
+            </div>
+          </sc-if>
+
+          <!-- ===== STEP 1: DATA AWAL & DOKUMEN ===== -->
+          <sc-if value="{{ isRegStep1 }}" hint-placeholder-val="{{ true }}">
+            <div style="background:#FBFCFD; border:1px solid #E6E7EB; border-radius:14px; padding:20px 22px; margin-bottom:16px;">
+              <div style="font-size:14px; font-weight:600; color:#191C21; margin-bottom:14px;">Data Awal</div>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:14px;">
+                <div>
+                  <div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">PrivyID Owner</div>
+                  <input value="{{ reg.ownerPrivyId }}" onInput="{{ reg.onOwnerPrivyId }}" placeholder="Contoh: WM0905" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px;" />
+                  <sc-if value="{{ reg.ownerName }}" hint-placeholder-val="{{ false }}">
+                    <div style="font-size:12px; color:#1C8A4B; margin-top:5px;"><i class="pi-check-circle" style="margin-right:4px;"></i>{{ reg.ownerName }}</div>
+                  </sc-if>
+                  <sc-if value="{{ reg.ownerLookupWarning }}" hint-placeholder-val="{{ false }}">
+                    <div style="font-size:12px; color:#8C5700; margin-top:5px;"><i class="pi-warning" style="margin-right:4px;"></i>PrivyID tidak ditemukan di direktori, data dummy tetap bisa lanjut.</div>
+                  </sc-if>
+                </div>
+                <div></div>
+                <div>
+                  <div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Email Perusahaan</div>
+                  <input value="{{ reg.companyEmail }}" onInput="{{ reg.onCompanyEmail }}" placeholder="company@enterprise.com" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px;" />
+                </div>
+                <div>
+                  <div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Nomor Handphone Perusahaan</div>
+                  <input value="{{ reg.companyPhone }}" onInput="{{ reg.onCompanyPhone }}" placeholder="+628123456789" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px;" />
+                </div>
+              </div>
+            </div>
+
+            <div style="background:#FBFCFD; border:1px solid #E6E7EB; border-radius:14px; padding:20px 22px; margin-bottom:16px;">
+              <div style="font-size:14px; font-weight:600; color:#191C21; margin-bottom:14px;">Upload Dokumen</div>
+              <sc-for list="{{ regDocSlots }}" as="ds" hint-placeholder-count="5">
+                <div style="margin-bottom:14px;">
+                  <div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">{{ ds.label }}</div>
+                  <sc-if value="{{ ds.hasFile }}" hint-placeholder-val="{{ false }}">
+                    <div style="display:flex; align-items:center; gap:8px; border:1px solid #E6E7EB; border-radius:8px; padding:10px 12px; background:#fff;">
+                      <i class="pi-document-check" style="color:#1C8A4B;"></i>
+                      <span style="font-size:13px; color:#191C21; flex:1;">{{ ds.fileName }}</span>
+                      <button onClick="{{ ds.remove }}" style="border:none; background:none; cursor:pointer;"><i class="pi-trash" style="color:#C22725; font-size:13px;"></i></button>
+                    </div>
+                  </sc-if>
+                  <sc-if value="{{ ds.showUpload }}" hint-placeholder-val="{{ true }}">
+                    <label style="display:flex; align-items:center; gap:8px; border:1.5px dashed #CBD1D8; border-radius:10px; padding:14px 16px; cursor:pointer; background:#FBFCFD;">
+                      <i class="pi-upload" style="font-size:16px; color:#939EAE;"></i>
+                      <span style="font-size:12.5px; color:#495260; font-weight:600;">Klik untuk pilih file</span>
+                      <input type="file" onChange="{{ ds.onFile }}" style="display:none;" />
+                    </label>
+                  </sc-if>
+                </div>
+              </sc-for>
+            </div>
+
+            <sc-if value="{{ regStep1Error }}" hint-placeholder-val="{{ false }}">
+              <div style="color:#C22725; font-size:12px; margin-bottom:10px;">{{ regStep1Error }}</div>
+            </sc-if>
+
+            <div style="display:flex; justify-content:flex-end; gap:10px;">
+              <button onClick="{{ goToRegStep2 }}" style="border:none; background:#E42E2C; color:#fff; font-size:13px; font-weight:600; padding:10px 22px; border-radius:8px; cursor:pointer;">Lanjut</button>
+            </div>
+          </sc-if>
+
+          <!-- ===== STEP 2: FORMULIR PENDAFTARAN (FO) ===== -->
+          <sc-if value="{{ isRegStep2 }}" hint-placeholder-val="{{ false }}">
+            <div style="background:#FBFCFD; border:1px solid #E6E7EB; border-radius:14px; padding:20px 22px; margin-bottom:16px;">
+              <div style="font-size:14px; font-weight:600; color:#191C21; margin-bottom:14px;">Identitas</div>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:14px;">
+                <div><div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">No. Privy</div><input value="{{ reg.formNumberPrivy }}" onInput="{{ reg.onFormNumberPrivy }}" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px;" /></div>
+                <div><div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">No. Pelanggan</div><input value="{{ reg.formNumberPelanggan }}" onInput="{{ reg.onFormNumberPelanggan }}" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px;" /></div>
+                <div>
+                  <div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Pihak Privy</div>
+                  <select value="{{ reg.privySigner }}" onChange="{{ reg.onPrivySigner }}" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px;">
+                    <option value="brata">Brata R. Rafly — Chief Business Officer</option>
+                    <option value="johan">Johan Andreas — Executive VP of Business Development</option>
+                  </select>
+                </div>
+                <div>
+                  <div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Tipe Pelanggan</div>
+                  <select value="{{ reg.customerType }}" onChange="{{ reg.onCustomerType }}" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px;">
+                    <option value="PT">Perseroan Terbatas</option>
+                    <option value="Koperasi">Koperasi</option>
+                    <option value="Yayasan">Yayasan</option>
+                    <option value="Perusahaan Perorangan">Perusahaan Perorangan</option>
+                    <option value="Firma">Firma</option>
+                    <option value="CV">CV</option>
+                  </select>
+                </div>
+                <div><div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Nama Perusahaan</div><input value="{{ reg.companyName }}" onInput="{{ reg.onCompanyName }}" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px;" /></div>
+                <div><div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">NPWP</div><input value="{{ reg.npwpNumber }}" onInput="{{ reg.onNpwpNumber }}" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px;" /></div>
+                <div style="grid-column:span 2;"><div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Alamat</div><textarea value="{{ reg.companyAddress }}" onInput="{{ reg.onCompanyAddress }}" rows="2" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px; resize:vertical;"></textarea></div>
+                <div style="grid-column:span 2;"><div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Bidang Usaha</div><input value="{{ reg.businessField }}" onInput="{{ reg.onBusinessField }}" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px;" /></div>
+              </div>
+            </div>
+
+            <div style="background:#FBFCFD; border:1px solid #E6E7EB; border-radius:14px; padding:20px 22px; margin-bottom:16px;">
+              <div style="font-size:14px; font-weight:600; color:#191C21; margin-bottom:14px;">Penandatangan Pelanggan</div>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+                <div>
+                  <div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">PrivyID Penandatangan</div>
+                  <input value="{{ reg.signerPrivyId }}" onInput="{{ reg.onSignerPrivyId }}" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px;" />
+                  <sc-if value="{{ reg.signerName }}" hint-placeholder-val="{{ false }}">
+                    <div style="font-size:12px; color:#1C8A4B; margin-top:5px;"><i class="pi-check-circle" style="margin-right:4px;"></i>{{ reg.signerName }}</div>
+                  </sc-if>
+                  <sc-if value="{{ reg.signerLookupWarning }}" hint-placeholder-val="{{ false }}">
+                    <div style="font-size:12px; color:#8C5700; margin-top:5px;"><i class="pi-warning" style="margin-right:4px;"></i>PrivyID tidak ditemukan di direktori.</div>
+                  </sc-if>
+                </div>
+                <div><div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Jabatan</div><input value="{{ reg.signerTitle }}" onInput="{{ reg.onSignerTitle }}" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px;" /></div>
+              </div>
+            </div>
+
+            <div style="background:#FBFCFD; border:1px solid #E6E7EB; border-radius:14px; padding:20px 22px; margin-bottom:16px;">
+              <div style="font-size:14px; font-weight:600; color:#191C21; margin-bottom:14px;">Korespondensi</div>
+              <div style="margin-bottom:14px;"><div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Alamat Korespondensi</div><textarea value="{{ reg.correspondenceAddress }}" onInput="{{ reg.onCorrespondenceAddress }}" rows="2" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px; resize:vertical;"></textarea></div>
+              <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px;">
+                <div><div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Email Pemutakhiran Harga</div><input value="{{ reg.emailPriceUpdate }}" onInput="{{ reg.onEmailPriceUpdate }}" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px;" /></div>
+                <div><div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Email Penghentian/Gangguan</div><input value="{{ reg.emailDisruption }}" onInput="{{ reg.onEmailDisruption }}" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px;" /></div>
+                <div><div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Email Penerimaan Tagihan</div><input value="{{ reg.emailBilling }}" onInput="{{ reg.onEmailBilling }}" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px;" /></div>
+              </div>
+            </div>
+
+            <div style="background:#FBFCFD; border:1px solid #E6E7EB; border-radius:14px; padding:20px 22px; margin-bottom:16px;">
+              <div style="font-size:14px; font-weight:600; color:#191C21; margin-bottom:14px;">Jenis &amp; Biaya Layanan</div>
+              <div style="display:grid; grid-template-columns:1.4fr 0.8fr 1fr 0.7fr 1fr 1.2fr; font-size:11px; font-weight:700; color:#939EAE; text-transform:uppercase; padding-bottom:8px; border-bottom:1px solid #E6E7EB; margin-bottom:6px;">
+                <div>Jenis Layanan</div><div>Periode (thn)</div><div>Biaya/Tahun</div><div>Unit</div><div>Discount</div><div>Sub Total setelah Discount</div>
+              </div>
+              <sc-for list="{{ regServiceRows }}" as="svc" hint-placeholder-count="3">
+                <div style="display:grid; grid-template-columns:1.4fr 0.8fr 1fr 0.7fr 1fr 1.2fr; align-items:center; padding:10px 0; border-bottom:1px solid #F4F5F7; gap:8px;">
+                  <div style="font-size:13px; color:#191C21; font-weight:600;">{{ svc.type }}</div>
+                  <input type="number" min="0" value="{{ svc.periodYears }}" onInput="{{ svc.onPeriod }}" style="width:100%; border:1px solid #CBD1D8; border-radius:7px; padding:7px 9px; font-size:12.5px;" />
+                  <input type="number" min="0" value="{{ svc.pricePerYear }}" onInput="{{ svc.onPrice }}" style="width:100%; border:1px solid #CBD1D8; border-radius:7px; padding:7px 9px; font-size:12.5px;" />
+                  <input type="number" min="0" value="{{ svc.unit }}" onInput="{{ svc.onUnit }}" style="width:100%; border:1px solid #CBD1D8; border-radius:7px; padding:7px 9px; font-size:12.5px;" />
+                  <input type="number" min="0" value="{{ svc.discount }}" onInput="{{ svc.onDiscount }}" style="width:100%; border:1px solid #CBD1D8; border-radius:7px; padding:7px 9px; font-size:12.5px;" />
+                  <div style="font-size:13px; font-weight:600; color:#191C21;">{{ svc.subtotalAfterDiscountLabel }}</div>
+                </div>
+              </sc-for>
+              <div style="display:flex; justify-content:flex-end; padding-top:12px; font-size:15px; font-weight:700; color:#191C21;">Total&nbsp;&nbsp;{{ regServiceTotalLabel }}</div>
+            </div>
+
+            <div style="background:#FBFCFD; border:1px solid #E6E7EB; border-radius:14px; padding:20px 22px; margin-bottom:16px;">
+              <div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Tanggal Perjanjian</div>
+              <input type="date" value="{{ reg.agreementDate }}" onInput="{{ reg.onAgreementDate }}" style="border:1px solid #CBD1D8; border-radius:8px; padding:9px 12px; font-size:13px;" />
+            </div>
+
+            <sc-if value="{{ regStep2Error }}" hint-placeholder-val="{{ false }}">
+              <div style="color:#C22725; font-size:12px; margin-bottom:10px;">{{ regStep2Error }}</div>
+            </sc-if>
+
+            <div style="display:flex; justify-content:space-between; gap:10px;">
+              <button onClick="{{ backToRegStep1 }}" style="border:1px solid #CBD1D8; background:#fff; color:#1F2329; font-size:13px; font-weight:600; padding:10px 20px; border-radius:8px; cursor:pointer;"><i class="pi-arrow-left"></i> Back</button>
+              <div style="display:flex; gap:10px;">
+                <button onClick="{{ openRegDocPreview }}" style="border:1px solid #CBD1D8; background:#fff; color:#1F2329; font-size:13px; font-weight:600; padding:10px 20px; border-radius:8px; cursor:pointer;">Preview Dokumen FO</button>
+                <button onClick="{{ goToRegStep3 }}" style="border:none; background:#E42E2C; color:#fff; font-size:13px; font-weight:600; padding:10px 22px; border-radius:8px; cursor:pointer;">Lanjut</button>
+              </div>
+            </div>
+          </sc-if>
+
+          <!-- ===== STEP 3: SUBMIT & STATUS ===== -->
+          <sc-if value="{{ isRegStep3 }}" hint-placeholder-val="{{ false }}">
+            <div style="background:#FBFCFD; border:1px solid #E6E7EB; border-radius:14px; padding:20px 22px; margin-bottom:16px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+                <div style="font-size:14px; font-weight:600; color:#191C21;">Ringkasan Registrasi</div>
+                <span style="font-size:11px; font-weight:700; padding:3px 9px; border-radius:999px; background:{{ reg.statusMeta.bg }}; color:{{ reg.statusMeta.color }};">{{ reg.statusMeta.label }}</span>
+              </div>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px 24px; font-size:13px;">
+                <div><div style="font-size:11px; color:#939EAE; margin-bottom:4px;">Nama Perusahaan</div><div style="color:#191C21; font-weight:500;">{{ reg.companyName }}</div></div>
+                <div><div style="font-size:11px; color:#939EAE; margin-bottom:4px;">Owner PrivyID</div><div style="color:#191C21; font-weight:500;">{{ reg.ownerPrivyId }}</div></div>
+                <div><div style="font-size:11px; color:#939EAE; margin-bottom:4px;">Email Perusahaan</div><div style="color:#191C21; font-weight:500;">{{ reg.companyEmail }}</div></div>
+                <div><div style="font-size:11px; color:#939EAE; margin-bottom:4px;">Dibuat pada</div><div style="color:#191C21; font-weight:500;">{{ reg.createdAtLabel }}</div></div>
+              </div>
+            </div>
+
+            <!-- draft / rejected: submit -->
+            <sc-if value="{{ reg.isDraftOrRejected }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex; justify-content:flex-end; gap:10px;">
+                <button onClick="{{ backToRegStep2 }}" style="border:1px solid #CBD1D8; background:#fff; color:#1F2329; font-size:13px; font-weight:600; padding:10px 20px; border-radius:8px; cursor:pointer;"><i class="pi-arrow-left"></i> Back</button>
+                <button onClick="{{ submitRegForVerification }}" style="border:none; background:#E42E2C; color:#fff; font-size:13px; font-weight:600; padding:10px 22px; border-radius:8px; cursor:pointer;">Submit untuk Verifikasi</button>
+              </div>
+            </sc-if>
+
+            <!-- pending verification: simulation panel -->
+            <sc-if value="{{ reg.isPendingVerification }}" hint-placeholder-val="{{ false }}">
+              <div style="border:1px solid #ADD9FF; background:#E5F3FF; border-radius:10px; padding:14px 16px; margin-bottom:14px; font-size:12.5px; color:#0061B3;"><i class="pi-info-circle" style="margin-right:6px;"></i>Menunggu hasil verifikasi dari aplikasi verifikator eksternal.</div>
+
+              <sc-if value="{{ reg.canSimulateVerify }}" hint-placeholder-val="{{ false }}">
+                <div style="border:1px solid #FFE0AD; background:#FFFBF5; border-radius:10px; padding:16px 18px;">
+                  <div style="font-size:12.5px; font-weight:700; color:#8C5700; margin-bottom:10px; letter-spacing:0.3px;">SIMULASI HASIL VERIFIKASI (DEMO)</div>
+
+                  <sc-if value="{{ showRegRejectInput }}" hint-placeholder-val="{{ false }}">
+                    <div style="margin-bottom:10px;">
+                      <div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Alasan Reject</div>
+                      <textarea value="{{ regRejectReasonInput }}" onInput="{{ onRegRejectReasonInput }}" rows="2" placeholder="Alasan penolakan registrasi" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:9px 12px; font-size:13px; resize:vertical; background:#fff; margin-bottom:10px;"></textarea>
+                      <div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Balik ke step</div>
+                      <div style="display:flex; gap:8px; margin-bottom:12px;">
+                        <button onClick="{{ setRegRejectStep_1 }}" style="border:1px solid {{ isRegRejectStep1 ? '#E42E2C' : '#CBD1D8' }}; background:{{ isRegRejectStep1 ? '#FCEAE9' : '#fff' }}; color:#1F2329; font-size:12.5px; font-weight:600; padding:7px 14px; border-radius:7px; cursor:pointer;">Step 1 (Data &amp; Dokumen)</button>
+                        <button onClick="{{ setRegRejectStep_2 }}" style="border:1px solid {{ isRegRejectStep2 ? '#E42E2C' : '#CBD1D8' }}; background:{{ isRegRejectStep2 ? '#FCEAE9' : '#fff' }}; color:#1F2329; font-size:12.5px; font-weight:600; padding:7px 14px; border-radius:7px; cursor:pointer;">Step 2 (Formulir FO)</button>
+                      </div>
+                      <sc-if value="{{ regStep2Error }}" hint-placeholder-val="{{ false }}">
+                        <div style="color:#C22725; font-size:12px; margin-bottom:10px;">{{ regStep2Error }}</div>
+                      </sc-if>
+                      <div style="display:flex; gap:8px;">
+                        <button onClick="{{ closeRegRejectPanel }}" style="border:1px solid #CBD1D8; background:#fff; color:#1F2329; font-size:12.5px; font-weight:600; padding:8px 16px; border-radius:7px; cursor:pointer;">Batal</button>
+                        <button onClick="{{ simulateRegReject }}" style="border:none; background:#C22725; color:#fff; font-size:12.5px; font-weight:600; padding:8px 18px; border-radius:7px; cursor:pointer;">Konfirmasi Reject</button>
+                      </div>
+                    </div>
+                  </sc-if>
+
+                  <div style="display:{{ showRegRejectInput ? 'none' : 'flex' }}; gap:8px;">
+                    <button onClick="{{ openRegRejectPanel }}" style="border:1px solid #F6BCBB; background:#fff; color:#C22725; font-size:13px; font-weight:600; padding:9px 16px; border-radius:8px; cursor:pointer;">Simulasikan: Ditolak</button>
+                    <button onClick="{{ simulateRegApprove }}" style="border:none; background:#E42E2C; color:#fff; font-size:13px; font-weight:600; padding:9px 18px; border-radius:8px; cursor:pointer;">Simulasikan: Disetujui</button>
+                  </div>
+                </div>
+              </sc-if>
+            </sc-if>
+
+            <!-- pending client signature -->
+            <sc-if value="{{ reg.isPendingClientSignature }}" hint-placeholder-val="{{ false }}">
+              <div style="border:1px solid #FFE0AD; background:#FFFBF5; border-radius:10px; padding:16px 18px;">
+                <div style="font-size:13px; color:#8C5700; margin-bottom:12px;">Terverifikasi. Kirim dokumen Formulir Pendaftaran ke client untuk ditandatangani.</div>
+                <sc-if value="{{ reg.hasDocSent }}" hint-placeholder-val="{{ false }}">
+                  <div style="font-size:12.5px; color:#1C8A4B; margin-bottom:12px;"><i class="pi-check-circle" style="margin-right:5px;"></i>Dokumen terkirim ke client pada {{ reg.docSentAtLabel }}</div>
+                  <button onClick="{{ publishRegistration }}" style="border:none; background:#E42E2C; color:#fff; font-size:13px; font-weight:600; padding:10px 20px; border-radius:8px; cursor:pointer;">Simulasikan: Client Sudah Tanda Tangan</button>
+                </sc-if>
+                <sc-if value="{{ reg.docNotSent }}" hint-placeholder-val="{{ true }}">
+                  <button onClick="{{ sendRegDocToClient }}" style="border:none; background:#191C21; color:#fff; font-size:13px; font-weight:600; padding:10px 20px; border-radius:8px; cursor:pointer;">Kirim Dokumen ke Client</button>
+                </sc-if>
+              </div>
+            </sc-if>
+
+            <!-- published -->
+            <sc-if value="{{ reg.isPublished }}" hint-placeholder-val="{{ false }}">
+              <div style="border:1px solid #BEEDCA; background:#EAF9EE; border-radius:10px; padding:16px 18px; font-size:13px; color:#248C3E;"><i class="pi-check-circle" style="margin-right:6px;"></i>Registrasi terbit. Enterprise sudah muncul di Enterprise List.</div>
+            </sc-if>
+          </sc-if>
+        </div>
+      </sc-if>
+
+      <!-- ============ MODAL: FO DOCUMENT PREVIEW ============ -->
+      <sc-if value="{{ showRegDocPreview }}" hint-placeholder-val="{{ false }}">
+        <div style="position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1050; display:flex; align-items:center; justify-content:center; padding:24px;" onClick="{{ closeRegDocPreview }}">
+          <div style="background:#F4F5F7; border-radius:14px; width:100%; max-width:680px; max-height:90vh; overflow-y:auto;" onClick="{{ stopProp }}">
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:18px 24px; border-bottom:1px solid #E6E7EB; background:#FBFCFD; border-radius:14px 14px 0 0;">
+              <button onClick="{{ closeRegDocPreview }}" style="border:none; background:none; cursor:pointer; display:flex; align-items:center; gap:6px; color:#0075D9; font-size:13px; font-weight:600;"><i class="pi-arrow-left"></i>Back</button>
+              <div style="display:flex; gap:8px;">
+                <button onClick="{{ downloadRegForm }}" style="border:1px solid #CBD1D8; background:#fff; color:#1F2329; font-size:12.5px; font-weight:600; padding:8px 14px; border-radius:7px; cursor:pointer; display:flex; align-items:center; gap:6px;"><i class="pi-download" style="font-size:12px;"></i>Download</button>
+                <button onClick="{{ closeRegDocPreview }}" style="border:none; background:none; cursor:pointer;"><i class="pi-close" style="font-size:16px; color:#939EAE;"></i></button>
+              </div>
+            </div>
+            <div style="padding:24px;">
+              <div style="background:#fff; border:1px solid #E6E7EB; border-top:3px solid #E42E2C; border-radius:12px; padding:28px 30px;">
+                <div style="display:flex; align-items:center; gap:7px; margin-bottom:16px;"><i class="pi-persona" style="font-size:20px; color:#E42E2C;"></i><span style="font-size:13px; font-weight:700; color:#495260; letter-spacing:0.4px;">PRIVY</span></div>
+                <div style="font-size:18px; font-weight:700; color:#191C21; text-transform:uppercase; margin-bottom:18px;">Formulir Pendaftaran Layanan</div>
+
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px 20px; font-size:12.5px; margin-bottom:16px;">
+                  <div><span style="color:#647184;">No. Privy</span><br/><span style="font-weight:600; color:#191C21;">{{ regFormPreview.formNumberPrivy }}</span></div>
+                  <div><span style="color:#647184;">No. Pelanggan</span><br/><span style="font-weight:600; color:#191C21;">{{ regFormPreview.formNumberPelanggan }}</span></div>
+                  <div style="grid-column:span 2;"><span style="color:#647184;">Pihak Privy</span><br/><span style="font-weight:600; color:#191C21;">{{ regFormPreview.privySignerLabel }}</span></div>
+                  <div><span style="color:#647184;">Tipe Pelanggan</span><br/><span style="font-weight:600; color:#191C21;">{{ regFormPreview.customerType }}</span></div>
+                  <div><span style="color:#647184;">NPWP</span><br/><span style="font-weight:600; color:#191C21;">{{ regFormPreview.npwpNumber }}</span></div>
+                  <div style="grid-column:span 2;"><span style="color:#647184;">Nama &amp; Alamat</span><br/><span style="font-weight:600; color:#191C21;">{{ regFormPreview.companyName }} — {{ regFormPreview.companyAddress }}</span></div>
+                  <div style="grid-column:span 2;"><span style="color:#647184;">Bidang Usaha</span><br/><span style="font-weight:600; color:#191C21;">{{ regFormPreview.businessField }}</span></div>
+                  <div style="grid-column:span 2;"><span style="color:#647184;">Perwakilan Sah Pelanggan</span><br/><span style="font-weight:600; color:#191C21;">{{ regFormPreview.signerName }} ({{ regFormPreview.signerPrivyId }}) — {{ regFormPreview.signerTitle }}</span></div>
+                  <div style="grid-column:span 2;"><span style="color:#647184;">Alamat Korespondensi</span><br/><span style="font-weight:600; color:#191C21;">{{ regFormPreview.correspondenceAddress }}</span></div>
+                  <div><span style="color:#647184;">Email Pemutakhiran Harga</span><br/><span style="font-weight:600; color:#191C21;">{{ regFormPreview.emailPriceUpdate }}</span></div>
+                  <div><span style="color:#647184;">Email Penghentian/Gangguan</span><br/><span style="font-weight:600; color:#191C21;">{{ regFormPreview.emailDisruption }}</span></div>
+                  <div><span style="color:#647184;">Email Penerimaan Tagihan</span><br/><span style="font-weight:600; color:#191C21;">{{ regFormPreview.emailBilling }}</span></div>
+                  <div><span style="color:#647184;">Tanggal Perjanjian</span><br/><span style="font-weight:600; color:#191C21;">{{ regFormPreview.agreementDateLabel }}</span></div>
+                </div>
+
+                <div style="display:grid; grid-template-columns:1.4fr 0.8fr 1fr 0.6fr 1fr; gap:8px; padding-bottom:10px; border-bottom:2px solid #191C21; font-size:11px; font-weight:700; color:#191C21; text-transform:uppercase;">
+                  <div>Jenis Layanan</div><div>Periode</div><div style="text-align:right;">Biaya/Tahun</div><div style="text-align:right;">Unit</div><div style="text-align:right;">Sub Total Setelah Discount</div>
+                </div>
+                <sc-for list="{{ regFormPreview.items }}" as="fi" hint-placeholder-count="3">
+                  <div style="display:grid; grid-template-columns:1.4fr 0.8fr 1fr 0.6fr 1fr; gap:8px; padding:10px 0; border-bottom:1px solid #F4F5F7; font-size:12.5px; color:#191C21;">
+                    <div>{{ fi.type }}</div><div>{{ fi.periodYearsLabel }}</div><div style="text-align:right;">{{ fi.priceLabel }}</div><div style="text-align:right;">{{ fi.unitLabel }}</div><div style="text-align:right; font-weight:600;">{{ fi.subtotalAfterDiscountLabel }}</div>
+                  </div>
+                </sc-for>
+                <div style="display:flex; justify-content:flex-end; padding-top:14px;"><span style="font-weight:700; color:#191C21; font-size:15px;">Total&nbsp;&nbsp;{{ regFormPreview.totalLabel }}</span></div>
+
+                <div style="text-align:center; font-size:11.5px; color:#939EAE; margin-top:20px;">Blok Tanda Tangan: {{ regFormPreview.signerName }} — {{ regFormPreview.signerTitle }}</div>
               </div>
             </div>
           </div>
@@ -2610,7 +2957,13 @@ class Component extends DCLogic {
     bulkReqFirstName: '', bulkReqLastName: '', bulkReqPrivyId: '', bulkReqEmail: '', bulkNeedFracture: false, bulkCcEmails: '',
     configPriceItemCode: '', configPriceUpsell: '0', configPriceDiscount: '0', configPriceError: '',
     editingProductId: null, productFormName: '', productFormUnit: '', productFormCode: '', productFormPrice: '0', productFormError: '',
-    productFormTier: '', productFormEaCount: ''
+    productFormTier: '', productFormEaCount: '',
+
+    // enterprise registration
+    enterpriseRegistrations: [],
+    regStep: 1, activeRegId: null, regStep1Error: '', regStep2Error: '',
+    showRegRejectInput: false, regRejectReasonInput: '', regRejectStepInput: 2,
+    showRegDocPreview: false
   };
 
   // ---------- helpers ----------
@@ -3329,6 +3682,258 @@ class Component extends DCLogic {
   }
   syncEnterprise() { window.alert('Sync enterprise dijalankan.'); }
 
+  // ---------- enterprise registration ----------
+  fakeToken(len) {
+    let str = '';
+    while (str.length < len) str += Math.random().toString(36).slice(2);
+    return str.slice(0, len);
+  }
+  lookupPrivyName(privyId) {
+    const hit = PRIVY_DIRECTORY.find(p => p.privyId.toLowerCase() === privyId.trim().toLowerCase());
+    return hit ? hit.name : '';
+  }
+  regServiceCalc(it) {
+    const periodYears = parseFloat(it.periodYears) || 0;
+    const pricePerYear = parseFloat(it.pricePerYear) || 0;
+    const unit = parseFloat(it.unit) || 0;
+    const subtotal = periodYears * pricePerYear * unit;
+    const discount = parseFloat(it.discount) || 0;
+    const subtotalAfterDiscount = Math.max(0, subtotal - discount);
+    return { subtotal, discount, subtotalAfterDiscount };
+  }
+  makeNewRegistration(actor) {
+    const now = new Date();
+    return {
+      id: uid('reg-'), status: 'draft', currentStep: 1,
+      rejectReason: '', rejectedAtStep: null,
+      createdBy: actor, createdAt: now, updatedAt: now,
+      ownerPrivyId: '', ownerName: '',
+      companyEmail: '', companyPhone: '',
+      documents: { npwp: null, nib: null, skPendirian: null, aktaPendirian: null, suratKuasa: null },
+      formNumberPrivy: '', formNumberPelanggan: '',
+      privySigner: 'brata',
+      customerType: 'PT',
+      companyName: '', companyAddress: '', businessField: '', npwpNumber: '',
+      signerPrivyId: '', signerName: '', signerTitle: '',
+      correspondenceAddress: '',
+      emailPriceUpdate: '', emailDisruption: '', emailBilling: '',
+      serviceItems: [
+        { type: 'Employee Account', periodYears: '', pricePerYear: '', unit: '', discount: '0' },
+        { type: 'Meterai Elektronik', periodYears: '', pricePerYear: '', unit: '', discount: '0' },
+        { type: 'Stamping Fee E-Meterai', periodYears: '', pricePerYear: '', unit: '', discount: '0' }
+      ],
+      agreementDate: now.toISOString().slice(0, 10),
+      docSentAt: null,
+      verifiedBy: null, verifiedAt: null,
+      clientSignedAt: null,
+      publishedEnterpriseId: null
+    };
+  }
+  getReg(id) { return this.state.enterpriseRegistrations.find(r => r.id === id); }
+  getActiveReg() { return this.getReg(this.state.activeRegId); }
+  onRegFieldPatch(patch) {
+    const id = this.state.activeRegId;
+    const regs = this.state.enterpriseRegistrations.map(r => r.id === id ? { ...r, ...patch, updatedAt: new Date() } : r);
+    this.setState({ enterpriseRegistrations: regs });
+  }
+  onRegField(field) { return (e) => this.onRegFieldPatch({ [field]: e.target.value }); }
+  onRegOwnerPrivyId(e) {
+    const v = e.target.value;
+    this.onRegFieldPatch({ ownerPrivyId: v, ownerName: this.lookupPrivyName(v) });
+  }
+  onRegSignerPrivyId(e) {
+    const v = e.target.value;
+    this.onRegFieldPatch({ signerPrivyId: v, signerName: this.lookupPrivyName(v) });
+  }
+  onRegDocFile(slot, e) {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    const id = this.state.activeRegId;
+    const regs = this.state.enterpriseRegistrations.map(r => r.id === id ? { ...r, documents: { ...r.documents, [slot]: { fileName: file.name, uploadedAt: new Date() } }, updatedAt: new Date() } : r);
+    this.setState({ enterpriseRegistrations: regs });
+  }
+  removeRegDoc(slot) {
+    const id = this.state.activeRegId;
+    const regs = this.state.enterpriseRegistrations.map(r => r.id === id ? { ...r, documents: { ...r.documents, [slot]: null }, updatedAt: new Date() } : r);
+    this.setState({ enterpriseRegistrations: regs });
+  }
+  onRegServiceItemField(idx, field, value) {
+    const id = this.state.activeRegId;
+    const regs = this.state.enterpriseRegistrations.map(r => {
+      if (r.id !== id) return r;
+      const serviceItems = r.serviceItems.map((it, i) => i === idx ? { ...it, [field]: value } : it);
+      return { ...r, serviceItems, updatedAt: new Date() };
+    });
+    this.setState({ enterpriseRegistrations: regs });
+  }
+  startNewRegistration() {
+    const reg = this.makeNewRegistration(this.currentActor());
+    this.setState({ enterpriseRegistrations: [reg, ...this.state.enterpriseRegistrations], page: 'ent-register', activeRegId: reg.id, regStep: 1, regStep1Error: '', regStep2Error: '', showRegRejectInput: false });
+    this.addAudit(this.currentActor(), 'Started new enterprise registration draft', reg.id, null);
+  }
+  resumeRegistration(id) {
+    const reg = this.getReg(id);
+    if (!reg) return;
+    let step = reg.currentStep || 1;
+    if (reg.status === 'rejected' && reg.rejectedAtStep) step = reg.rejectedAtStep;
+    if (['pending_verification', 'pending_client_signature', 'published'].includes(reg.status)) step = 3;
+    this.setState({ page: 'ent-register', activeRegId: id, regStep: step, regStep1Error: '', regStep2Error: '', showRegRejectInput: false });
+  }
+  backToRegList() { this.setState({ page: 'ent-reg-list', activeRegId: null }); }
+  goToRegStep2() {
+    const reg = this.getActiveReg();
+    if (!reg) return;
+    if (!reg.ownerPrivyId.trim() || !reg.companyEmail.trim() || !reg.companyPhone.trim()) {
+      this.setState({ regStep1Error: 'Semua field wajib diisi.' }); return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(reg.companyEmail.trim())) {
+      this.setState({ regStep1Error: 'Format email tidak valid.' }); return;
+    }
+    if (!/^(\+62|62|0)[0-9]{8,13}$/.test(reg.companyPhone.trim())) {
+      this.setState({ regStep1Error: 'Format nomor handphone tidak valid.' }); return;
+    }
+    const requiredDocs = ['npwp', 'nib', 'skPendirian', 'aktaPendirian'];
+    if (requiredDocs.some(k => !reg.documents[k])) {
+      this.setState({ regStep1Error: 'Semua dokumen wajib (kecuali Surat Kuasa) harus diupload.' }); return;
+    }
+    this.setState({ regStep1Error: '', regStep: 2 });
+    this.onRegFieldPatch({ currentStep: Math.max(reg.currentStep, 2) });
+  }
+  backToRegStep1() { this.setState({ regStep: 1 }); }
+  goToRegStep3() {
+    const reg = this.getActiveReg();
+    if (!reg) return;
+    const required = [reg.formNumberPrivy, reg.formNumberPelanggan, reg.companyName, reg.companyAddress, reg.businessField, reg.npwpNumber, reg.signerPrivyId, reg.signerTitle, reg.correspondenceAddress, reg.emailPriceUpdate, reg.emailDisruption, reg.emailBilling, reg.agreementDate];
+    if (required.some(v => !v || !String(v).trim())) {
+      this.setState({ regStep2Error: 'Semua field wajib diisi.' }); return;
+    }
+    const emails = [reg.emailPriceUpdate, reg.emailDisruption, reg.emailBilling];
+    if (emails.some(e => !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e.trim()))) {
+      this.setState({ regStep2Error: 'Format salah satu email korespondensi tidak valid.' }); return;
+    }
+    if (reg.serviceItems.some(it => !it.periodYears || !it.pricePerYear || !it.unit)) {
+      this.setState({ regStep2Error: 'Lengkapi periode, biaya per tahun, dan unit untuk semua jenis layanan.' }); return;
+    }
+    this.setState({ regStep2Error: '', regStep: 3 });
+    this.onRegFieldPatch({ currentStep: Math.max(reg.currentStep, 3) });
+  }
+  backToRegStep2() { this.setState({ regStep: 2 }); }
+  openRegDocPreview() { this.setState({ showRegDocPreview: true }); }
+  closeRegDocPreview() { this.setState({ showRegDocPreview: false }); }
+  downloadRegForm() {
+    const reg = this.getActiveReg();
+    if (!reg) return;
+    const fp = this.buildRegFormPreview(reg);
+    this.triggerDownload('Formulir_Pendaftaran_' + (reg.companyName || reg.id).replace(/\s+/g, '_') + '.html', this.htmlRegFormTemplate(fp));
+  }
+  submitRegForVerification() {
+    const reg = this.getActiveReg();
+    if (!reg) return;
+    const wasRejected = reg.status === 'rejected';
+    this.onRegFieldPatch({ status: 'pending_verification', rejectReason: '', rejectedAtStep: null });
+    this.addAudit(this.currentActor(), wasRejected ? 'Resubmitted enterprise registration for verification' : 'Submitted enterprise registration for verification', reg.companyName || reg.id, null);
+  }
+  openRegRejectPanel() { this.setState({ showRegRejectInput: true, regRejectReasonInput: '', regRejectStepInput: 2 }); }
+  closeRegRejectPanel() { this.setState({ showRegRejectInput: false }); }
+  setRegRejectStep(step) { this.setState({ regRejectStepInput: step }); }
+  onRegRejectReasonInput(e) { this.setState({ regRejectReasonInput: e.target.value }); }
+  simulateRegApprove(id) {
+    if (this.state.role !== 'lead') return;
+    const now = new Date();
+    const regs = this.state.enterpriseRegistrations.map(r => r.id === id ? { ...r, status: 'pending_client_signature', verifiedBy: this.currentActor(), verifiedAt: now, updatedAt: now } : r);
+    this.setState({ enterpriseRegistrations: regs });
+    const reg = regs.find(r => r.id === id);
+    this.addAudit(this.currentActor(), 'Simulasi verifikasi: Disetujui', reg.companyName || id, null);
+  }
+  simulateRegReject() {
+    if (this.state.role !== 'lead') return;
+    const id = this.state.activeRegId;
+    const reason = this.state.regRejectReasonInput.trim();
+    if (!reason) { this.setState({ regStep2Error: 'Alasan reject wajib diisi.' }); return; }
+    const step = this.state.regRejectStepInput;
+    const now = new Date();
+    const regs = this.state.enterpriseRegistrations.map(r => r.id === id ? { ...r, status: 'rejected', rejectReason: reason, rejectedAtStep: step, updatedAt: now } : r);
+    this.setState({ enterpriseRegistrations: regs, showRegRejectInput: false, regStep: step, regStep2Error: '' });
+    const reg = regs.find(r => r.id === id);
+    this.addAudit(this.currentActor(), 'Simulasi verifikasi: Ditolak', (reg.companyName || id) + ' — ' + reason, null);
+  }
+  sendRegDocToClient(id) {
+    const now = new Date();
+    const regs = this.state.enterpriseRegistrations.map(r => r.id === id ? { ...r, docSentAt: now, updatedAt: now } : r);
+    this.setState({ enterpriseRegistrations: regs });
+    const reg = regs.find(r => r.id === id);
+    this.addAudit(this.currentActor(), 'Sent registration document to client', reg.companyName || id, null);
+  }
+  publishRegistration(id) {
+    const reg = this.getReg(id);
+    if (!reg) return;
+    const now = new Date();
+    const eaItem = reg.serviceItems[0], meItem = reg.serviceItems[1], feeItem = reg.serviceItems[2];
+    const agreementDate = reg.agreementDate ? new Date(reg.agreementDate) : now;
+    const addYears = (d, y) => new Date(d.getFullYear() + (parseInt(y, 10) || 1), d.getMonth(), d.getDate());
+    const regularExpiredAt = addYears(agreementDate, eaItem.periodYears || 1);
+    const stampExpiredAt = addYears(agreementDate, meItem.periodYears || 1);
+    const eaUnit = parseInt(eaItem.unit, 10) || 0;
+    const meUnit = parseInt(meItem.unit, 10) || 0;
+    const newEnt = {
+      id: uid('ent-'), uuid: uid('uuid-'), name: reg.companyName, pid: uid('EID').toUpperCase(), ownerPid: reg.ownerPrivyId, npwp: reg.npwpNumber,
+      syncBy: reg.createdBy, createdAt: reg.createdAt, registeredBy: reg.createdBy, updatedAt: now, updatedBy: this.currentActor(),
+      email: reg.companyEmail, phone: reg.companyPhone, address: reg.companyAddress, ownerName: reg.ownerName, ownerUuid: uid('uuid-'),
+      credentialToken: this.fakeToken(64), type: 'AS_IS', pic: null,
+      regularAvailable: eaUnit, regularQuota: eaUnit, regularUsage: 0, freeAvailable: 0, freeQuota: 0, freeUsage: 0,
+      stampAvailable: meUnit, stampQuota: meUnit, stampUsage: 0,
+      regularExpiredAt, freeExpiredAt: regularExpiredAt, stampExpiredAt,
+      items: [
+        { code: '375', name: 'Employee Account (EA)', unit: 'month', base: Math.round((parseFloat(eaItem.pricePerYear) || 0) / 12), hasSpecial: false, special: null },
+        { code: '386', name: 'E-Meterai', unit: 'piece', base: parseFloat(meItem.pricePerYear) || 0, hasSpecial: false, special: null },
+        { code: '387', name: 'Stamping Fee - (E-Meterai)', unit: 'piece', base: parseFloat(feeItem.pricePerYear) || 0, hasSpecial: false, special: null }
+      ]
+    };
+    const regs = this.state.enterpriseRegistrations.map(r => r.id === id ? { ...r, status: 'published', clientSignedAt: now, publishedEnterpriseId: newEnt.id, updatedAt: now } : r);
+    this.setState({ enterpriseRegistrations: regs, enterprises: [...this.state.enterprises, newEnt] });
+    this.addAudit(this.currentActor(), 'Client signed — enterprise registration published', newEnt.name, newEnt.id);
+  }
+  buildRegFormPreview(reg) {
+    const signerMeta = {
+      brata: 'Brata R. Rafly — Chief Business Officer (Surat Kuasa No. 021/Privy-DIR/S.Ku/VII/2026, 10 Juli 2026)',
+      johan: 'Johan Andreas — Executive VP of Business Development (Surat Kuasa No. 015/Privy-DIR/S.Ku/VII/2025, 11 Juli 2025)'
+    };
+    const items = reg.serviceItems.map(it => {
+      const calc = this.regServiceCalc(it);
+      return {
+        type: it.type, periodYearsLabel: (it.periodYears || '-') + ' tahun', priceLabel: rp(parseFloat(it.pricePerYear) || 0), unitLabel: it.unit || '-',
+        subtotalLabel: rp(calc.subtotal), discountLabel: rp(calc.discount), subtotalAfterDiscountLabel: rp(calc.subtotalAfterDiscount)
+      };
+    });
+    const total = reg.serviceItems.reduce((a, it) => a + this.regServiceCalc(it).subtotalAfterDiscount, 0);
+    return {
+      formNumberPrivy: reg.formNumberPrivy || '-', formNumberPelanggan: reg.formNumberPelanggan || '-',
+      privySignerLabel: signerMeta[reg.privySigner], customerType: reg.customerType,
+      companyName: reg.companyName || '-', companyAddress: reg.companyAddress || '-', businessField: reg.businessField || '-', npwpNumber: reg.npwpNumber || '-',
+      signerName: reg.signerName || '-', signerPrivyId: reg.signerPrivyId || '-', signerTitle: reg.signerTitle || '-',
+      correspondenceAddress: reg.correspondenceAddress || '-',
+      emailPriceUpdate: reg.emailPriceUpdate || '-', emailDisruption: reg.emailDisruption || '-', emailBilling: reg.emailBilling || '-',
+      items, totalLabel: rp(total),
+      agreementDateLabel: reg.agreementDate ? fmtDate(new Date(reg.agreementDate)) : '-'
+    };
+  }
+  htmlRegFormTemplate(fp) {
+    const rows = fp.items.map(it => '<tr><td style="padding:8px 0;">' + it.type + '</td><td style="padding:8px 0; text-align:right;">' + it.periodYearsLabel + '</td><td style="padding:8px 0; text-align:right;">' + it.priceLabel + '</td><td style="padding:8px 0; text-align:right;">' + it.unitLabel + '</td><td style="padding:8px 0; text-align:right;">' + it.subtotalLabel + '</td><td style="padding:8px 0; text-align:right;">' + it.discountLabel + '</td><td style="padding:8px 0; text-align:right;">' + it.subtotalAfterDiscountLabel + '</td></tr>').join('');
+    return '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Formulir Pendaftaran ' + fp.companyName + '</title>' +
+      '<style>body{font-family:Arial,sans-serif; padding:40px; color:#191C21;} table{width:100%; border-collapse:collapse;} th{text-align:left; border-bottom:2px solid #191C21; padding:8px 0;}</style>' +
+      '</head><body><h1>FORMULIR PENDAFTARAN LAYANAN PRIVY</h1>' +
+      '<p>No. Privy: ' + fp.formNumberPrivy + ' &middot; No. Pelanggan: ' + fp.formNumberPelanggan + '</p>' +
+      '<p>Pihak Privy: ' + fp.privySignerLabel + '</p>' +
+      '<p>Tipe Pelanggan: ' + fp.customerType + '</p>' +
+      '<p>Nama: ' + fp.companyName + '<br/>Alamat: ' + fp.companyAddress + '<br/>Bidang Usaha: ' + fp.businessField + '<br/>NPWP: ' + fp.npwpNumber + '</p>' +
+      '<p>Perwakilan sah Pelanggan: ' + fp.signerName + ' (' + fp.signerPrivyId + ') &mdash; ' + fp.signerTitle + '</p>' +
+      '<p>Korespondensi: ' + fp.correspondenceAddress + '<br/>Email pemutakhiran harga: ' + fp.emailPriceUpdate + '<br/>Email penghentian/gangguan: ' + fp.emailDisruption + '<br/>Email tagihan: ' + fp.emailBilling + '</p>' +
+      '<table><thead><tr><th>Jenis Layanan</th><th>Periode</th><th>Biaya/Tahun</th><th>Unit</th><th>Sub Total</th><th>Discount</th><th>Sub Total setelah Discount</th></tr></thead><tbody>' + rows + '</tbody></table>' +
+      '<p><b>Total: ' + fp.totalLabel + '</b></p>' +
+      '<p>Tanggal: ' + fp.agreementDateLabel + '</p>' +
+      '<p>Tanda tangan: ' + fp.signerName + ' &mdash; ' + fp.signerTitle + '</p></body></html>';
+  }
+
   renderVals() {
     const s = this.state;
     const isLead = s.role === 'lead';
@@ -3341,6 +3946,7 @@ class Component extends DCLogic {
     const navDefs = [
       ...(isLead ? [{ key: 'products', label: 'Product List', icon: 'pi-archive-box', badge: null }] : []),
       { key: 'list', label: 'Enterprise List', icon: 'pi-apps', badge: null },
+      { key: 'ent-reg-list', label: 'Enterprise Registration', icon: 'pi-document-add', badge: null },
       { key: 'personal', label: 'Personal Plan', icon: 'pi-user-circle', badge: null },
       { key: 'approvals', label: 'Approvals', icon: 'pi-shield-on', badge: isLead && pendingCount ? pendingCount : null },
       { key: 'topup', label: 'Log Top Up', icon: 'pi-wallet', badge: null },
@@ -3716,6 +4322,90 @@ class Component extends DCLogic {
       id: p.id, name: p.name, unit: p.unit, code: p.code || '-', priceLabel: rp(p.base), createdAtLabel: fmtDate(p.createdAt), openEdit: () => this.openEditProductModal(p)
     }));
 
+    // ---------- enterprise registration ----------
+    const activeReg = this.getActiveReg();
+    const regStatusMeta = {
+      draft: { label: 'Draft', bg: '#F4F5F7', color: '#647184' },
+      pending_verification: { label: 'Menunggu Verifikasi', bg: '#E5F3FF', color: '#0061B3' },
+      pending_client_signature: { label: 'Menunggu Tanda Tangan Client', bg: '#FFF5E5', color: '#8C5700' },
+      rejected: { label: 'Ditolak', bg: '#FCEAE9', color: '#C22725' },
+      published: { label: 'Terbit', bg: '#EAF9EE', color: '#248C3E' }
+    };
+    const regListRows = s.enterpriseRegistrations.map(r => {
+      const meta = regStatusMeta[r.status];
+      return {
+        id: r.id, companyName: r.companyName || 'Draft belum diisi', ownerPrivyId: r.ownerPrivyId || '-',
+        statusLabel: meta.label, statusBg: meta.bg, statusColor: meta.color,
+        createdAtLabel: fmtDateTime(r.createdAt), updatedAtLabel: fmtDateTime(r.updatedAt), createdBy: r.createdBy,
+        open: () => this.resumeRegistration(r.id)
+      };
+    });
+    const regStepMeta = (n) => ({
+      bg: s.regStep === n ? '#E42E2C' : (s.regStep > n ? '#191C21' : '#F4F5F7'),
+      color: s.regStep >= n ? '#fff' : '#939EAE',
+      textColor: s.regStep === n ? '#191C21' : '#939EAE'
+    });
+    const regStep1M = regStepMeta(1), regStep2M = regStepMeta(2), regStep3M = regStepMeta(3);
+    const regDocSlotDefs = [
+      { key: 'npwp', label: 'NPWP', required: true },
+      { key: 'nib', label: 'NIB', required: true },
+      { key: 'skPendirian', label: 'SK Pendirian', required: true },
+      { key: 'aktaPendirian', label: 'Akta Pendirian', required: true },
+      { key: 'suratKuasa', label: 'Surat Kuasa (Opsional)', required: false }
+    ];
+    const regDocSlots = activeReg ? regDocSlotDefs.map(d => {
+      const doc = activeReg.documents[d.key];
+      return {
+        key: d.key, label: d.label, required: d.required,
+        fileName: doc ? doc.fileName : '', hasFile: !!doc, showUpload: !doc,
+        onFile: (e) => this.onRegDocFile(d.key, e), remove: () => this.removeRegDoc(d.key)
+      };
+    }) : [];
+    const regServiceRows = activeReg ? activeReg.serviceItems.map((it, idx) => {
+      const calc = this.regServiceCalc(it);
+      return {
+        idx, type: it.type, periodYears: it.periodYears, pricePerYear: it.pricePerYear, unit: it.unit, discount: it.discount,
+        subtotalLabel: rp(calc.subtotal), subtotalAfterDiscountLabel: rp(calc.subtotalAfterDiscount),
+        onPeriod: (e) => this.onRegServiceItemField(idx, 'periodYears', e.target.value),
+        onPrice: (e) => this.onRegServiceItemField(idx, 'pricePerYear', e.target.value),
+        onUnit: (e) => this.onRegServiceItemField(idx, 'unit', e.target.value),
+        onDiscount: (e) => this.onRegServiceItemField(idx, 'discount', e.target.value)
+      };
+    }) : [];
+    const regServiceTotal = activeReg ? activeReg.serviceItems.reduce((a, it) => a + this.regServiceCalc(it).subtotalAfterDiscount, 0) : 0;
+    const regFormPreview = (s.showRegDocPreview && activeReg) ? this.buildRegFormPreview(activeReg) : null;
+    const regView = activeReg ? {
+      ownerPrivyId: activeReg.ownerPrivyId, ownerName: activeReg.ownerName, ownerLookupWarning: !!activeReg.ownerPrivyId.trim() && !activeReg.ownerName,
+      companyEmail: activeReg.companyEmail, companyPhone: activeReg.companyPhone,
+      onOwnerPrivyId: (e) => this.onRegOwnerPrivyId(e), onCompanyEmail: this.onRegField('companyEmail'), onCompanyPhone: this.onRegField('companyPhone'),
+      formNumberPrivy: activeReg.formNumberPrivy, formNumberPelanggan: activeReg.formNumberPelanggan,
+      onFormNumberPrivy: this.onRegField('formNumberPrivy'), onFormNumberPelanggan: this.onRegField('formNumberPelanggan'),
+      privySigner: activeReg.privySigner, onPrivySigner: this.onRegField('privySigner'),
+      customerType: activeReg.customerType, onCustomerType: this.onRegField('customerType'),
+      companyName: activeReg.companyName, onCompanyName: this.onRegField('companyName'),
+      companyAddress: activeReg.companyAddress, onCompanyAddress: this.onRegField('companyAddress'),
+      businessField: activeReg.businessField, onBusinessField: this.onRegField('businessField'),
+      npwpNumber: activeReg.npwpNumber, onNpwpNumber: this.onRegField('npwpNumber'),
+      signerPrivyId: activeReg.signerPrivyId, signerName: activeReg.signerName, signerLookupWarning: !!activeReg.signerPrivyId.trim() && !activeReg.signerName,
+      onSignerPrivyId: (e) => this.onRegSignerPrivyId(e),
+      signerTitle: activeReg.signerTitle, onSignerTitle: this.onRegField('signerTitle'),
+      correspondenceAddress: activeReg.correspondenceAddress, onCorrespondenceAddress: this.onRegField('correspondenceAddress'),
+      emailPriceUpdate: activeReg.emailPriceUpdate, onEmailPriceUpdate: this.onRegField('emailPriceUpdate'),
+      emailDisruption: activeReg.emailDisruption, onEmailDisruption: this.onRegField('emailDisruption'),
+      emailBilling: activeReg.emailBilling, onEmailBilling: this.onRegField('emailBilling'),
+      agreementDate: activeReg.agreementDate, onAgreementDate: this.onRegField('agreementDate'),
+      status: activeReg.status, statusMeta: regStatusMeta[activeReg.status],
+      rejectReason: activeReg.rejectReason, rejectedAtStep: activeReg.rejectedAtStep, hasRejectReason: !!activeReg.rejectReason,
+      isDraftOrRejected: activeReg.status === 'draft' || activeReg.status === 'rejected',
+      isPendingVerification: activeReg.status === 'pending_verification',
+      isPendingClientSignature: activeReg.status === 'pending_client_signature',
+      isPublished: activeReg.status === 'published',
+      canSimulateVerify: activeReg.status === 'pending_verification' && isLead,
+      docSentAtLabel: activeReg.docSentAt ? fmtDateTime(activeReg.docSentAt) : '', hasDocSent: !!activeReg.docSentAt, docNotSent: !activeReg.docSentAt,
+      publishedEnterpriseId: activeReg.publishedEnterpriseId,
+      createdAtLabel: fmtDateTime(activeReg.createdAt)
+    } : {};
+
     return {
       isLead, avatarBg: isLead ? '#E42E2C' : '#008AFF', avatarInitials: isLead ? 'VE' : 'DA',
       roleEbsBg: !isLead ? '#fff' : 'transparent', roleEbsColor: !isLead ? '#191C21' : '#647184', roleEbsShadow: !isLead ? '0 1px 3px rgba(25,28,33,0.10)' : 'none',
@@ -4064,7 +4754,37 @@ class Component extends DCLogic {
       saveSpecialPrice: () => this.saveSpecialPrice(),
 
       // plan history modal
-      showPlanHistoryModal: s.modal === 'planHistory', planHistoryTitle, planHistoryList
+      showPlanHistoryModal: s.modal === 'planHistory', planHistoryTitle, planHistoryList,
+
+      // ---------- enterprise registration ----------
+      isEntRegListPage: s.page === 'ent-reg-list', isEntRegisterPage: s.page === 'ent-register',
+      startNewRegistration: () => this.startNewRegistration(),
+      backToRegList: () => this.backToRegList(),
+      regListRows, noRegListRows: regListRows.length === 0,
+
+      isRegStep1: s.regStep === 1, isRegStep2: s.regStep === 2, isRegStep3: s.regStep === 3,
+      regStep1Bg: regStep1M.bg, regStep1Color: regStep1M.color, regStep1TextColor: regStep1M.textColor,
+      regStep2Bg: regStep2M.bg, regStep2Color: regStep2M.color, regStep2TextColor: regStep2M.textColor,
+      regStep3Bg: regStep3M.bg, regStep3Color: regStep3M.color, regStep3TextColor: regStep3M.textColor,
+
+      reg: regView,
+      regDocSlots, regServiceRows, regServiceTotalLabel: rp(regServiceTotal),
+      regStep1Error: s.regStep1Error, regStep2Error: s.regStep2Error,
+      goToRegStep2: () => this.goToRegStep2(), backToRegStep1: () => this.backToRegStep1(),
+      goToRegStep3: () => this.goToRegStep3(), backToRegStep2: () => this.backToRegStep2(),
+      openRegDocPreview: () => this.openRegDocPreview(), closeRegDocPreview: () => this.closeRegDocPreview(),
+      showRegDocPreview: s.showRegDocPreview, regFormPreview: regFormPreview || { items: [] },
+      downloadRegForm: () => this.downloadRegForm(),
+      submitRegForVerification: () => this.submitRegForVerification(),
+      openRegRejectPanel: () => this.openRegRejectPanel(), closeRegRejectPanel: () => this.closeRegRejectPanel(),
+      showRegRejectInput: s.showRegRejectInput,
+      regRejectReasonInput: s.regRejectReasonInput, onRegRejectReasonInput: (e) => this.onRegRejectReasonInput(e),
+      isRegRejectStep1: s.regRejectStepInput === 1, isRegRejectStep2: s.regRejectStepInput === 2,
+      setRegRejectStep_1: () => this.setRegRejectStep(1), setRegRejectStep_2: () => this.setRegRejectStep(2),
+      simulateRegReject: () => this.simulateRegReject(),
+      simulateRegApprove: () => activeReg && this.simulateRegApprove(activeReg.id),
+      sendRegDocToClient: () => activeReg && this.sendRegDocToClient(activeReg.id),
+      publishRegistration: () => activeReg && this.publishRegistration(activeReg.id)
     };
   }
 
