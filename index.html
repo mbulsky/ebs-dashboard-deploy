@@ -361,10 +361,13 @@
 
               <div class="{{ regStep2FormClass }}" style="flex:1 1 55%; min-width:0; max-height:78vh; overflow-y:auto; padding-right:4px;">
                 <div style="background:#FBFCFD; border:1px solid #E6E7EB; border-radius:14px; padding:20px 22px; margin-bottom:16px;">
-                  <div style="font-size:14px; font-weight:600; color:#191C21; margin-bottom:14px;">Identitas</div>
-                  <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:14px;">
-                    <div><div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">No. Privy</div><input value="{{ reg.formNumberPrivy }}" onInput="{{ reg.onFormNumberPrivy }}" onFocus="{{ setRegFocused_privy }}" onBlur="{{ clearRegFocusedField }}" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px;" /></div>
-                    <div><div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">No. Pelanggan</div><input value="{{ reg.formNumberPelanggan }}" onInput="{{ reg.onFormNumberPelanggan }}" onFocus="{{ setRegFocused_pelanggan }}" onBlur="{{ clearRegFocusedField }}" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px;" /></div>
+                  <div style="font-size:14px; font-weight:600; color:#191C21; margin-bottom:3px;">Identitas</div>
+                  <div style="font-size:12px; color:#939EAE; margin-bottom:14px;">Data ini mengisi Bagian A &mdash; Identitas Para Pihak pada dokumen.</div>
+                  <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
+                    <div><div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">No. Privy</div><input value="{{ reg.formNumberPrivy }}" onInput="{{ reg.onFormNumberPrivy }}" onFocus="{{ setRegFocused_privy }}" onBlur="{{ clearRegFocusedField }}" placeholder="cth. PRIV-0001" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px;" /></div>
+                    <div><div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">No. Pelanggan</div><input value="{{ reg.formNumberPelanggan }}" onInput="{{ reg.onFormNumberPelanggan }}" onFocus="{{ setRegFocused_pelanggan }}" onBlur="{{ clearRegFocusedField }}" placeholder="cth. CUST-0001" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px;" /></div>
+                  </div>
+                  <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
                     <div>
                       <div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Pihak Privy</div>
                       <select value="{{ reg.privySigner }}" onChange="{{ reg.onPrivySigner }}" onFocus="{{ setRegFocused_privy }}" onBlur="{{ clearRegFocusedField }}" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px;">
@@ -383,19 +386,22 @@
                         <option value="CV">CV</option>
                       </select>
                     </div>
-                    <div><div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Nama Perusahaan</div><input value="{{ reg.companyName }}" onInput="{{ reg.onCompanyName }}" onFocus="{{ setRegFocused_privy }}" onBlur="{{ clearRegFocusedField }}" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px;" /></div>
-                    <div><div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">NPWP</div><input value="{{ reg.npwpNumber }}" onInput="{{ reg.onNpwpNumber }}" onFocus="{{ setRegFocused_privy }}" onBlur="{{ clearRegFocusedField }}" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px;" /></div>
-                    <div style="grid-column:span 2;"><div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Alamat</div><textarea value="{{ reg.companyAddress }}" onInput="{{ reg.onCompanyAddress }}" onFocus="{{ setRegFocused_privy }}" onBlur="{{ clearRegFocusedField }}" rows="2" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px; resize:vertical;"></textarea></div>
-                    <div style="grid-column:span 2;"><div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Bidang Usaha</div><input value="{{ reg.businessField }}" onInput="{{ reg.onBusinessField }}" onFocus="{{ setRegFocused_privy }}" onBlur="{{ clearRegFocusedField }}" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px;" /></div>
                   </div>
+                  <div style="margin-bottom:16px;"><div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Nama Perusahaan</div><input value="{{ reg.companyName }}" onInput="{{ reg.onCompanyName }}" onFocus="{{ setRegFocused_privy }}" onBlur="{{ clearRegFocusedField }}" placeholder="Nama resmi perusahaan pelanggan" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px;" /></div>
+                  <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
+                    <div><div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Bidang Usaha</div><input value="{{ reg.businessField }}" onInput="{{ reg.onBusinessField }}" onFocus="{{ setRegFocused_privy }}" onBlur="{{ clearRegFocusedField }}" placeholder="cth. Teknologi Informasi" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px;" /></div>
+                    <div><div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">NPWP</div><input value="{{ reg.npwpNumber }}" onInput="{{ reg.onNpwpNumber }}" onFocus="{{ setRegFocused_privy }}" onBlur="{{ clearRegFocusedField }}" placeholder="cth. 012345678901000" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px;" /></div>
+                  </div>
+                  <div><div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Alamat</div><textarea value="{{ reg.companyAddress }}" onInput="{{ reg.onCompanyAddress }}" onFocus="{{ setRegFocused_privy }}" onBlur="{{ clearRegFocusedField }}" rows="2" placeholder="Alamat lengkap perusahaan pelanggan" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px; resize:vertical;"></textarea></div>
                 </div>
 
                 <div style="background:#FBFCFD; border:1px solid #E6E7EB; border-radius:14px; padding:20px 22px; margin-bottom:16px;">
-                  <div style="font-size:14px; font-weight:600; color:#191C21; margin-bottom:14px;">Penandatangan Pelanggan</div>
+                  <div style="font-size:14px; font-weight:600; color:#191C21; margin-bottom:3px;">Penandatangan Pelanggan</div>
+                  <div style="font-size:12px; color:#939EAE; margin-bottom:14px;">Perwakilan sah yang menandatangani dokumen atas nama Pelanggan.</div>
                   <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
                     <div>
                       <div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">PrivyID Penandatangan</div>
-                      <input value="{{ reg.signerPrivyId }}" onInput="{{ reg.onSignerPrivyId }}" onFocus="{{ setRegFocused_signer }}" onBlur="{{ clearRegFocusedField }}" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px;" />
+                      <input value="{{ reg.signerPrivyId }}" onInput="{{ reg.onSignerPrivyId }}" onFocus="{{ setRegFocused_signer }}" onBlur="{{ clearRegFocusedField }}" placeholder="cth. WM0905" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px;" />
                       <sc-if value="{{ reg.signerName }}" hint-placeholder-val="{{ false }}">
                         <div style="font-size:12px; color:#1C8A4B; margin-top:5px;"><i class="pi-check-circle" style="margin-right:4px;"></i>{{ reg.signerName }}</div>
                       </sc-if>
@@ -403,35 +409,39 @@
                         <div style="font-size:12px; color:#8C5700; margin-top:5px;"><i class="pi-warning" style="margin-right:4px;"></i>PrivyID tidak ditemukan di direktori.</div>
                       </sc-if>
                     </div>
-                    <div><div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Jabatan</div><input value="{{ reg.signerTitle }}" onInput="{{ reg.onSignerTitle }}" onFocus="{{ setRegFocused_signerTitle }}" onBlur="{{ clearRegFocusedField }}" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px;" /></div>
+                    <div><div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Jabatan</div><input value="{{ reg.signerTitle }}" onInput="{{ reg.onSignerTitle }}" onFocus="{{ setRegFocused_signerTitle }}" onBlur="{{ clearRegFocusedField }}" placeholder="cth. Direktur Utama" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px;" /></div>
                   </div>
                 </div>
 
                 <div style="background:#FBFCFD; border:1px solid #E6E7EB; border-radius:14px; padding:20px 22px; margin-bottom:16px;">
-                  <div style="font-size:14px; font-weight:600; color:#191C21; margin-bottom:14px;">Korespondensi</div>
-                  <div style="margin-bottom:14px;"><div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Alamat Korespondensi</div><textarea value="{{ reg.correspondenceAddress }}" onInput="{{ reg.onCorrespondenceAddress }}" onFocus="{{ setRegFocused_korespondensi }}" onBlur="{{ clearRegFocusedField }}" rows="2" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px; resize:vertical;"></textarea></div>
+                  <div style="font-size:14px; font-weight:600; color:#191C21; margin-bottom:3px;">Korespondensi</div>
+                  <div style="font-size:12px; color:#939EAE; margin-bottom:14px;">Alamat &amp; email yang mengisi Bagian B &mdash; Korespondensi pada dokumen.</div>
+                  <div style="margin-bottom:14px;"><div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Alamat Korespondensi</div><textarea value="{{ reg.correspondenceAddress }}" onInput="{{ reg.onCorrespondenceAddress }}" onFocus="{{ setRegFocused_korespondensi }}" onBlur="{{ clearRegFocusedField }}" rows="2" placeholder="Alamat korespondensi pelanggan" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px; resize:vertical;"></textarea></div>
                   <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px;">
-                    <div><div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Email Pemutakhiran Harga</div><input value="{{ reg.emailPriceUpdate }}" onInput="{{ reg.onEmailPriceUpdate }}" onFocus="{{ setRegFocused_korespondensi }}" onBlur="{{ clearRegFocusedField }}" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px;" /></div>
-                    <div><div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Email Penghentian/Gangguan</div><input value="{{ reg.emailDisruption }}" onInput="{{ reg.onEmailDisruption }}" onFocus="{{ setRegFocused_korespondensi }}" onBlur="{{ clearRegFocusedField }}" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px;" /></div>
-                    <div><div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Email Penerimaan Tagihan</div><input value="{{ reg.emailBilling }}" onInput="{{ reg.onEmailBilling }}" onFocus="{{ setRegFocused_korespondensi }}" onBlur="{{ clearRegFocusedField }}" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px;" /></div>
+                    <div><div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Email Pemutakhiran Harga</div><input value="{{ reg.emailPriceUpdate }}" onInput="{{ reg.onEmailPriceUpdate }}" onFocus="{{ setRegFocused_korespondensi }}" onBlur="{{ clearRegFocusedField }}" placeholder="finance@pelanggan.com" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px;" /></div>
+                    <div><div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Email Penghentian/Gangguan</div><input value="{{ reg.emailDisruption }}" onInput="{{ reg.onEmailDisruption }}" onFocus="{{ setRegFocused_korespondensi }}" onBlur="{{ clearRegFocusedField }}" placeholder="ops@pelanggan.com" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px;" /></div>
+                    <div><div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Email Penerimaan Tagihan</div><input value="{{ reg.emailBilling }}" onInput="{{ reg.onEmailBilling }}" onFocus="{{ setRegFocused_korespondensi }}" onBlur="{{ clearRegFocusedField }}" placeholder="billing@pelanggan.com" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px;" /></div>
                   </div>
                 </div>
 
                 <div style="background:#FBFCFD; border:1px solid #E6E7EB; border-radius:14px; padding:20px 22px; margin-bottom:16px;">
-                  <div style="font-size:14px; font-weight:600; color:#191C21; margin-bottom:14px;">Jenis &amp; Biaya Layanan</div>
-                  <div style="display:grid; grid-template-columns:1.4fr 0.8fr 1fr 0.7fr 1fr 1.2fr; font-size:11px; font-weight:700; color:#939EAE; text-transform:uppercase; padding-bottom:8px; border-bottom:1px solid #E6E7EB; margin-bottom:6px;">
-                    <div>Jenis Layanan</div><div>Periode (thn)</div><div>Biaya/Tahun</div><div>Unit</div><div>Discount</div><div>Sub Total setelah Discount</div>
+                  <div style="font-size:14px; font-weight:600; color:#191C21; margin-bottom:3px;">Jenis &amp; Biaya Layanan</div>
+                  <div style="font-size:12px; color:#939EAE; margin-bottom:14px;">Bagian C pada dokumen. Tambah atau hapus baris sesuai kebutuhan layanan pelanggan.</div>
+                  <div style="display:grid; grid-template-columns:1.4fr 0.8fr 1fr 0.7fr 1fr 1.2fr 28px; font-size:11px; font-weight:700; color:#939EAE; text-transform:uppercase; padding-bottom:8px; border-bottom:1px solid #E6E7EB; margin-bottom:6px; gap:8px;">
+                    <div>Jenis Layanan</div><div>Periode (thn)</div><div>Biaya/Tahun (Rp)</div><div>Unit</div><div>Discount (Rp)</div><div>Sub Total Setelah Discount</div><div></div>
                   </div>
                   <sc-for list="{{ regServiceRows }}" as="svc" hint-placeholder-count="3">
-                    <div style="display:grid; grid-template-columns:1.4fr 0.8fr 1fr 0.7fr 1fr 1.2fr; align-items:center; padding:10px 0; border-bottom:1px solid #F4F5F7; gap:8px;">
-                      <div style="font-size:13px; color:#191C21; font-weight:600;">{{ svc.type }}</div>
-                      <input type="number" min="0" value="{{ svc.periodYears }}" onInput="{{ svc.onPeriod }}" onFocus="{{ setRegFocused_biaya }}" onBlur="{{ clearRegFocusedField }}" style="width:100%; border:1px solid #CBD1D8; border-radius:7px; padding:7px 9px; font-size:12.5px;" />
-                      <input type="number" min="0" value="{{ svc.pricePerYear }}" onInput="{{ svc.onPrice }}" onFocus="{{ setRegFocused_biaya }}" onBlur="{{ clearRegFocusedField }}" style="width:100%; border:1px solid #CBD1D8; border-radius:7px; padding:7px 9px; font-size:12.5px;" />
-                      <input type="number" min="0" value="{{ svc.unit }}" onInput="{{ svc.onUnit }}" onFocus="{{ setRegFocused_biaya }}" onBlur="{{ clearRegFocusedField }}" style="width:100%; border:1px solid #CBD1D8; border-radius:7px; padding:7px 9px; font-size:12.5px;" />
+                    <div style="display:grid; grid-template-columns:1.4fr 0.8fr 1fr 0.7fr 1fr 1.2fr 28px; align-items:center; padding:10px 0; border-bottom:1px solid #F4F5F7; gap:8px;">
+                      <input value="{{ svc.type }}" onInput="{{ svc.onType }}" onFocus="{{ setRegFocused_biaya }}" onBlur="{{ clearRegFocusedField }}" placeholder="cth. Employee Account" style="width:100%; border:1px solid #CBD1D8; border-radius:7px; padding:7px 9px; font-size:12.5px; font-weight:600; color:#191C21;" />
+                      <input type="number" min="0" value="{{ svc.periodYears }}" onInput="{{ svc.onPeriod }}" onFocus="{{ setRegFocused_biaya }}" onBlur="{{ clearRegFocusedField }}" placeholder="cth. 1" style="width:100%; border:1px solid #CBD1D8; border-radius:7px; padding:7px 9px; font-size:12.5px;" />
+                      <input type="number" min="0" value="{{ svc.pricePerYear }}" onInput="{{ svc.onPrice }}" onFocus="{{ setRegFocused_biaya }}" onBlur="{{ clearRegFocusedField }}" placeholder="cth. 175000" style="width:100%; border:1px solid #CBD1D8; border-radius:7px; padding:7px 9px; font-size:12.5px;" />
+                      <input type="number" min="0" value="{{ svc.unit }}" onInput="{{ svc.onUnit }}" onFocus="{{ setRegFocused_biaya }}" onBlur="{{ clearRegFocusedField }}" placeholder="cth. 10" style="width:100%; border:1px solid #CBD1D8; border-radius:7px; padding:7px 9px; font-size:12.5px;" />
                       <input type="number" min="0" value="{{ svc.discount }}" onInput="{{ svc.onDiscount }}" onFocus="{{ setRegFocused_biaya }}" onBlur="{{ clearRegFocusedField }}" style="width:100%; border:1px solid #CBD1D8; border-radius:7px; padding:7px 9px; font-size:12.5px;" />
                       <div style="font-size:13px; font-weight:600; color:#191C21;">{{ svc.subtotalAfterDiscountLabel }}</div>
+                      <button onClick="{{ svc.remove }}" disabled="{{ !svc.canRemove }}" title="Hapus baris" style="border:none; background:none; cursor:pointer; padding:4px; opacity:{{ svc.removeOpacity }};"><i class="pi-trash" style="font-size:14px; color:#C22725;"></i></button>
                     </div>
                   </sc-for>
+                  <button onClick="{{ addRegServiceItem }}" style="margin-top:12px; border:1px dashed #CBD1D8; background:#fff; color:#495260; font-size:12.5px; font-weight:600; padding:8px 14px; border-radius:8px; cursor:pointer; display:flex; align-items:center; gap:6px;"><i class="pi-add-circle" style="font-size:13px;"></i>Tambah Jenis Layanan</button>
                   <div style="display:flex; justify-content:flex-end; padding-top:12px; font-size:15px; font-weight:700; color:#191C21;">Total&nbsp;&nbsp;{{ regServiceTotalLabel }}</div>
                 </div>
 
@@ -3759,6 +3769,20 @@ class Component extends DCLogic {
     });
     this.setState({ enterpriseRegistrations: regs });
   }
+  addRegServiceItem() {
+    const id = this.state.activeRegId;
+    const regs = this.state.enterpriseRegistrations.map(r => r.id === id ? { ...r, serviceItems: [...r.serviceItems, { type: '', periodYears: '', pricePerYear: '', unit: '', discount: '0' }], updatedAt: new Date() } : r);
+    this.setState({ enterpriseRegistrations: regs });
+  }
+  removeRegServiceItem(idx) {
+    const id = this.state.activeRegId;
+    const regs = this.state.enterpriseRegistrations.map(r => {
+      if (r.id !== id) return r;
+      if (r.serviceItems.length <= 1) return r;
+      return { ...r, serviceItems: r.serviceItems.filter((it, i) => i !== idx), updatedAt: new Date() };
+    });
+    this.setState({ enterpriseRegistrations: regs });
+  }
   startNewRegistration() {
     const reg = this.makeNewRegistration(this.currentActor());
     this.setState({ enterpriseRegistrations: [reg, ...this.state.enterpriseRegistrations], page: 'ent-register', activeRegId: reg.id, regStep: 1, regStep1Error: '', regStep2Error: '', showRegRejectInput: false });
@@ -3803,6 +3827,9 @@ class Component extends DCLogic {
     const emails = [reg.emailPriceUpdate, reg.emailDisruption, reg.emailBilling];
     if (emails.some(e => !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e.trim()))) {
       this.setState({ regStep2Error: 'Format salah satu email korespondensi tidak valid.' }); return;
+    }
+    if (reg.serviceItems.some(it => !it.type || !it.type.trim())) {
+      this.setState({ regStep2Error: 'Semua baris jenis layanan wajib diberi nama.' }); return;
     }
     if (reg.serviceItems.some(it => !it.periodYears || !it.pricePerYear || !it.unit)) {
       this.setState({ regStep2Error: 'Lengkapi periode, biaya per tahun, dan unit untuk semua jenis layanan.' }); return;
@@ -3863,7 +3890,9 @@ class Component extends DCLogic {
     const reg = this.getReg(id);
     if (!reg) return;
     const now = new Date();
-    const eaItem = reg.serviceItems[0], meItem = reg.serviceItems[1], feeItem = reg.serviceItems[2];
+    const findServiceItem = (keyword) => reg.serviceItems.find(it => it.type && it.type.toLowerCase().includes(keyword));
+    const emptyItem = { periodYears: 1, unit: 0, pricePerYear: 0 };
+    const eaItem = findServiceItem('employee') || emptyItem, meItem = findServiceItem('meterai') || emptyItem, feeItem = findServiceItem('stamping') || emptyItem;
     const agreementDate = reg.agreementDate ? new Date(reg.agreementDate) : now;
     const addYears = (d, y) => new Date(d.getFullYear() + (parseInt(y, 10) || 1), d.getMonth(), d.getDate());
     const regularExpiredAt = addYears(agreementDate, eaItem.periodYears || 1);
@@ -3898,9 +3927,10 @@ class Component extends DCLogic {
   htmlFoDocTemplate(reg, opts) {
     opts = opts || {};
     const signerMeta = {
-      brata: 'Brata R. Rafly — Chief Business Officer (Surat Kuasa No. 021/Privy-DIR/S.Ku/VII/2026, 10 Juli 2026)',
-      johan: 'Johan Andreas — Executive VP of Business Development (Surat Kuasa No. 015/Privy-DIR/S.Ku/VII/2025, 11 Juli 2025)'
+      brata: { name: 'Brata R. Rafly', title: 'Chief Business Officer', suratKuasaNo: '021/Privy-DIR/S.Ku/VII/2026', suratKuasaDate: '10 Juli 2026' },
+      johan: { name: 'Johan Andreas', title: 'Executive VP of Business Development', suratKuasaNo: '015/Privy-DIR/S.Ku/VII/2025', suratKuasaDate: '11 Juli 2025' }
     };
+    const signer = signerMeta[reg.privySigner] || signerMeta.brata;
     const customerTypeLabel = { PT: 'Perseroan Terbatas', Koperasi: 'Koperasi', Yayasan: 'Yayasan', 'Perusahaan Perorangan': 'Perusahaan Perorangan', Firma: 'Firma', CV: 'CV' }[reg.customerType] || reg.customerType;
     const items = reg.serviceItems.map(it => {
       const calc = this.regServiceCalc(it);
@@ -3909,79 +3939,141 @@ class Component extends DCLogic {
         periodYearsLabel: (it.periodYears || '0') + ' tahun',
         priceLabel: rp(parseFloat(it.pricePerYear) || 0),
         unitLabel: it.unit || '0',
-        subtotalLabel: rp(calc.subtotal), discountLabel: rp(calc.discount), subtotalAfterDiscountLabel: rp(calc.subtotalAfterDiscount)
+        subtotalLabel: rp(calc.subtotal), discountLabel: rp(calc.discount), subtotalAfterDiscountLabel: rp(calc.subtotalAfterDiscount),
+        subtotal: calc.subtotal, discount: calc.discount, subtotalAfterDiscount: calc.subtotalAfterDiscount
       };
     });
-    const total = reg.serviceItems.reduce((a, it) => a + this.regServiceCalc(it).subtotalAfterDiscount, 0);
-    const rows = items.map(it => '<tr><td>' + this.escapeHtml(it.type) + '</td><td style="text-align:right;">' + it.periodYearsLabel + '</td><td style="text-align:right;">' + it.priceLabel + '</td><td style="text-align:right;">' + it.unitLabel + '</td><td style="text-align:right;">' + it.subtotalLabel + '</td><td style="text-align:right;">' + it.discountLabel + '</td><td style="text-align:right; font-weight:700;">' + it.subtotalAfterDiscountLabel + '</td></tr>').join('');
+    const subtotalSum = items.reduce((a, it) => a + it.subtotal, 0);
+    const discountSum = items.reduce((a, it) => a + it.discount, 0);
+    const grandTotal = items.reduce((a, it) => a + it.subtotalAfterDiscount, 0);
+    const rows = items.map(it => '<tr><td>' + this.escapeHtml(it.type || '-') + '</td><td style="text-align:right;">' + it.periodYearsLabel + '</td><td style="text-align:right;">' + it.priceLabel + '</td><td style="text-align:right;">' + it.unitLabel + '</td><td style="text-align:right;">' + it.subtotalLabel + '</td><td style="text-align:right;">' + it.discountLabel + '</td><td style="text-align:right; font-weight:700;">' + it.subtotalAfterDiscountLabel + '</td></tr>').join('');
     const agreementDateLabel = reg.agreementDate ? fmtDate(new Date(reg.agreementDate)) : '';
 
-    const sec = (key, title, bodyHtml) => '<div id="fo-sec-' + key + '" class="fo-sec' + (opts.highlightKey === key ? ' fo-hl' : '') + '"><div class="fo-sec-title">' + title + '</div>' + bodyHtml + '</div>';
+    const kv = (pairs) => '<table class="fo-kv"><tbody>' + pairs.map(p => '<tr><td>' + p[0] + '</td><td>:</td><td>' + p[1] + '</td></tr>').join('') + '</tbody></table>';
+    const hl = (key, bodyHtml) => '<div id="fo-sec-' + key + '" class="fo-hl-wrap' + (opts.highlightKey === key ? ' fo-hl' : '') + '">' + bodyHtml + '</div>';
+    const letterSec = (letter, title, bodyHtml) => '<div class="fo-lettersec"><div class="fo-lettersec-title">' + letter + '. ' + title + '</div>' + bodyHtml + '</div>';
 
     const html = '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Formulir Pendaftaran ' + this.escapeHtml(reg.companyName || reg.id) + '</title>' +
       '<style>' +
-      'body{font-family:Georgia,\'Times New Roman\',serif; color:#191C21; background:#fff; padding:36px 44px; line-height:1.6; font-size:13px;}' +
-      'h1{font-size:17px; text-transform:uppercase; letter-spacing:0.4px; text-align:center; margin-bottom:2px;}' +
-      '.fo-sub{text-align:center; font-size:11.5px; color:#647184; margin-bottom:26px;}' +
-      '.fo-sec{margin-bottom:20px; padding:10px 12px; border-radius:6px; transition:background 0.3s;}' +
-      '.fo-sec-title{font-weight:700; text-transform:uppercase; font-size:11.5px; letter-spacing:0.3px; color:#191C21; margin-bottom:8px; border-bottom:1px solid #E6E7EB; padding-bottom:4px;}' +
+      'body{font-family:Georgia,\'Times New Roman\',serif; color:#191C21; background:#fff; padding:36px 44px; line-height:1.6; font-size:12.5px;}' +
+      '.fo-header{display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:18px;}' +
+      '.fo-logo{font-weight:700; font-size:15px; color:#C22725;}' +
+      '.fo-confidential{font-style:italic; font-size:12px;}' +
+      'h1{font-size:14px; text-align:center; margin:0 0 4px;}' +
+      '.fo-sub{text-align:center; font-size:12.5px; margin-bottom:20px;}' +
+      '.fo-lettersec{margin-bottom:18px;}' +
+      '.fo-lettersec-title{font-weight:700; font-size:13px; margin-bottom:8px;}' +
+      '.fo-hl-wrap{padding:6px 8px; margin:0 -8px 8px; border-radius:6px; transition:background 0.3s;}' +
       '.fo-hl{background:#FCEAE9;}' +
       '.fo-placeholder{color:#939EAE; font-style:italic; background:#FFFCE8; padding:1px 5px; border-radius:3px;}' +
-      'table{width:100%; border-collapse:collapse; font-size:12.5px; margin-top:6px;}' +
-      'th{text-align:left; border-bottom:1.5px solid #191C21; padding:6px 4px; font-size:11px; text-transform:uppercase;}' +
-      'td{padding:6px 4px; border-bottom:1px solid #F0F1F3;}' +
-      '.fo-total-row{display:flex; justify-content:flex-end; padding-top:10px; font-weight:700; font-size:14px;}' +
-      '.fo-sign{margin-top:40px; display:flex; justify-content:space-between;}' +
-      '.fo-sign-block{width:45%; text-align:center; font-size:12.5px;}' +
-      '.fo-sign-line{margin-top:60px; border-top:1px solid #191C21; padding-top:6px;}' +
+      'p{margin:0 0 10px;}' +
+      'ol{margin:0 0 10px; padding-left:20px;}' +
+      'ol li{margin-bottom:8px;}' +
+      '.fo-kv{border-collapse:collapse; margin:6px 0 10px;}' +
+      '.fo-kv td{padding:1px 4px; vertical-align:top; font-size:12.5px;}' +
+      '.fo-kv td:first-child{width:130px; white-space:nowrap;}' +
+      '.fo-kv td:nth-child(2){width:10px;}' +
+      'table.fo-svc{width:100%; border-collapse:collapse; font-size:12px; margin:8px 0;}' +
+      '.fo-svc th{text-align:left; border:1px solid #191C21; padding:5px 6px; font-size:10.5px; background:#F4F5F7;}' +
+      '.fo-svc td{border:1px solid #CBD1D8; padding:5px 6px;}' +
+      '.fo-svc .fo-total-row td{font-weight:700; border-top:1.5px solid #191C21;}' +
+      '.fo-keterangan-title{font-weight:700; margin:12px 0 6px;}' +
+      '.fo-sign{margin-top:36px; display:flex; justify-content:space-between; gap:20px;}' +
+      '.fo-sign-block{width:46%; font-size:12.5px;}' +
+      '.fo-sign-line{margin-top:56px; border-top:1px solid #191C21; padding-top:4px;}' +
+      '.fo-footnote{margin-top:26px; font-size:10px; color:#647184; font-style:italic;}' +
       '</style></head><body>' +
+
+      '<div class="fo-header"><div class="fo-logo">privy</div><div class="fo-confidential">Sangat Rahasia</div></div>' +
       '<h1>Formulir Pendaftaran Layanan Enterprise Account Privy</h1>' +
-      '<div class="fo-sub">No. Privy: ' + this.foVal(reg.formNumberPrivy) + ' &middot; No. Pelanggan: ' + this.foVal(reg.formNumberPelanggan) + '</div>' +
+      '<div class="fo-sub">No. Privy: ' + this.foVal(reg.formNumberPrivy) + '<br/>No. Pelanggan: ' + this.foVal(reg.formNumberPelanggan) + '</div>' +
 
-      sec('identitas', 'A. Identitas Para Pihak',
-        '<p>Perjanjian ini dibuat dan ditandatangani oleh dan antara PT Privy Identitas Digital ("<b>Privy</b>"), diwakili oleh ' + this.escapeHtml(signerMeta[reg.privySigner]) + ', dengan pihak pelanggan sebagaimana disebutkan di bawah ini ("<b>Pelanggan</b>").</p>' +
-        '<table><tbody>' +
-        '<tr><td style="width:32%; color:#647184;">Tipe Pelanggan</td><td>' + this.foVal(customerTypeLabel) + '</td></tr>' +
-        '<tr><td style="color:#647184;">Nama Pelanggan</td><td>' + this.foVal(reg.companyName) + '</td></tr>' +
-        '<tr><td style="color:#647184;">Alamat</td><td>' + this.foVal(reg.companyAddress) + '</td></tr>' +
-        '<tr><td style="color:#647184;">Bidang Usaha</td><td>' + this.foVal(reg.businessField) + '</td></tr>' +
-        '<tr><td style="color:#647184;">NPWP</td><td>' + this.foVal(reg.npwpNumber) + '</td></tr>' +
-        '</tbody></table>'
+      letterSec('A', 'Identitas Para Pihak',
+        hl('identitas',
+          '<p>Formulir Pendaftaran Layanan Enterprise Account Privy ini (untuk selanjutnya disebut sebagai &ldquo;<b>Formulir Pendaftaran</b>&rdquo;) adalah perjanjian antara PT Privy Identitas Digital (&ldquo;<b>Privy</b>&rdquo;) yang diwakili oleh ' + this.escapeHtml(signer.name) + ' dalam kedudukannya selaku ' + this.escapeHtml(signer.title) + ' berdasarkan Surat Kuasa No. ' + this.escapeHtml(signer.suratKuasaNo) + ' tanggal ' + this.escapeHtml(signer.suratKuasaDate) + ' dan Pelanggan yang merupakan ' + this.foVal(customerTypeLabel) + ' dengan rincian sebagai berikut:</p>' +
+          kv([
+            ['Nama', this.foVal(reg.companyName)],
+            ['Alamat', this.foVal(reg.companyAddress)],
+            ['Bidang usaha', this.foVal(reg.businessField)],
+            ['NPWP', this.foVal(reg.npwpNumber)]
+          ]) +
+          '<p>(&ldquo;<b>Pelanggan</b>&rdquo;)</p>' +
+          '<p>Dalam hal ini diwakili secara sah oleh:</p>'
+        ) +
+        hl('penandatangan',
+          kv([
+            ['Nama', this.foVal(reg.signerName) + (reg.signerPrivyId ? ' (' + this.escapeHtml(reg.signerPrivyId) + ')' : '')],
+            ['Jabatan', this.foVal(reg.signerTitle)]
+          ])
+        ) +
+        '<p>Para Pihak sepakat bahwa Formulir Pendaftaran ini tunduk pada ketentuan yang diatur dalam Ketentuan Umum Formulir Pendaftaran Layanan Enterprise Account Privy yang dapat diakses oleh Pelanggan sewaktu-waktu, yang tersedia secara daring di <a href="https://privy.id/general-terms">https://privy.id/general-terms</a> (untuk selanjutnya disebut sebagai &ldquo;<b>Ketentuan Umum</b>&rdquo;).</p>'
       ) +
 
-      sec('penandatangan', 'B. Perwakilan Sah Pelanggan',
-        '<p>Pelanggan diwakili oleh perwakilan sah yang memiliki kewenangan untuk menandatangani perjanjian ini atas nama Pelanggan.</p>' +
-        '<table><tbody>' +
-        '<tr><td style="width:32%; color:#647184;">Nama</td><td>' + this.foVal(reg.signerName) + ' (' + this.foVal(reg.signerPrivyId) + ')</td></tr>' +
-        '<tr><td style="color:#647184;">Jabatan</td><td>' + this.foVal(reg.signerTitle) + '</td></tr>' +
-        '</tbody></table>'
+      letterSec('B', 'Korespondensi',
+        hl('korespondensi',
+          '<p>Dengan tetap mengacu pada ketentuan yang diatur dalam Ketentuan Umum, semua surat menyurat atau pemberitahuan-pemberitahuan antara Para Pihak dalam Formulir Pendaftaran ini mengenai atau sehubungan dengan Formulir Pendaftaran akan dikirimkan ke alamat-alamat tersebut di bawah ini:</p>' +
+          '<p><b>Alamat pemberitahuan/Korespondensi Privy:</b></p>' +
+          kv([
+            ['Alamat', 'CIBIS Tower 9 (PT Privy Identitas Digital, lantai 8), Jl. Raya Cilandak KKO No. 129 RT. 13/RW. 5, Cilandak Timur, Pasar Minggu, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12560'],
+            ['E-mail', 'bd@privy.id'],
+            ['U.p.', 'Divisi Business Development']
+          ]) +
+          '<p><b>Alamat pemberitahuan/Korespondensi Pelanggan:</b></p>' +
+          kv([
+            ['Alamat', this.foVal(reg.correspondenceAddress)],
+            ['Untuk pemutakhiran harga', this.foVal(reg.emailPriceUpdate)],
+            ['Penghentian/Gangguan/Perawatan', this.foVal(reg.emailDisruption)],
+            ['Penerimaan tagihan pembayaran', this.foVal(reg.emailBilling)]
+          ])
+        )
       ) +
 
-      sec('korespondensi', 'C. Korespondensi',
-        '<p>Seluruh pemberitahuan, penagihan, dan komunikasi resmi terkait layanan akan dikirimkan ke alamat dan email korespondensi berikut.</p>' +
-        '<table><tbody>' +
-        '<tr><td style="width:32%; color:#647184;">Alamat Korespondensi</td><td>' + this.foVal(reg.correspondenceAddress) + '</td></tr>' +
-        '<tr><td style="color:#647184;">Email Pemutakhiran Harga</td><td>' + this.foVal(reg.emailPriceUpdate) + '</td></tr>' +
-        '<tr><td style="color:#647184;">Email Penghentian/Gangguan/Perawatan</td><td>' + this.foVal(reg.emailDisruption) + '</td></tr>' +
-        '<tr><td style="color:#647184;">Email Penerimaan Tagihan</td><td>' + this.foVal(reg.emailBilling) + '</td></tr>' +
-        '</tbody></table>'
+      letterSec('C', 'Jenis dan Biaya Layanan',
+        hl('biaya',
+          '<p>Pelanggan setuju untuk mendaftar dan membeli layanan sebagai berikut:</p>' +
+          '<table class="fo-svc"><thead><tr><th>Jenis Layanan</th><th style="text-align:right;">Periode Layanan (Tahun)</th><th style="text-align:right;">Biaya Layanan per Tahun (Rupiah)</th><th style="text-align:right;">Unit</th><th style="text-align:right;">Sub Total (Rupiah)</th><th style="text-align:right;">Discount (Rupiah)</th><th style="text-align:right;">Sub Total setelah Discount (Rupiah)</th></tr></thead><tbody>' + rows +
+          '<tr class="fo-total-row"><td colspan="4">Total Biaya Layanan (Rupiah)</td><td style="text-align:right;">' + rp(subtotalSum) + '</td><td style="text-align:right;">' + rp(discountSum) + '</td><td style="text-align:right;">' + rp(grandTotal) + '</td></tr>' +
+          '</tbody></table>' +
+          '<div class="fo-keterangan-title">Keterangan:</div>' +
+          '<ol>' +
+          '<li>Biaya Layanan yang tertera pada Formulir Pendaftaran ini belum termasuk Pajak Pertambahan Nilai (PPN) dan sudah termasuk Pajak Penghasilan (PPh) sesuai dengan ketentuan hukum yang berlaku.</li>' +
+          '<li>Periode Layanan sebagaimana dimaksud pada tabel di atas dimulai terhitung sejak Enterprise Account Pelanggan berstatus aktif. Privy akan mengaktifkan status Enterprise Account Pelanggan setelah Biaya Layanan dilunasi oleh Pelanggan.</li>' +
+          '<li>Periode Layanan akan diperbarui sesuai dengan ketentuan Pembaruan Periode Layanan yang tercantum dalam Perjanjian ini.</li>' +
+          '<li>Dalam hal terdapat pembaruan Periode Layanan dan tidak ada perubahan atas kuantitas, harga, dan/atau komponen Biaya Layanan lainnya sebagaimana tercantum dalam tabel di atas, maka Pelanggan sepakat untuk melakukan pembayaran atas Biaya Layanan untuk pembaruan Periode Layanan tersebut dengan mengacu pada Biaya Layanan dan ketentuan pembayaran yang tercantum dalam Perjanjian ini. Perubahan harga atas Biaya Layanan akan diberitahukan secara tertulis kepada Pelanggan.</li>' +
+          '<li>Pembayaran dilakukan paling lambat 14 (empat belas) Hari Kalender setelah invoice diterima oleh Pelanggan.</li>' +
+          '<li>Seluruh layanan berdasarkan Formulir Pendaftaran ini serta setiap pembaruan Periode Layanannya bersifat pra-bayar (<i>pre-paid</i>) yang hanya dapat digunakan setelah pembayaran Biaya Layanan dilunasi oleh Pelanggan. Segera setelah pembayaran dilakukan, harap mengirimkan bukti pembayaran/transfer berikut dengan informasi tentang nama Pelanggan, jumlah transfer, dan nomor <i>invoice</i> melalui <i>e-mail</i> ke bd@privy.id.</li>' +
+          '</ol>'
+        )
       ) +
 
-      sec('biaya', 'D. Jenis dan Biaya Layanan',
-        '<p>Pelanggan setuju untuk menggunakan layanan Privy dengan rincian jenis, periode, dan biaya layanan sebagai berikut.</p>' +
-        '<table><thead><tr><th>Jenis Layanan</th><th style="text-align:right;">Periode</th><th style="text-align:right;">Biaya/Tahun</th><th style="text-align:right;">Unit</th><th style="text-align:right;">Sub Total</th><th style="text-align:right;">Discount</th><th style="text-align:right;">Sub Total setelah Discount</th></tr></thead><tbody>' + rows + '</tbody></table>' +
-        '<div class="fo-total-row">Total&nbsp;&nbsp;' + rp(total) + '</div>'
+      letterSec('D', 'Jangka Waktu Perjanjian',
+        '<ol>' +
+        '<li>Perjanjian ini berlaku efektif selama 1 (satu) tahun terhitung sejak tanggal Perjanjian ini (&ldquo;<b>Jangka Waktu</b>&rdquo;). Jangka Waktu Perjanjian ini diperpanjang secara otomatis dan terus-menerus untuk setiap 1 (satu) tahun berikutnya, kecuali diakhiri sesuai dengan ketentuan dalam Perjanjian ini.</li>' +
+        '<li>Apabila tidak terdapat pembaruan Periode Layanan atau Para Pihak telah menandatangani Formulir Pendaftaran baru sebagaimana dimaksud dalam Bagian E Perjanjian ini, maka Jangka Waktu Perjanjian ini akan berakhir secara otomatis.</li>' +
+        '</ol>'
       ) +
 
-      sec('jangka-waktu', 'E. Jangka Waktu Perjanjian dan Pembaruan Periode Layanan',
-        '<p>Perjanjian ini berlaku efektif sejak Tanggal Perjanjian dan berlaku selama periode layanan yang tercantum pada Bagian D untuk masing-masing jenis layanan. Layanan akan diperbarui secara otomatis untuk periode yang sama kecuali salah satu pihak menyampaikan pemberitahuan tertulis untuk tidak memperpanjang, selambat-lambatnya 30 (tiga puluh) hari sebelum berakhirnya periode layanan yang berjalan.</p>' +
-        '<p style="color:#647184;">Tanggal Perjanjian: <b style="color:#191C21;">' + (agreementDateLabel ? this.escapeHtml(agreementDateLabel) : '<span class="fo-placeholder">[belum diisi]</span>') + '</b></p>'
+      letterSec('E', 'Pembaruan Periode Layanan',
+        '<ol>' +
+        '<li>Pelanggan wajib melunasi seluruh Biaya Layanan untuk setiap pembaruan Periode Layanan sebelum berakhirnya Periode Layanan terakhir. Untuk menghindari keragu-raguan, Periode Layanan yang diperbarui akan dimulai pada hari kalender berikutnya setelah berakhirnya Periode Layanan terakhir, sehingga Periode Layanan yang diperbarui tersebut berlaku sebagai kelanjutan dari Periode Layanan terakhir yang dimaksud.</li>' +
+        '<li>Apabila Pelanggan tidak melakukan pelunasan sebagaimana dimaksud pada ayat (1) di atas, maka Periode Layanan tidak akan diperbarui dan Jangka Waktu Perjanjian ini berakhir secara otomatis pada saat berakhirnya Periode Layanan terakhir.</li>' +
+        '<li>Apabila terdapat perubahan atas kuantitas, harga, dan/atau komponen Biaya Layanan lainnya, dari Biaya Layanan yang telah disepakati dalam Bagian C Perjanjian ini, untuk Periode Layanan yang akan diperbarui, Para Pihak sepakat bahwa pembelian dan penyediaan Layanan wajib dituangkan dalam Formulir Pendaftaran baru yang disepakati dan ditandatangani oleh Para Pihak. Dengan ditandatanganinya Formulir Pendaftaran baru tersebut, Jangka Waktu Perjanjian ini akan berakhir secara otomatis.</li>' +
+        '</ol>'
       ) +
+
+      '<p>Formulir Pendaftaran ini dan Ketentuan Umum merupakan satu kesatuan yang tidak terpisahkan. Privy berhak mengubah Ketentuan Umum sewaktu-waktu atas kewenangannya sendiri. Formulir Pendaftaran ini dapat ditandatangani secara terpisah oleh masing-masing Pihak, dan ketika ditandatangani maka akan dianggap menjadi satu kesatuan dokumen asli yang tidak terpisahkan dari Formulir Pendaftaran ini dan Formulir Pendaftaran ini ditandatangani oleh Para Pihak dalam 2 (dua) rangkap atau ditandatangani secara elektronik pada hari dan tanggal di bawah ini.</p>' +
+
+      hl('tanggal-tandatangan', '<p>Tanggal: <b>' + (agreementDateLabel ? this.escapeHtml(agreementDateLabel) : '<span class="fo-placeholder">[belum diisi]</span>') + '</b></p>') +
 
       '<div class="fo-sign">' +
-      '<div class="fo-sign-block"><div class="fo-sign-line">Untuk dan atas nama Privy<br/>' + this.escapeHtml(signerMeta[reg.privySigner]) + '</div></div>' +
-      '<div class="fo-sign-block"><div class="fo-sign-line">Untuk dan atas nama Pelanggan<br/>' + this.foVal(reg.signerName) + ' — ' + this.foVal(reg.signerTitle) + '</div></div>' +
+      '<div class="fo-sign-block"><div>Untuk dan atas nama Pelanggan:</div><div><b>' + this.foVal(reg.companyName) + '</b></div>' +
+      '<div class="fo-sign-line">Nama: ' + this.foVal(reg.signerName) + '<br/>Jabatan: ' + this.foVal(reg.signerTitle) + '</div></div>' +
+      '<div class="fo-sign-block"><div>Diterima dan disetujui oleh:</div><div><b>PT Privy Identitas Digital</b></div>' +
+      '<div class="fo-sign-line">Nama: ' + this.escapeHtml(signer.name) + '<br/>Jabatan: ' + this.escapeHtml(signer.title) + '</div></div>' +
       '</div>' +
+
+      '<div class="fo-footnote">*Harap hapus yang tidak perlu<br/>**Harap untuk dapat dilengkapi</div>' +
+
       (opts.highlightKey ? '<script>var el=document.getElementById("fo-sec-' + opts.highlightKey + '"); if(el){ el.scrollIntoView({behavior:"smooth", block:"center"}); }<\/script>' : '') +
       '</body></html>';
     return html;
@@ -4429,15 +4521,19 @@ class Component extends DCLogic {
         onFile: (e) => this.onRegDocFile(d.key, e), remove: () => this.removeRegDoc(d.key)
       };
     }) : [];
+    const regServiceCanRemove = activeReg ? activeReg.serviceItems.length > 1 : false;
     const regServiceRows = activeReg ? activeReg.serviceItems.map((it, idx) => {
       const calc = this.regServiceCalc(it);
       return {
         idx, type: it.type, periodYears: it.periodYears, pricePerYear: it.pricePerYear, unit: it.unit, discount: it.discount,
         subtotalLabel: rp(calc.subtotal), subtotalAfterDiscountLabel: rp(calc.subtotalAfterDiscount),
+        canRemove: regServiceCanRemove, removeOpacity: regServiceCanRemove ? 1 : 0.35,
+        onType: (e) => this.onRegServiceItemField(idx, 'type', e.target.value),
         onPeriod: (e) => this.onRegServiceItemField(idx, 'periodYears', e.target.value),
         onPrice: (e) => this.onRegServiceItemField(idx, 'pricePerYear', e.target.value),
         onUnit: (e) => this.onRegServiceItemField(idx, 'unit', e.target.value),
-        onDiscount: (e) => this.onRegServiceItemField(idx, 'discount', e.target.value)
+        onDiscount: (e) => this.onRegServiceItemField(idx, 'discount', e.target.value),
+        remove: () => this.removeRegServiceItem(idx)
       };
     }) : [];
     const regServiceTotal = activeReg ? activeReg.serviceItems.reduce((a, it) => a + this.regServiceCalc(it).subtotalAfterDiscount, 0) : 0;
@@ -4836,7 +4932,7 @@ class Component extends DCLogic {
       regStep3Bg: regStep3M.bg, regStep3Color: regStep3M.color, regStep3TextColor: regStep3M.textColor,
 
       reg: regView,
-      regDocSlots, regServiceRows, regServiceTotalLabel: rp(regServiceTotal),
+      regDocSlots, regServiceRows, regServiceTotalLabel: rp(regServiceTotal), addRegServiceItem: () => this.addRegServiceItem(),
       regStep1Error: s.regStep1Error, regStep2Error: s.regStep2Error,
       goToRegStep2: () => this.goToRegStep2(), backToRegStep1: () => this.backToRegStep1(),
       goToRegStep3: () => this.goToRegStep3(), backToRegStep2: () => this.backToRegStep2(),
@@ -4853,7 +4949,7 @@ class Component extends DCLogic {
       setRegFocused_signer: () => this.setRegFocusedField('penandatangan'), setRegFocused_signerTitle: () => this.setRegFocusedField('penandatangan'),
       setRegFocused_korespondensi: () => this.setRegFocusedField('korespondensi'),
       setRegFocused_biaya: () => this.setRegFocusedField('biaya'),
-      setRegFocused_tanggal: () => this.setRegFocusedField('jangka-waktu'),
+      setRegFocused_tanggal: () => this.setRegFocusedField('tanggal-tandatangan'),
       submitRegForVerification: () => this.submitRegForVerification(),
       openRegRejectPanel: () => this.openRegRejectPanel(), closeRegRejectPanel: () => this.closeRegRejectPanel(),
       showRegRejectInput: s.showRegRejectInput,
