@@ -359,7 +359,7 @@
 
             <div class="fo-step2-wrap" style="display:flex; gap:20px; align-items:flex-start;">
 
-              <div class="fo-step2-col-form {{ regStep2ViewMode === 'preview' ? 'mode-preview' : '' }}" style="flex:1 1 55%; min-width:0; max-height:78vh; overflow-y:auto; padding-right:4px;">
+              <div class="{{ regStep2FormClass }}" style="flex:1 1 55%; min-width:0; max-height:78vh; overflow-y:auto; padding-right:4px;">
                 <div style="background:#FBFCFD; border:1px solid #E6E7EB; border-radius:14px; padding:20px 22px; margin-bottom:16px;">
                   <div style="font-size:14px; font-weight:600; color:#191C21; margin-bottom:14px;">Identitas</div>
                   <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:14px;">
@@ -450,7 +450,7 @@
                 </div>
               </div>
 
-              <div class="fo-step2-col-preview {{ regStep2ViewMode === 'form' ? 'mode-form' : '' }}" style="flex:1 1 45%; min-width:0; position:sticky; top:20px;">
+              <div class="{{ regStep2PreviewClass }}" style="flex:1 1 45%; min-width:0; position:sticky; top:20px;">
                 <div style="display:flex; justify-content:flex-end; margin-bottom:8px;">
                   <button onClick="{{ openRegDocPreview }}" style="border:1px solid #CBD1D8; background:#fff; color:#1F2329; font-size:12.5px; font-weight:600; padding:8px 14px; border-radius:7px; cursor:pointer; display:flex; align-items:center; gap:6px;"><i class="pi-expand" style="font-size:12px;"></i>Lihat Preview Layar Penuh</button>
                 </div>
@@ -497,8 +497,8 @@
                       <textarea value="{{ regRejectReasonInput }}" onInput="{{ onRegRejectReasonInput }}" rows="2" placeholder="Alasan penolakan registrasi" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:9px 12px; font-size:13px; resize:vertical; background:#fff; margin-bottom:10px;"></textarea>
                       <div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Balik ke step</div>
                       <div style="display:flex; gap:8px; margin-bottom:12px;">
-                        <button onClick="{{ setRegRejectStep_1 }}" style="border:1px solid {{ isRegRejectStep1 ? '#E42E2C' : '#CBD1D8' }}; background:{{ isRegRejectStep1 ? '#FCEAE9' : '#fff' }}; color:#1F2329; font-size:12.5px; font-weight:600; padding:7px 14px; border-radius:7px; cursor:pointer;">Step 1 (Data &amp; Dokumen)</button>
-                        <button onClick="{{ setRegRejectStep_2 }}" style="border:1px solid {{ isRegRejectStep2 ? '#E42E2C' : '#CBD1D8' }}; background:{{ isRegRejectStep2 ? '#FCEAE9' : '#fff' }}; color:#1F2329; font-size:12.5px; font-weight:600; padding:7px 14px; border-radius:7px; cursor:pointer;">Step 2 (Formulir FO)</button>
+                        <button onClick="{{ setRegRejectStep_1 }}" style="border:1px solid {{ regRejectStep1Border }}; background:{{ regRejectStep1Bg }}; color:#1F2329; font-size:12.5px; font-weight:600; padding:7px 14px; border-radius:7px; cursor:pointer;">Step 1 (Data &amp; Dokumen)</button>
+                        <button onClick="{{ setRegRejectStep_2 }}" style="border:1px solid {{ regRejectStep2Border }}; background:{{ regRejectStep2Bg }}; color:#1F2329; font-size:12.5px; font-weight:600; padding:7px 14px; border-radius:7px; cursor:pointer;">Step 2 (Formulir FO)</button>
                       </div>
                       <sc-if value="{{ regStep2Error }}" hint-placeholder-val="{{ false }}">
                         <div style="color:#C22725; font-size:12px; margin-bottom:10px;">{{ regStep2Error }}</div>
@@ -510,7 +510,7 @@
                     </div>
                   </sc-if>
 
-                  <div style="display:{{ showRegRejectInput ? 'none' : 'flex' }}; gap:8px;">
+                  <div style="display:{{ regRejectToggleDisplay }}; gap:8px;">
                     <button onClick="{{ openRegRejectPanel }}" style="border:1px solid #F6BCBB; background:#fff; color:#C22725; font-size:13px; font-weight:600; padding:9px 16px; border-radius:8px; cursor:pointer;">Simulasikan: Ditolak</button>
                     <button onClick="{{ simulateRegApprove }}" style="border:none; background:#E42E2C; color:#fff; font-size:13px; font-weight:600; padding:9px 18px; border-radius:8px; cursor:pointer;">Simulasikan: Disetujui</button>
                   </div>
