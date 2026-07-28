@@ -292,6 +292,7 @@
 
           <!-- ===== STEP 1: DATA AWAL & DOKUMEN ===== -->
           <sc-if value="{{ isRegStep1 }}" hint-placeholder-val="{{ true }}">
+          <div style="{{ regLockedWrapStyle }}">
             <div style="background:#FBFCFD; border:1px solid #E6E7EB; border-radius:14px; padding:20px 22px; margin-bottom:16px;">
               <div style="font-size:14px; font-weight:600; color:#191C21; margin-bottom:14px;">Data Awal</div>
               <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:14px;">
@@ -347,6 +348,7 @@
             <div style="display:flex; justify-content:flex-end; gap:10px;">
               <button onClick="{{ goToRegStep2 }}" style="border:none; background:#E42E2C; color:#fff; font-size:13px; font-weight:600; padding:10px 22px; border-radius:8px; cursor:pointer;">Lanjut</button>
             </div>
+          </div>
           </sc-if>
 
           <!-- ===== STEP 2: FORMULIR PENDAFTARAN (FO) ===== -->
@@ -359,7 +361,7 @@
 
             <div class="fo-step2-wrap" style="display:flex; gap:20px; align-items:flex-start;">
 
-              <div class="{{ regStep2FormClass }}" style="flex:1 1 55%; min-width:0; max-height:78vh; overflow-y:auto; padding-right:4px;">
+              <div class="{{ regStep2FormClass }}" style="flex:1 1 55%; min-width:0; max-height:78vh; overflow-y:auto; padding-right:4px; {{ regLockedWrapStyle }}">
                 <div style="background:#FBFCFD; border:1px solid #E6E7EB; border-radius:14px; padding:20px 22px; margin-bottom:16px;">
                   <div style="font-size:14px; font-weight:600; color:#191C21; margin-bottom:3px;">Identitas</div>
                   <div style="font-size:12px; color:#939EAE; margin-bottom:14px;">Data ini mengisi Bagian A &mdash; Identitas Para Pihak pada dokumen.</div>
@@ -485,17 +487,107 @@
               </div>
             </div>
 
-            <!-- draft / rejected: submit -->
-            <sc-if value="{{ reg.isDraftOrRejected }}" hint-placeholder-val="{{ true }}">
+            <!-- ===== 1. DRAFT: belum disubmit ===== -->
+            <sc-if value="{{ reg.isDraft }}" hint-placeholder-val="{{ true }}">
+              <sc-if value="{{ reg.hasSubmissionHistory }}" hint-placeholder-val="{{ false }}">
+                <div style="display:inline-block; background:#F4F5F7; color:#495260; font-size:11px; font-weight:700; padding:4px 10px; border-radius:999px; margin-bottom:12px;">Percobaan ke-{{ reg.nextAttemptNumber }}</div>
+              </sc-if>
+
+              <div style="background:#FBFCFD; border:1px solid #E6E7EB; border-radius:14px; margin-bottom:14px; overflow:hidden;">
+                <div onClick="{{ toggleRegSummaryStep1 }}" style="display:flex; justify-content:space-between; align-items:center; padding:16px 18px; cursor:pointer;">
+                  <div style="font-size:13.5px; font-weight:600; color:#191C21;">Data Awal &amp; Dokumen</div>
+                  <i class="{{ regSummaryStep1Icon }}" style="font-size:12px; color:#939EAE;"></i>
+                </div>
+                <sc-if value="{{ regSummaryStep1Open }}" hint-placeholder-val="{{ false }}">
+                  <div style="padding:0 18px 18px; font-size:12.5px; color:#495260; display:grid; grid-template-columns:1fr 1fr; gap:10px 20px; border-top:1px solid #F4F5F7; padding-top:14px;">
+                    <div><span style="color:#939EAE;">Owner PrivyID</span><br/>{{ reg.ownerPrivyId }} &mdash; {{ reg.ownerName }}</div>
+                    <div><span style="color:#939EAE;">Email / Telepon Perusahaan</span><br/>{{ reg.companyEmail }} &middot; {{ reg.companyPhone }}</div>
+                  </div>
+                </sc-if>
+              </div>
+
+              <div style="background:#FBFCFD; border:1px solid #E6E7EB; border-radius:14px; margin-bottom:16px; overflow:hidden;">
+                <div onClick="{{ toggleRegSummaryStep2 }}" style="display:flex; justify-content:space-between; align-items:center; padding:16px 18px; cursor:pointer;">
+                  <div style="font-size:13.5px; font-weight:600; color:#191C21;">Formulir Pendaftaran (FO)</div>
+                  <i class="{{ regSummaryStep2Icon }}" style="font-size:12px; color:#939EAE;"></i>
+                </div>
+                <sc-if value="{{ regSummaryStep2Open }}" hint-placeholder-val="{{ false }}">
+                  <div style="padding:0 18px 18px; font-size:12.5px; color:#495260; display:grid; grid-template-columns:1fr 1fr; gap:10px 20px; border-top:1px solid #F4F5F7; padding-top:14px;">
+                    <div><span style="color:#939EAE;">Nama Perusahaan</span><br/>{{ reg.companyName }}</div>
+                    <div><span style="color:#939EAE;">Penandatangan</span><br/>{{ reg.signerName }} &mdash; {{ reg.signerTitle }}</div>
+                    <div style="grid-column:span 2;"><span style="color:#939EAE;">Korespondensi</span><br/>{{ reg.correspondenceAddress }}</div>
+                    <div><span style="color:#939EAE;">Total Biaya Layanan</span><br/>{{ regServiceTotalLabel }}</div>
+                    <div><span style="color:#939EAE;">Tanggal Perjanjian</span><br/>{{ reg.agreementDate }}</div>
+                  </div>
+                </sc-if>
+              </div>
+
               <div style="display:flex; justify-content:flex-end; gap:10px;">
                 <button onClick="{{ backToRegStep2 }}" style="border:1px solid #CBD1D8; background:#fff; color:#1F2329; font-size:13px; font-weight:600; padding:10px 20px; border-radius:8px; cursor:pointer;"><i class="pi-arrow-left"></i> Back</button>
                 <button onClick="{{ submitRegForVerification }}" style="border:none; background:#E42E2C; color:#fff; font-size:13px; font-weight:600; padding:10px 22px; border-radius:8px; cursor:pointer;">Submit untuk Verifikasi</button>
               </div>
+
+              <sc-if value="{{ reg.showHistoryCollapsible }}" hint-placeholder-val="{{ false }}">
+                <div style="margin-top:20px;">
+                  <button onClick="{{ toggleRegHistoryExpanded }}" style="border:none; background:none; color:#0075D9; font-size:12.5px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px; padding:0;"><i class="{{ regHistoryToggleIcon }}" style="font-size:10px;"></i>Lihat riwayat sebelumnya</button>
+                  <sc-if value="{{ regHistoryExpanded }}" hint-placeholder-val="{{ false }}">
+                    <div style="margin-top:12px;">
+                      <sc-for list="{{ submissionHistoryRows }}" as="sh" hint-placeholder-count="1">
+                        <div style="border:1px solid #E6E7EB; border-radius:10px; padding:12px 14px; margin-bottom:8px; background:#fff;">
+                          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                            <span style="font-size:11px; font-weight:700; background:#F4F5F7; color:#495260; padding:3px 9px; border-radius:999px;">Percobaan ke-{{ sh.attemptNumber }}</span>
+                            <span style="font-size:11px; font-weight:700; padding:3px 9px; border-radius:999px; background:{{ sh.resultBg }}; color:{{ sh.resultColor }};">{{ sh.resultLabel }}</span>
+                          </div>
+                          <div style="font-size:12px; color:#647184; margin-bottom:4px;">Diajukan {{ sh.submittedAtLabel }} oleh {{ sh.submittedBy }}</div>
+                          <sc-if value="{{ sh.hasRejectReason }}" hint-placeholder-val="{{ false }}">
+                            <div style="font-size:12px; color:#C22725;">{{ sh.rejectReason }} &middot; {{ sh.rejectedAtStepLabel }}</div>
+                          </sc-if>
+                        </div>
+                      </sc-for>
+                    </div>
+                  </sc-if>
+                </div>
+              </sc-if>
             </sc-if>
 
-            <!-- pending verification: simulation panel -->
+            <!-- ===== 2. REJECTED ===== -->
+            <sc-if value="{{ reg.isRejected }}" hint-placeholder-val="{{ false }}">
+              <div style="border:1px solid #F6BCBB; background:#FCEAE9; border-radius:10px; padding:16px 18px; margin-bottom:14px;">
+                <div style="font-size:13px; font-weight:700; color:#C22725; margin-bottom:6px;"><i class="pi-warning" style="margin-right:6px;"></i>Registrasi ini ditolak</div>
+                <div style="font-size:12.5px; color:#8C2320; margin-bottom:4px;">{{ reg.rejectReason }}</div>
+                <div style="font-size:12px; color:#8C2320;">Perlu diperbaiki di: {{ reg.rejectedAtStepLabel }}</div>
+              </div>
+              <div style="display:flex; justify-content:flex-end; margin-bottom:20px;">
+                <button onClick="{{ goToRejectedStep }}" style="border:none; background:#E42E2C; color:#fff; font-size:13px; font-weight:600; padding:10px 22px; border-radius:8px; cursor:pointer;">Perbaiki Sekarang</button>
+              </div>
+              <div style="font-size:13px; font-weight:600; color:#191C21; margin-bottom:10px;">Riwayat Resubmit</div>
+              <sc-for list="{{ submissionHistoryRows }}" as="sh" hint-placeholder-count="1">
+                <div style="border:1px solid #E6E7EB; border-radius:10px; padding:12px 14px; margin-bottom:8px; background:#FBFCFD;">
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                    <span style="font-size:11px; font-weight:700; background:#F4F5F7; color:#495260; padding:3px 9px; border-radius:999px;">Percobaan ke-{{ sh.attemptNumber }}</span>
+                    <span style="font-size:11px; font-weight:700; padding:3px 9px; border-radius:999px; background:{{ sh.resultBg }}; color:{{ sh.resultColor }};">{{ sh.resultLabel }}</span>
+                  </div>
+                  <div style="font-size:12px; color:#647184; margin-bottom:4px;">Diajukan {{ sh.submittedAtLabel }} oleh {{ sh.submittedBy }}</div>
+                  <sc-if value="{{ sh.hasRejectReason }}" hint-placeholder-val="{{ false }}">
+                    <div style="font-size:12px; color:#C22725;">{{ sh.rejectReason }} &middot; {{ sh.rejectedAtStepLabel }}</div>
+                  </sc-if>
+                </div>
+              </sc-for>
+              <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:16px; padding-top:16px; border-top:1px solid #E6E7EB;">
+                <button onClick="{{ backToRegStep2 }}" style="border:1px solid #CBD1D8; background:#fff; color:#1F2329; font-size:13px; font-weight:600; padding:10px 20px; border-radius:8px; cursor:pointer;"><i class="pi-arrow-left"></i> Back</button>
+                <button onClick="{{ submitRegForVerification }}" style="border:none; background:#E42E2C; color:#fff; font-size:13px; font-weight:600; padding:10px 22px; border-radius:8px; cursor:pointer;">Submit Ulang untuk Verifikasi</button>
+              </div>
+            </sc-if>
+
+            <!-- ===== 3. PENDING VERIFICATION ===== -->
             <sc-if value="{{ reg.isPendingVerification }}" hint-placeholder-val="{{ false }}">
-              <div style="border:1px solid #ADD9FF; background:#E5F3FF; border-radius:10px; padding:14px 16px; margin-bottom:14px; font-size:12.5px; color:#0061B3;"><i class="pi-info-circle" style="margin-right:6px;"></i>Menunggu hasil verifikasi dari aplikasi verifikator eksternal.</div>
+              <div style="border:1px solid #ADD9FF; background:#E5F3FF; border-radius:10px; padding:16px 18px; margin-bottom:14px;">
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+                  <i class="pi-time" style="font-size:16px; color:#0061B3;"></i>
+                  <div style="font-size:13.5px; font-weight:600; color:#0061B3;">Sedang menunggu hasil verifikasi</div>
+                </div>
+                <div style="font-size:12.5px; color:#0061B3;">Diajukan pada {{ reg.lastSubmission.submittedAtLabel }} oleh {{ reg.lastSubmission.submittedBy }}</div>
+              </div>
 
               <sc-if value="{{ reg.canSimulateVerify }}" hint-placeholder-val="{{ false }}">
                 <div style="border:1px solid #FFE0AD; background:#FFFBF5; border-radius:10px; padding:16px 18px;">
@@ -526,25 +618,56 @@
                   </div>
                 </div>
               </sc-if>
+
+              <sc-if value="{{ reg.showHistoryCollapsible }}" hint-placeholder-val="{{ false }}">
+                <div style="margin-top:20px;">
+                  <button onClick="{{ toggleRegHistoryExpanded }}" style="border:none; background:none; color:#0075D9; font-size:12.5px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px; padding:0;"><i class="{{ regHistoryToggleIcon }}" style="font-size:10px;"></i>Lihat riwayat sebelumnya</button>
+                  <sc-if value="{{ regHistoryExpanded }}" hint-placeholder-val="{{ false }}">
+                    <div style="margin-top:12px;">
+                      <sc-for list="{{ submissionHistoryRows }}" as="sh" hint-placeholder-count="1">
+                        <div style="border:1px solid #E6E7EB; border-radius:10px; padding:12px 14px; margin-bottom:8px; background:#fff;">
+                          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                            <span style="font-size:11px; font-weight:700; background:#F4F5F7; color:#495260; padding:3px 9px; border-radius:999px;">Percobaan ke-{{ sh.attemptNumber }}</span>
+                            <span style="font-size:11px; font-weight:700; padding:3px 9px; border-radius:999px; background:{{ sh.resultBg }}; color:{{ sh.resultColor }};">{{ sh.resultLabel }}</span>
+                          </div>
+                          <div style="font-size:12px; color:#647184; margin-bottom:4px;">Diajukan {{ sh.submittedAtLabel }} oleh {{ sh.submittedBy }}</div>
+                          <sc-if value="{{ sh.hasRejectReason }}" hint-placeholder-val="{{ false }}">
+                            <div style="font-size:12px; color:#C22725;">{{ sh.rejectReason }} &middot; {{ sh.rejectedAtStepLabel }}</div>
+                          </sc-if>
+                        </div>
+                      </sc-for>
+                    </div>
+                  </sc-if>
+                </div>
+              </sc-if>
             </sc-if>
 
-            <!-- pending client signature -->
+            <!-- ===== 4. PENDING CLIENT SIGNATURE ===== -->
             <sc-if value="{{ reg.isPendingClientSignature }}" hint-placeholder-val="{{ false }}">
               <div style="border:1px solid #FFE0AD; background:#FFFBF5; border-radius:10px; padding:16px 18px;">
-                <div style="font-size:13px; color:#8C5700; margin-bottom:12px;">Terverifikasi. Kirim dokumen Formulir Pendaftaran ke client untuk ditandatangani.</div>
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+                  <i class="pi-send" style="font-size:15px; color:#8C5700;"></i>
+                  <sc-if value="{{ reg.hasDocSent }}" hint-placeholder-val="{{ false }}">
+                    <div style="font-size:13px; font-weight:600; color:#8C5700;">Dokumen sudah dikirim ke client, menunggu tanda tangan</div>
+                  </sc-if>
+                  <sc-if value="{{ reg.docNotSent }}" hint-placeholder-val="{{ true }}">
+                    <div style="font-size:13px; font-weight:600; color:#8C5700;">Terverifikasi. Kirim dokumen Formulir Pendaftaran ke client untuk ditandatangani.</div>
+                  </sc-if>
+                </div>
                 <sc-if value="{{ reg.hasDocSent }}" hint-placeholder-val="{{ false }}">
-                  <div style="font-size:12.5px; color:#1C8A4B; margin-bottom:12px;"><i class="pi-check-circle" style="margin-right:5px;"></i>Dokumen terkirim ke client pada {{ reg.docSentAtLabel }}</div>
-                  <button onClick="{{ publishRegistration }}" style="border:none; background:#E42E2C; color:#fff; font-size:13px; font-weight:600; padding:10px 20px; border-radius:8px; cursor:pointer;">Simulasikan: Client Sudah Tanda Tangan</button>
+                  <div style="font-size:12.5px; color:#1C8A4B; margin-bottom:12px;"><i class="pi-check-circle" style="margin-right:5px;"></i>Dikirim pada {{ reg.docSentAtLabel }}</div>
+                  <div style="display:flex; gap:8px;">
+                    <button onClick="{{ openRegDocPreview }}" style="border:1px solid #CBD1D8; background:#fff; color:#1F2329; font-size:13px; font-weight:600; padding:10px 18px; border-radius:8px; cursor:pointer;">Lihat Dokumen</button>
+                    <button onClick="{{ publishRegistration }}" style="border:none; background:#E42E2C; color:#fff; font-size:13px; font-weight:600; padding:10px 20px; border-radius:8px; cursor:pointer;">Simulasikan: Client Sudah Tanda Tangan</button>
+                  </div>
                 </sc-if>
                 <sc-if value="{{ reg.docNotSent }}" hint-placeholder-val="{{ true }}">
-                  <button onClick="{{ sendRegDocToClient }}" style="border:none; background:#191C21; color:#fff; font-size:13px; font-weight:600; padding:10px 20px; border-radius:8px; cursor:pointer;">Kirim Dokumen ke Client</button>
+                  <div style="display:flex; gap:8px;">
+                    <button onClick="{{ openRegDocPreview }}" style="border:1px solid #CBD1D8; background:#fff; color:#1F2329; font-size:13px; font-weight:600; padding:10px 18px; border-radius:8px; cursor:pointer;">Lihat Dokumen</button>
+                    <button onClick="{{ sendRegDocToClient }}" style="border:none; background:#191C21; color:#fff; font-size:13px; font-weight:600; padding:10px 20px; border-radius:8px; cursor:pointer;">Kirim Dokumen ke Client</button>
+                  </div>
                 </sc-if>
               </div>
-            </sc-if>
-
-            <!-- published -->
-            <sc-if value="{{ reg.isPublished }}" hint-placeholder-val="{{ false }}">
-              <div style="border:1px solid #BEEDCA; background:#EAF9EE; border-radius:10px; padding:16px 18px; font-size:13px; color:#248C3E;"><i class="pi-check-circle" style="margin-right:6px;"></i>Registrasi terbit. Enterprise sudah muncul di Enterprise List.</div>
             </sc-if>
           </sc-if>
         </div>
@@ -2756,6 +2879,11 @@
   </div>
 </sc-if>
 
+<!-- ================= TOAST ================= -->
+<sc-if value="{{ toastVisible }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed; top:20px; right:20px; z-index:2000; background:#191C21; color:#fff; padding:13px 20px; border-radius:10px; font-size:13px; font-weight:600; box-shadow:0 10px 25px -5px rgba(25,28,33,0.35); display:flex; align-items:center; gap:8px;"><i class="pi-check-circle" style="color:#34C759; font-size:15px;"></i>{{ toastMessage }}</div>
+</sc-if>
+
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 const INITIAL_PRODUCTS_ACCOUNT = [
@@ -2966,7 +3094,9 @@ class Component extends DCLogic {
     regStep: 1, activeRegId: null, regStep1Error: '', regStep2Error: '',
     showRegRejectInput: false, regRejectReasonInput: '', regRejectStepInput: 2,
     showRegDocPreview: false,
-    regFocusedField: '', regStep2ViewMode: 'form'
+    regFocusedField: '', regStep2ViewMode: 'form',
+    regHistoryExpanded: false, regSummaryStep1Open: false, regSummaryStep2Open: false,
+    toastMessage: '', toastVisible: false
   };
 
   // ---------- helpers ----------
@@ -3729,7 +3859,8 @@ class Component extends DCLogic {
       docSentAt: null,
       verifiedBy: null, verifiedAt: null,
       clientSignedAt: null,
-      publishedEnterpriseId: null
+      publishedEnterpriseId: null,
+      submissionHistory: []
     };
   }
   getReg(id) { return this.state.enterpriseRegistrations.find(r => r.id === id); }
@@ -3791,11 +3922,24 @@ class Component extends DCLogic {
   resumeRegistration(id) {
     const reg = this.getReg(id);
     if (!reg) return;
+    if (reg.status === 'published') { this.openEnterprise(reg.publishedEnterpriseId); return; }
     let step = reg.currentStep || 1;
     if (reg.status === 'rejected' && reg.rejectedAtStep) step = reg.rejectedAtStep;
-    if (['pending_verification', 'pending_client_signature', 'published'].includes(reg.status)) step = 3;
-    this.setState({ page: 'ent-register', activeRegId: id, regStep: step, regStep1Error: '', regStep2Error: '', showRegRejectInput: false });
+    if (['pending_verification', 'pending_client_signature'].includes(reg.status)) step = 3;
+    this.setState({ page: 'ent-register', activeRegId: id, regStep: step, regStep1Error: '', regStep2Error: '', showRegRejectInput: false, regHistoryExpanded: false });
   }
+  goToRejectedStep() {
+    const reg = this.getActiveReg();
+    if (!reg) return;
+    this.setState({ regStep: reg.rejectedAtStep || 1 });
+  }
+  toggleRegHistoryExpanded() { this.setState({ regHistoryExpanded: !this.state.regHistoryExpanded }); }
+  showToast(message) {
+    this.setState({ toastMessage: message, toastVisible: true });
+    setTimeout(() => this.setState({ toastVisible: false }), 2500);
+  }
+  toggleRegSummaryStep1() { this.setState({ regSummaryStep1Open: !this.state.regSummaryStep1Open }); }
+  toggleRegSummaryStep2() { this.setState({ regSummaryStep2Open: !this.state.regSummaryStep2Open }); }
   backToRegList() { this.setState({ page: 'ent-reg-list', activeRegId: null }); }
   goToRegStep2() {
     const reg = this.getActiveReg();
@@ -3852,17 +3996,29 @@ class Component extends DCLogic {
     const reg = this.getActiveReg();
     if (!reg) return;
     const wasRejected = reg.status === 'rejected';
-    this.onRegFieldPatch({ status: 'pending_verification', rejectReason: '', rejectedAtStep: null });
+    const now = new Date();
+    const entry = { id: uid('sub-'), attemptNumber: reg.submissionHistory.length + 1, submittedAt: now, submittedBy: this.currentActor(), result: 'pending', reviewedAt: null, rejectReason: null, rejectedAtStep: null };
+    this.onRegFieldPatch({ status: 'pending_verification', rejectReason: '', rejectedAtStep: null, submissionHistory: [...reg.submissionHistory, entry] });
     this.addAudit(this.currentActor(), wasRejected ? 'Resubmitted enterprise registration for verification' : 'Submitted enterprise registration for verification', reg.companyName || reg.id, null);
   }
   openRegRejectPanel() { this.setState({ showRegRejectInput: true, regRejectReasonInput: '', regRejectStepInput: 2 }); }
   closeRegRejectPanel() { this.setState({ showRegRejectInput: false }); }
   setRegRejectStep(step) { this.setState({ regRejectStepInput: step }); }
   onRegRejectReasonInput(e) { this.setState({ regRejectReasonInput: e.target.value }); }
+  updateLastPendingSubmission(submissionHistory, patch) {
+    let lastPendingIdx = -1;
+    submissionHistory.forEach((h, i) => { if (h.result === 'pending') lastPendingIdx = i; });
+    if (lastPendingIdx === -1) return submissionHistory;
+    return submissionHistory.map((h, i) => i === lastPendingIdx ? { ...h, ...patch } : h);
+  }
   simulateRegApprove(id) {
     if (this.state.role !== 'lead') return;
     const now = new Date();
-    const regs = this.state.enterpriseRegistrations.map(r => r.id === id ? { ...r, status: 'pending_client_signature', verifiedBy: this.currentActor(), verifiedAt: now, updatedAt: now } : r);
+    const regs = this.state.enterpriseRegistrations.map(r => {
+      if (r.id !== id) return r;
+      const submissionHistory = this.updateLastPendingSubmission(r.submissionHistory, { result: 'approved', reviewedAt: now });
+      return { ...r, status: 'pending_client_signature', verifiedBy: this.currentActor(), verifiedAt: now, updatedAt: now, submissionHistory };
+    });
     this.setState({ enterpriseRegistrations: regs });
     const reg = regs.find(r => r.id === id);
     this.addAudit(this.currentActor(), 'Simulasi verifikasi: Disetujui', reg.companyName || id, null);
@@ -3874,7 +4030,11 @@ class Component extends DCLogic {
     if (!reason) { this.setState({ regStep2Error: 'Alasan reject wajib diisi.' }); return; }
     const step = this.state.regRejectStepInput;
     const now = new Date();
-    const regs = this.state.enterpriseRegistrations.map(r => r.id === id ? { ...r, status: 'rejected', rejectReason: reason, rejectedAtStep: step, updatedAt: now } : r);
+    const regs = this.state.enterpriseRegistrations.map(r => {
+      if (r.id !== id) return r;
+      const submissionHistory = this.updateLastPendingSubmission(r.submissionHistory, { result: 'rejected', reviewedAt: now, rejectReason: reason, rejectedAtStep: step });
+      return { ...r, status: 'rejected', rejectReason: reason, rejectedAtStep: step, updatedAt: now, submissionHistory };
+    });
     this.setState({ enterpriseRegistrations: regs, showRegRejectInput: false, regStep: step, regStep2Error: '' });
     const reg = regs.find(r => r.id === id);
     this.addAudit(this.currentActor(), 'Simulasi verifikasi: Ditolak', (reg.companyName || id) + ' — ' + reason, null);
@@ -3916,6 +4076,8 @@ class Component extends DCLogic {
     const regs = this.state.enterpriseRegistrations.map(r => r.id === id ? { ...r, status: 'published', clientSignedAt: now, publishedEnterpriseId: newEnt.id, updatedAt: now } : r);
     this.setState({ enterpriseRegistrations: regs, enterprises: [...this.state.enterprises, newEnt] });
     this.addAudit(this.currentActor(), 'Client signed — enterprise registration published', newEnt.name, newEnt.id);
+    this.showToast('Enterprise berhasil terbit');
+    this.openEnterprise(newEnt.id);
   }
   escapeHtml(str) {
     return String(str == null ? '' : str).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -4538,6 +4700,21 @@ class Component extends DCLogic {
     }) : [];
     const regServiceTotal = activeReg ? activeReg.serviceItems.reduce((a, it) => a + this.regServiceCalc(it).subtotalAfterDiscount, 0) : 0;
     const regFoDocHtml = activeReg ? this.htmlFoDocTemplate(activeReg, { highlightKey: s.regFocusedField }) : '';
+    const regStepLabelMeta = { 1: 'Step 1 (Data & Dokumen)', 2: 'Step 2 (Formulir FO)' };
+    const submissionResultMeta = {
+      pending: { label: 'Menunggu', bg: '#E5F3FF', color: '#0061B3' },
+      approved: { label: 'Disetujui', bg: '#EAF9EE', color: '#248C3E' },
+      rejected: { label: 'Ditolak', bg: '#FCEAE9', color: '#C22725' }
+    };
+    const submissionHistoryRows = activeReg ? activeReg.submissionHistory.slice().reverse().map(h => {
+      const meta = submissionResultMeta[h.result];
+      return {
+        id: h.id, attemptNumber: h.attemptNumber, submittedAtLabel: fmtDateTime(h.submittedAt), submittedBy: h.submittedBy,
+        resultLabel: meta.label, resultBg: meta.bg, resultColor: meta.color,
+        hasRejectReason: !!h.rejectReason, rejectReason: h.rejectReason || '',
+        rejectedAtStepLabel: h.rejectedAtStep ? regStepLabelMeta[h.rejectedAtStep] : ''
+      };
+    }) : [];
     const regView = activeReg ? {
       ownerPrivyId: activeReg.ownerPrivyId, ownerName: activeReg.ownerName, ownerLookupWarning: !!activeReg.ownerPrivyId.trim() && !activeReg.ownerName,
       companyEmail: activeReg.companyEmail, companyPhone: activeReg.companyPhone,
@@ -4560,15 +4737,29 @@ class Component extends DCLogic {
       agreementDate: activeReg.agreementDate, onAgreementDate: this.onRegField('agreementDate'),
       status: activeReg.status, statusMeta: regStatusMeta[activeReg.status],
       rejectReason: activeReg.rejectReason, rejectedAtStep: activeReg.rejectedAtStep, hasRejectReason: !!activeReg.rejectReason,
-      isDraftOrRejected: activeReg.status === 'draft' || activeReg.status === 'rejected',
+      rejectedAtStepLabel: activeReg.rejectedAtStep ? regStepLabelMeta[activeReg.rejectedAtStep] : '',
+      isDraft: activeReg.status === 'draft',
+      isRejected: activeReg.status === 'rejected',
       isPendingVerification: activeReg.status === 'pending_verification',
       isPendingClientSignature: activeReg.status === 'pending_client_signature',
       isPublished: activeReg.status === 'published',
+      isLocked: activeReg.status === 'pending_verification' || activeReg.status === 'pending_client_signature',
       canSimulateVerify: activeReg.status === 'pending_verification' && isLead,
       docSentAtLabel: activeReg.docSentAt ? fmtDateTime(activeReg.docSentAt) : '', hasDocSent: !!activeReg.docSentAt, docNotSent: !activeReg.docSentAt,
       publishedEnterpriseId: activeReg.publishedEnterpriseId,
-      createdAtLabel: fmtDateTime(activeReg.createdAt)
+      createdAtLabel: fmtDateTime(activeReg.createdAt),
+      nextAttemptNumber: activeReg.submissionHistory.length + 1,
+      hasSubmissionHistory: activeReg.submissionHistory.length > 0,
+      showHistoryCollapsible: (activeReg.status === 'draft' || activeReg.status === 'pending_verification') && activeReg.submissionHistory.length > 1,
+      lastSubmission: activeReg.submissionHistory.length ? (() => {
+        const last = activeReg.submissionHistory[activeReg.submissionHistory.length - 1];
+        return { submittedAtLabel: fmtDateTime(last.submittedAt), submittedBy: last.submittedBy };
+      })() : { submittedAtLabel: '', submittedBy: '' }
     } : {};
+    const regLockedWrapStyle = (activeReg && (activeReg.status === 'pending_verification' || activeReg.status === 'pending_client_signature')) ? 'pointer-events:none; opacity:0.55;' : '';
+    const regSummaryStep1Icon = s.regSummaryStep1Open ? 'pi-chevron-up' : 'pi-chevron-down';
+    const regSummaryStep2Icon = s.regSummaryStep2Open ? 'pi-chevron-up' : 'pi-chevron-down';
+    const regHistoryToggleIcon = s.regHistoryExpanded ? 'pi-chevron-up' : 'pi-chevron-down';
 
     return {
       isLead, avatarBg: isLead ? '#E42E2C' : '#008AFF', avatarInitials: isLead ? 'VE' : 'DA',
@@ -4959,7 +5150,15 @@ class Component extends DCLogic {
       simulateRegReject: () => this.simulateRegReject(),
       simulateRegApprove: () => activeReg && this.simulateRegApprove(activeReg.id),
       sendRegDocToClient: () => activeReg && this.sendRegDocToClient(activeReg.id),
-      publishRegistration: () => activeReg && this.publishRegistration(activeReg.id)
+      publishRegistration: () => activeReg && this.publishRegistration(activeReg.id),
+
+      regLockedWrapStyle,
+      submissionHistoryRows, noSubmissionHistoryRows: submissionHistoryRows.length === 0,
+      goToRejectedStep: () => this.goToRejectedStep(),
+      regHistoryExpanded: s.regHistoryExpanded, toggleRegHistoryExpanded: () => this.toggleRegHistoryExpanded(), regHistoryToggleIcon,
+      regSummaryStep1Open: s.regSummaryStep1Open, toggleRegSummaryStep1: () => this.toggleRegSummaryStep1(), regSummaryStep1Icon,
+      regSummaryStep2Open: s.regSummaryStep2Open, toggleRegSummaryStep2: () => this.toggleRegSummaryStep2(), regSummaryStep2Icon,
+      toastMessage: s.toastMessage, toastVisible: s.toastVisible
     };
   }
 
