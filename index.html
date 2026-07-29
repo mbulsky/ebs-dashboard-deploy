@@ -26,6 +26,8 @@
       .fo-step2-col-preview.mode-form { display: none; }
       .fo-step2-wrap { flex-direction: column !important; }
     }
+    @keyframes reg-pulse { 0% { transform: scale(1); opacity: 1; } 70% { transform: scale(1.9); opacity: 0; } 100% { transform: scale(1.9); opacity: 0; } }
+    .reg-pulse-dot { animation: reg-pulse 1.4s infinite; }
   </style>
 </helmet>
 
@@ -280,12 +282,26 @@
             </sc-if>
           </div>
 
-          <div style="display:flex; align-items:center; gap:8px; margin-bottom:22px;">
-            <div style="display:flex; align-items:center; gap:7px;"><div style="width:22px; height:22px; border-radius:999px; background:{{ regStep1Bg }}; color:{{ regStep1Color }}; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700;">1</div><span style="font-size:12.5px; font-weight:600; color:{{ regStep1TextColor }};">Data Awal &amp; Dokumen</span></div>
-            <div style="flex:1; height:1px; background:#E6E7EB;"></div>
-            <div style="display:flex; align-items:center; gap:7px;"><div style="width:22px; height:22px; border-radius:999px; background:{{ regStep2Bg }}; color:{{ regStep2Color }}; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700;">2</div><span style="font-size:12.5px; font-weight:600; color:{{ regStep2TextColor }};">Formulir Pendaftaran</span></div>
-            <div style="flex:1; height:1px; background:#E6E7EB;"></div>
-            <div style="display:flex; align-items:center; gap:7px;"><div style="width:22px; height:22px; border-radius:999px; background:{{ regStep3Bg }}; color:{{ regStep3Color }}; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700;">3</div><span style="font-size:12.5px; font-weight:600; color:{{ regStep3TextColor }};">Submit &amp; Status</span></div>
+          <div style="display:flex; align-items:center; gap:6px; margin-bottom:22px; flex-wrap:wrap;">
+            <sc-for list="{{ regStepperNodes }}" as="node" hint-placeholder-count="5">
+              <div style="display:flex; align-items:center; gap:6px; flex:none;">
+                <div title="{{ node.tooltip }}" onClick="{{ node.onClick }}" style="display:flex; align-items:center; gap:7px; cursor:{{ node.cursor }};">
+                  <div style="position:relative; width:22px; height:22px; border-radius:999px; background:{{ node.bg }}; color:{{ node.color }}; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700;">
+                    <sc-if value="{{ node.isDone }}" hint-placeholder-val="{{ false }}"><i class="pi-check" style="font-size:11px;"></i></sc-if>
+                    <sc-if value="{{ node.pulsing }}" hint-placeholder-val="{{ false }}">
+                      <span class="reg-pulse-dot" style="position:absolute; top:-2px; right:-2px; width:8px; height:8px; border-radius:999px; background:#B37E00; border:1.5px solid #fff;"></span>
+                    </sc-if>
+                  </div>
+                  <span style="font-size:12.5px; font-weight:600; color:{{ node.textColor }};">{{ node.label }}</span>
+                  <sc-if value="{{ node.hasBadge }}" hint-placeholder-val="{{ false }}">
+                    <span style="font-size:10px; font-weight:700; background:#B37E00; color:#fff; padding:1px 7px; border-radius:999px;">{{ node.badge }}</span>
+                  </sc-if>
+                </div>
+                <sc-if value="{{ !node.isLast }}" hint-placeholder-val="{{ true }}">
+                  <div style="width:20px; height:1px; background:#E6E7EB;"></div>
+                </sc-if>
+              </div>
+            </sc-for>
           </div>
 
           <sc-if value="{{ reg.hasRejectReason }}" hint-placeholder-val="{{ false }}">
@@ -620,17 +636,57 @@
               </div>
             </sc-if>
 
-            <!-- ===== 3. PENDING VERIFICATION ===== -->
+            <!-- ===== 3a. PENDING VERIFICATION (menunggu antrian, belum mulai) ===== -->
             <sc-if value="{{ reg.isPendingVerification }}" hint-placeholder-val="{{ false }}">
               <div style="border:1px solid #ADD9FF; background:#E5F3FF; border-radius:10px; padding:16px 18px; margin-bottom:14px;">
                 <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
                   <i class="pi-time" style="font-size:16px; color:#0061B3;"></i>
-                  <div style="font-size:13.5px; font-weight:600; color:#0061B3;">Sedang menunggu hasil verifikasi</div>
+                  <div style="font-size:13.5px; font-weight:600; color:#0061B3;">Menunggu giliran diverifikasi</div>
                 </div>
                 <div style="font-size:12.5px; color:#0061B3;">Diajukan pada {{ reg.lastSubmission.submittedAtLabel }} oleh {{ reg.lastSubmission.submittedBy }}</div>
               </div>
 
               <sc-if value="{{ reg.canSimulateVerify }}" hint-placeholder-val="{{ false }}">
+                <div style="border:1px solid #FFE0AD; background:#FFFBF5; border-radius:10px; padding:16px 18px;">
+                  <div style="font-size:12.5px; font-weight:700; color:#8C5700; margin-bottom:10px; letter-spacing:0.3px;">SIMULASI HASIL VERIFIKASI (DEMO)</div>
+                  <button onClick="{{ simulateRegStartReview }}" style="border:none; background:#E42E2C; color:#fff; font-size:13px; font-weight:600; padding:9px 18px; border-radius:8px; cursor:pointer;">Simulasikan: Mulai Diverifikasi</button>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ reg.showHistoryCollapsible }}" hint-placeholder-val="{{ false }}">
+                <div style="margin-top:20px;">
+                  <button onClick="{{ toggleRegHistoryExpanded }}" style="border:none; background:none; color:#0075D9; font-size:12.5px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px; padding:0;"><i class="{{ regHistoryToggleIcon }}" style="font-size:10px;"></i>Lihat riwayat sebelumnya</button>
+                  <sc-if value="{{ regHistoryExpanded }}" hint-placeholder-val="{{ false }}">
+                    <div style="margin-top:12px;">
+                      <sc-for list="{{ submissionHistoryRows }}" as="sh" hint-placeholder-count="1">
+                        <div style="border:1px solid #E6E7EB; border-radius:10px; padding:12px 14px; margin-bottom:8px; background:#fff;">
+                          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                            <span style="font-size:11px; font-weight:700; background:#F4F5F7; color:#495260; padding:3px 9px; border-radius:999px;">Percobaan ke-{{ sh.attemptNumber }}</span>
+                            <span style="font-size:11px; font-weight:700; padding:3px 9px; border-radius:999px; background:{{ sh.resultBg }}; color:{{ sh.resultColor }};">{{ sh.resultLabel }}</span>
+                          </div>
+                          <div style="font-size:12px; color:#647184; margin-bottom:4px;">Diajukan {{ sh.submittedAtLabel }} oleh {{ sh.submittedBy }}</div>
+                          <sc-if value="{{ sh.hasRejectReason }}" hint-placeholder-val="{{ false }}">
+                            <div style="font-size:12px; color:#C22725;">{{ sh.rejectReason }} &middot; {{ sh.rejectedAtStepLabel }}</div>
+                          </sc-if>
+                        </div>
+                      </sc-for>
+                    </div>
+                  </sc-if>
+                </div>
+              </sc-if>
+            </sc-if>
+
+            <!-- ===== 3b. IN REVIEW (sedang diverifikasi tim) ===== -->
+            <sc-if value="{{ reg.isInReview }}" hint-placeholder-val="{{ false }}">
+              <div style="border:1px solid #FFE0AD; background:#FFFBF5; border-radius:10px; padding:16px 18px; margin-bottom:14px;">
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+                  <span style="position:relative; width:10px; height:10px; display:inline-flex;"><span class="reg-pulse-dot" style="position:absolute; inset:0; border-radius:999px; background:#B37E00;"></span><span style="position:absolute; inset:0; border-radius:999px; background:#B37E00;"></span></span>
+                  <div style="font-size:13.5px; font-weight:600; color:#8C5700;">Sedang diverifikasi oleh tim</div>
+                </div>
+                <div style="font-size:12.5px; color:#8C5700;">Diajukan pada {{ reg.lastSubmission.submittedAtLabel }} oleh {{ reg.lastSubmission.submittedBy }}</div>
+              </div>
+
+              <sc-if value="{{ reg.canSimulateVerifyResult }}" hint-placeholder-val="{{ false }}">
                 <div style="border:1px solid #FFE0AD; background:#FFFBF5; border-radius:10px; padding:16px 18px;">
                   <div style="font-size:12.5px; font-weight:700; color:#8C5700; margin-bottom:10px; letter-spacing:0.3px;">SIMULASI HASIL VERIFIKASI (DEMO)</div>
 
@@ -4016,7 +4072,7 @@ class Component extends DCLogic {
     if (reg.status === 'published') { this.openEnterprise(reg.publishedEnterpriseId); return; }
     let step = reg.currentStep || 1;
     if (reg.status === 'rejected' && reg.rejectedAtStep) step = reg.rejectedAtStep;
-    if (['pending_verification', 'pending_client_signature'].includes(reg.status)) step = 3;
+    if (['pending_verification', 'in_review', 'pending_client_signature'].includes(reg.status)) step = 3;
     this.setState({ page: 'ent-register', activeRegId: id, regStep: step, regStep1Error: '', regStep2Error: '', showRegRejectInput: false, regHistoryExpanded: false });
   }
   goToRejectedStep() {
@@ -4130,7 +4186,7 @@ class Component extends DCLogic {
     if (!reg) return;
     const wasRejected = reg.status === 'rejected';
     const now = new Date();
-    const entry = { id: uid('sub-'), attemptNumber: reg.submissionHistory.length + 1, submittedAt: now, submittedBy: this.currentActor(), result: 'pending', reviewedAt: null, rejectReason: null, rejectedAtStep: null };
+    const entry = { id: uid('sub-'), attemptNumber: reg.submissionHistory.length + 1, submittedAt: now, submittedBy: this.currentActor(), result: 'pending', reviewedAt: null, rejectReason: null, rejectedAtStep: null, reviewStartedAt: null };
     this.onRegFieldPatch({ status: 'pending_verification', rejectReason: '', rejectedAtStep: null, submissionHistory: [...reg.submissionHistory, entry] });
     this.addAudit(this.currentActor(), wasRejected ? 'Resubmitted enterprise registration for verification' : 'Submitted enterprise registration for verification', reg.companyName || reg.id, null);
   }
@@ -4143,6 +4199,18 @@ class Component extends DCLogic {
     submissionHistory.forEach((h, i) => { if (h.result === 'pending') lastPendingIdx = i; });
     if (lastPendingIdx === -1) return submissionHistory;
     return submissionHistory.map((h, i) => i === lastPendingIdx ? { ...h, ...patch } : h);
+  }
+  simulateRegStartReview(id) {
+    if (this.state.role !== 'lead') return;
+    const now = new Date();
+    const regs = this.state.enterpriseRegistrations.map(r => {
+      if (r.id !== id) return r;
+      const submissionHistory = this.updateLastPendingSubmission(r.submissionHistory, { reviewStartedAt: now });
+      return { ...r, status: 'in_review', updatedAt: now, submissionHistory };
+    });
+    this.setState({ enterpriseRegistrations: regs });
+    const reg = regs.find(r => r.id === id);
+    this.addAudit(this.currentActor(), 'Simulasi verifikasi: Mulai diverifikasi', reg.companyName || id, null);
   }
   simulateRegApprove(id) {
     if (this.state.role !== 'lead') return;
@@ -4767,6 +4835,7 @@ class Component extends DCLogic {
     const regStatusMeta = {
       draft: { label: 'Draft', bg: '#F4F5F7', color: '#647184' },
       pending_verification: { label: 'Menunggu Verifikasi', bg: '#E5F3FF', color: '#0061B3' },
+      in_review: { label: 'Sedang Diverifikasi', bg: '#FFF5E5', color: '#8C5700' },
       pending_client_signature: { label: 'Menunggu Tanda Tangan Client', bg: '#FFF5E5', color: '#8C5700' },
       rejected: { label: 'Ditolak', bg: '#FCEAE9', color: '#C22725' },
       published: { label: 'Terbit', bg: '#EAF9EE', color: '#248C3E' }
@@ -4780,12 +4849,57 @@ class Component extends DCLogic {
         open: () => this.resumeRegistration(r.id)
       };
     });
-    const regStepMeta = (n) => ({
-      bg: s.regStep === n ? '#E42E2C' : (s.regStep > n ? '#191C21' : '#F4F5F7'),
-      color: s.regStep >= n ? '#fff' : '#939EAE',
-      textColor: s.regStep === n ? '#191C21' : '#939EAE'
-    });
-    const regStep1M = regStepMeta(1), regStep2M = regStepMeta(2), regStep3M = regStepMeta(3);
+    // ---------- registration lifecycle stepper (end-to-end, shown on all 3 form steps) ----------
+    const regStatusForStepper = activeReg ? activeReg.status : 'draft';
+    const regRejectedCount = activeReg ? activeReg.submissionHistory.filter(h => h.result === 'rejected').length : 0;
+    const regHasEverRejected = regRejectedCount > 0;
+    const regIsEditableNow = regStatusForStepper === 'draft' || regStatusForStepper === 'rejected';
+    const stepperColor = (state) => ({
+      done: { bg: '#191C21', color: '#fff', textColor: '#495260' },
+      active: { bg: '#E42E2C', color: '#fff', textColor: '#191C21' },
+      pending: { bg: '#F4F5F7', color: '#939EAE', textColor: '#939EAE' }
+    })[state];
+    const stepperWarningColor = (state) => ({
+      active: { bg: '#B37E00', color: '#fff', textColor: '#8C5700' },
+      done: { bg: '#FFE7AD', color: '#8C5700', textColor: '#8C5700' }
+    })[state];
+    const goToFormStep = (n) => regIsEditableNow ? (() => this.setState({ regStep: n })) : (() => {});
+    const goToStatusStep = () => this.setState({ regStep: 3 });
+    const buildStepperNode = (key, label, state, opts) => {
+      opts = opts || {};
+      const meta = opts.warning ? stepperWarningColor(state) : stepperColor(state);
+      return {
+        key, label, bg: meta.bg, color: meta.color, textColor: meta.textColor,
+        isDone: state === 'done', hasBadge: !!opts.badge, badge: opts.badge || '',
+        pulsing: !!opts.pulsing, clickable: !!opts.clickable,
+        cursor: opts.clickable ? 'pointer' : 'default',
+        onClick: opts.onClick || (() => {}),
+        tooltip: opts.tooltip || ''
+      };
+    };
+    const regStepperNodesRaw = [
+      buildStepperNode('data-awal', 'Data Awal', (regStatusForStepper === 'draft' && s.regStep === 1) ? 'active' : 'done', {
+        clickable: regIsEditableNow, onClick: goToFormStep(1), tooltip: regIsEditableNow ? '' : 'Tidak bisa diedit saat menunggu proses'
+      }),
+      buildStepperNode('formulir', 'Isi Formulir', regStatusForStepper === 'draft' ? (s.regStep === 2 ? 'active' : (s.regStep === 1 ? 'pending' : 'done')) : 'done', {
+        clickable: regIsEditableNow, onClick: goToFormStep(2), tooltip: regIsEditableNow ? '' : 'Tidak bisa diedit saat menunggu proses'
+      }),
+      buildStepperNode('verifikasi', 'Verifikasi', (regStatusForStepper === 'pending_verification' || regStatusForStepper === 'in_review') ? 'active' : (regStatusForStepper === 'draft' ? 'pending' : 'done'), {
+        clickable: true, onClick: goToStatusStep, pulsing: regStatusForStepper === 'in_review'
+      })
+    ];
+    if (regHasEverRejected) {
+      regStepperNodesRaw.push(buildStepperNode('perbaikan', 'Perbaikan', regStatusForStepper === 'rejected' ? 'active' : 'done', {
+        clickable: true, onClick: goToStatusStep, warning: true, badge: regRejectedCount
+      }));
+    }
+    regStepperNodesRaw.push(
+      buildStepperNode('ttd-client', 'Tanda Tangan Client', regStatusForStepper === 'pending_client_signature' ? 'active' : (regStatusForStepper === 'published' ? 'done' : 'pending'), {
+        clickable: true, onClick: goToStatusStep
+      }),
+      buildStepperNode('terbit', 'Terbit', regStatusForStepper === 'published' ? 'active' : 'pending', { clickable: false })
+    );
+    const regStepperNodes = regStepperNodesRaw.map((n, i) => ({ ...n, isLast: i === regStepperNodesRaw.length - 1 }));
     // NOTE: this templating engine's {{ }} resolver does NOT support ternary (? :) syntax —
     // it only understands dotted paths, equality ops, and literals — so any conditional value
     // used in a template MUST be precomputed here in JS and exposed as a plain getter.
@@ -4879,22 +4993,24 @@ class Component extends DCLogic {
       isDraft: activeReg.status === 'draft',
       isRejected: activeReg.status === 'rejected',
       isPendingVerification: activeReg.status === 'pending_verification',
+      isInReview: activeReg.status === 'in_review',
       isPendingClientSignature: activeReg.status === 'pending_client_signature',
       isPublished: activeReg.status === 'published',
-      isLocked: activeReg.status === 'pending_verification' || activeReg.status === 'pending_client_signature',
+      isLocked: activeReg.status === 'pending_verification' || activeReg.status === 'in_review' || activeReg.status === 'pending_client_signature',
       canSimulateVerify: activeReg.status === 'pending_verification' && isLead,
+      canSimulateVerifyResult: activeReg.status === 'in_review' && isLead,
       docSentAtLabel: activeReg.docSentAt ? fmtDateTime(activeReg.docSentAt) : '', hasDocSent: !!activeReg.docSentAt, docNotSent: !activeReg.docSentAt,
       publishedEnterpriseId: activeReg.publishedEnterpriseId,
       createdAtLabel: fmtDateTime(activeReg.createdAt),
       nextAttemptNumber: activeReg.submissionHistory.length + 1,
       hasSubmissionHistory: activeReg.submissionHistory.length > 0,
-      showHistoryCollapsible: (activeReg.status === 'draft' || activeReg.status === 'pending_verification') && activeReg.submissionHistory.length > 1,
+      showHistoryCollapsible: (activeReg.status === 'draft' || activeReg.status === 'pending_verification' || activeReg.status === 'in_review') && activeReg.submissionHistory.length > 1,
       lastSubmission: activeReg.submissionHistory.length ? (() => {
         const last = activeReg.submissionHistory[activeReg.submissionHistory.length - 1];
         return { submittedAtLabel: fmtDateTime(last.submittedAt), submittedBy: last.submittedBy };
       })() : { submittedAtLabel: '', submittedBy: '' }
     } : {};
-    const regLockedWrapStyle = (activeReg && (activeReg.status === 'pending_verification' || activeReg.status === 'pending_client_signature')) ? 'pointer-events:none; opacity:0.55;' : '';
+    const regLockedWrapStyle = (activeReg && (activeReg.status === 'pending_verification' || activeReg.status === 'in_review' || activeReg.status === 'pending_client_signature')) ? 'pointer-events:none; opacity:0.55;' : '';
     const regSummaryStep1Icon = s.regSummaryStep1Open ? 'pi-chevron-up' : 'pi-chevron-down';
     const regSummaryStep2Icon = s.regSummaryStep2Open ? 'pi-chevron-up' : 'pi-chevron-down';
     const regHistoryToggleIcon = s.regHistoryExpanded ? 'pi-chevron-up' : 'pi-chevron-down';
@@ -5256,9 +5372,7 @@ class Component extends DCLogic {
       regListRows, noRegListRows: regListRows.length === 0,
 
       isRegStep1: s.regStep === 1, isRegStep2: s.regStep === 2, isRegStep3: s.regStep === 3,
-      regStep1Bg: regStep1M.bg, regStep1Color: regStep1M.color, regStep1TextColor: regStep1M.textColor,
-      regStep2Bg: regStep2M.bg, regStep2Color: regStep2M.color, regStep2TextColor: regStep2M.textColor,
-      regStep3Bg: regStep3M.bg, regStep3Color: regStep3M.color, regStep3TextColor: regStep3M.textColor,
+      regStepperNodes,
 
       reg: regView,
       regDocSlots, regServiceRows, regServiceTotalLabel: rp(regServiceTotal), addRegServiceItem: () => this.addRegServiceItem(),
@@ -5287,6 +5401,7 @@ class Component extends DCLogic {
       setRegRejectStep_1: () => this.setRegRejectStep(1), setRegRejectStep_2: () => this.setRegRejectStep(2),
       simulateRegReject: () => this.simulateRegReject(),
       simulateRegApprove: () => activeReg && this.simulateRegApprove(activeReg.id),
+      simulateRegStartReview: () => activeReg && this.simulateRegStartReview(activeReg.id),
       sendRegDocToClient: () => activeReg && this.sendRegDocToClient(activeReg.id),
       publishRegistration: () => activeReg && this.publishRegistration(activeReg.id),
 
