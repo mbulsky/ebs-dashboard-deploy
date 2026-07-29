@@ -315,12 +315,22 @@
                   <div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Nomor Handphone Perusahaan</div>
                   <input value="{{ reg.companyPhone }}" onInput="{{ reg.onCompanyPhone }}" placeholder="+628123456789" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px;" />
                 </div>
+                <div style="grid-column:span 2;">
+                  <div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Nama Perusahaan</div>
+                  <input value="{{ reg.companyName }}" onInput="{{ reg.onCompanyName }}" placeholder="Nama resmi perusahaan pelanggan" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px;" />
+                </div>
               </div>
             </div>
 
             <div style="background:#FBFCFD; border:1px solid #E6E7EB; border-radius:14px; padding:20px 22px; margin-bottom:16px;">
               <div style="font-size:14px; font-weight:600; color:#191C21; margin-bottom:14px;">Upload Dokumen</div>
               <sc-for list="{{ regDocSlots }}" as="ds" hint-placeholder-count="5">
+                <sc-if value="{{ ds.isNpwpSlot }}" hint-placeholder-val="{{ false }}">
+                  <div style="margin-bottom:8px;">
+                    <div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Nomor NPWP</div>
+                    <input value="{{ reg.npwpNumber }}" onInput="{{ reg.onNpwpNumber }}" placeholder="cth. 012345678901000" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px;" />
+                  </div>
+                </sc-if>
                 <div style="margin-bottom:14px;">
                   <div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">{{ ds.label }}</div>
                   <sc-if value="{{ ds.hasFile }}" hint-placeholder-val="{{ false }}">
@@ -400,10 +410,14 @@
                 <div style="background:#FBFCFD; border:1px solid #E6E7EB; border-radius:14px; padding:20px 22px; margin-bottom:16px;">
                   <div style="font-size:14px; font-weight:600; color:#191C21; margin-bottom:3px;">Penandatangan Pelanggan</div>
                   <div style="font-size:12px; color:#939EAE; margin-bottom:14px;">Perwakilan sah yang menandatangani dokumen atas nama Pelanggan.</div>
+                  <label style="display:flex; align-items:center; gap:8px; margin-bottom:14px; cursor:pointer;">
+                    <input type="checkbox" checked="{{ reg.signerSameAsOwner }}" onChange="{{ reg.toggleSignerSameAsOwner }}" style="width:16px; height:16px;" />
+                    <span style="font-size:12.5px; color:#495260;">Penandatangan sama dengan Owner</span>
+                  </label>
                   <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
                     <div>
                       <div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">PrivyID Penandatangan</div>
-                      <input value="{{ reg.signerPrivyId }}" onInput="{{ reg.onSignerPrivyId }}" onFocus="{{ setRegFocused_signer }}" onBlur="{{ clearRegFocusedField }}" placeholder="cth. WM0905" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px;" />
+                      <input value="{{ reg.signerPrivyId }}" onInput="{{ reg.onSignerPrivyId }}" onFocus="{{ setRegFocused_signer }}" onBlur="{{ clearRegFocusedField }}" disabled="{{ reg.signerSameAsOwner }}" placeholder="cth. WM0905" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px;" />
                       <sc-if value="{{ reg.signerName }}" hint-placeholder-val="{{ false }}">
                         <div style="font-size:12px; color:#1C8A4B; margin-top:5px;"><i class="pi-check-circle" style="margin-right:4px;"></i>{{ reg.signerName }}</div>
                       </sc-if>
@@ -418,11 +432,33 @@
                 <div style="background:#FBFCFD; border:1px solid #E6E7EB; border-radius:14px; padding:20px 22px; margin-bottom:16px;">
                   <div style="font-size:14px; font-weight:600; color:#191C21; margin-bottom:3px;">Korespondensi</div>
                   <div style="font-size:12px; color:#939EAE; margin-bottom:14px;">Alamat &amp; email yang mengisi Bagian B &mdash; Korespondensi pada dokumen.</div>
-                  <div style="margin-bottom:14px;"><div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Alamat Korespondensi</div><textarea value="{{ reg.correspondenceAddress }}" onInput="{{ reg.onCorrespondenceAddress }}" onFocus="{{ setRegFocused_korespondensi }}" onBlur="{{ clearRegFocusedField }}" rows="2" placeholder="Alamat korespondensi pelanggan" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px; resize:vertical;"></textarea></div>
+                  <label style="display:flex; align-items:center; gap:8px; margin-bottom:8px; cursor:pointer;">
+                    <input type="checkbox" checked="{{ reg.correspondenceSameAsCompany }}" onChange="{{ reg.toggleCorrespondenceSameAsCompany }}" style="width:16px; height:16px;" />
+                    <span style="font-size:12.5px; color:#495260;">Alamat korespondensi sama dengan alamat perusahaan</span>
+                  </label>
+                  <div style="margin-bottom:14px;"><div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Alamat Korespondensi</div><textarea value="{{ reg.correspondenceAddress }}" onInput="{{ reg.onCorrespondenceAddress }}" onFocus="{{ setRegFocused_korespondensi }}" onBlur="{{ clearRegFocusedField }}" disabled="{{ reg.correspondenceSameAsCompany }}" rows="2" placeholder="Alamat korespondensi pelanggan" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px; resize:vertical;"></textarea></div>
                   <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px;">
-                    <div><div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Email Pemutakhiran Harga</div><input value="{{ reg.emailPriceUpdate }}" onInput="{{ reg.onEmailPriceUpdate }}" onFocus="{{ setRegFocused_korespondensi }}" onBlur="{{ clearRegFocusedField }}" placeholder="finance@pelanggan.com" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px;" /></div>
-                    <div><div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Email Penghentian/Gangguan</div><input value="{{ reg.emailDisruption }}" onInput="{{ reg.onEmailDisruption }}" onFocus="{{ setRegFocused_korespondensi }}" onBlur="{{ clearRegFocusedField }}" placeholder="ops@pelanggan.com" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px;" /></div>
-                    <div><div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Email Penerimaan Tagihan</div><input value="{{ reg.emailBilling }}" onInput="{{ reg.onEmailBilling }}" onFocus="{{ setRegFocused_korespondensi }}" onBlur="{{ clearRegFocusedField }}" placeholder="billing@pelanggan.com" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px;" /></div>
+                    <div>
+                      <div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Email Pemutakhiran Harga</div>
+                      <input value="{{ reg.emailPriceUpdate }}" onInput="{{ reg.onEmailPriceUpdate }}" onFocus="{{ setRegFocused_korespondensi }}" onBlur="{{ clearRegFocusedField }}" placeholder="finance@pelanggan.com" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px;" />
+                      <sc-if value="{{ reg.emailPriceUpdateAutofilled }}" hint-placeholder-val="{{ false }}">
+                        <div style="font-size:11px; color:#939EAE; margin-top:4px;">Diisi otomatis dari Step 1</div>
+                      </sc-if>
+                    </div>
+                    <div>
+                      <div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Email Penghentian/Gangguan</div>
+                      <input value="{{ reg.emailDisruption }}" onInput="{{ reg.onEmailDisruption }}" onFocus="{{ setRegFocused_korespondensi }}" onBlur="{{ clearRegFocusedField }}" placeholder="ops@pelanggan.com" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px;" />
+                      <sc-if value="{{ reg.emailDisruptionAutofilled }}" hint-placeholder-val="{{ false }}">
+                        <div style="font-size:11px; color:#939EAE; margin-top:4px;">Diisi otomatis dari Step 1</div>
+                      </sc-if>
+                    </div>
+                    <div>
+                      <div style="font-size:12.5px; font-weight:600; color:#647184; margin-bottom:6px;">Email Penerimaan Tagihan</div>
+                      <input value="{{ reg.emailBilling }}" onInput="{{ reg.onEmailBilling }}" onFocus="{{ setRegFocused_korespondensi }}" onBlur="{{ clearRegFocusedField }}" placeholder="billing@pelanggan.com" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:10px 12px; font-size:13px;" />
+                      <sc-if value="{{ reg.emailBillingAutofilled }}" hint-placeholder-val="{{ false }}">
+                        <div style="font-size:11px; color:#939EAE; margin-top:4px;">Diisi otomatis dari Step 1</div>
+                      </sc-if>
+                    </div>
                   </div>
                 </div>
 
@@ -3860,7 +3896,8 @@ class Component extends DCLogic {
       verifiedBy: null, verifiedAt: null,
       clientSignedAt: null,
       publishedEnterpriseId: null,
-      submissionHistory: []
+      submissionHistory: [],
+      autofilledFields: {}, signerSameAsOwner: false, correspondenceSameAsCompany: false
     };
   }
   getReg(id) { return this.state.enterpriseRegistrations.find(r => r.id === id); }
@@ -3873,11 +3910,60 @@ class Component extends DCLogic {
   onRegField(field) { return (e) => this.onRegFieldPatch({ [field]: e.target.value }); }
   onRegOwnerPrivyId(e) {
     const v = e.target.value;
-    this.onRegFieldPatch({ ownerPrivyId: v, ownerName: this.lookupPrivyName(v) });
+    const reg = this.getActiveReg();
+    const patch = { ownerPrivyId: v, ownerName: this.lookupPrivyName(v) };
+    if (reg && reg.signerSameAsOwner) { patch.signerPrivyId = v; patch.signerName = this.lookupPrivyName(v); }
+    this.onRegFieldPatch(patch);
   }
   onRegSignerPrivyId(e) {
     const v = e.target.value;
     this.onRegFieldPatch({ signerPrivyId: v, signerName: this.lookupPrivyName(v) });
+  }
+  onRegCompanyEmail(e) {
+    const v = e.target.value;
+    const reg = this.getActiveReg();
+    const af = (reg && reg.autofilledFields) || {};
+    const patch = { companyEmail: v };
+    const autofilledFields = { ...af };
+    ['emailPriceUpdate', 'emailDisruption', 'emailBilling'].forEach(f => {
+      if (af[f] !== false) { patch[f] = v; autofilledFields[f] = true; }
+    });
+    patch.autofilledFields = autofilledFields;
+    this.onRegFieldPatch(patch);
+  }
+  onRegAutofillableField(field) {
+    return (e) => {
+      const reg = this.getActiveReg();
+      const autofilledFields = { ...((reg && reg.autofilledFields) || {}), [field]: false };
+      this.onRegFieldPatch({ [field]: e.target.value, autofilledFields });
+    };
+  }
+  onRegCompanyAddress(e) {
+    const v = e.target.value;
+    const reg = this.getActiveReg();
+    const patch = { companyAddress: v };
+    if (reg && reg.correspondenceSameAsCompany) patch.correspondenceAddress = v;
+    this.onRegFieldPatch(patch);
+  }
+  toggleSignerSameAsOwner(e) {
+    const checked = e.target.checked;
+    const reg = this.getActiveReg();
+    if (!reg) return;
+    if (checked) {
+      this.onRegFieldPatch({ signerSameAsOwner: true, signerPrivyId: reg.ownerPrivyId, signerName: this.lookupPrivyName(reg.ownerPrivyId) });
+    } else {
+      this.onRegFieldPatch({ signerSameAsOwner: false, signerPrivyId: '', signerName: '' });
+    }
+  }
+  toggleCorrespondenceSameAsCompany(e) {
+    const checked = e.target.checked;
+    const reg = this.getActiveReg();
+    if (!reg) return;
+    if (checked) {
+      this.onRegFieldPatch({ correspondenceSameAsCompany: true, correspondenceAddress: reg.companyAddress });
+    } else {
+      this.onRegFieldPatch({ correspondenceSameAsCompany: false, correspondenceAddress: '' });
+    }
   }
   onRegDocFile(slot, e) {
     const file = e.target.files && e.target.files[0];
@@ -3944,7 +4030,7 @@ class Component extends DCLogic {
   goToRegStep2() {
     const reg = this.getActiveReg();
     if (!reg) return;
-    if (!reg.ownerPrivyId.trim() || !reg.companyEmail.trim() || !reg.companyPhone.trim()) {
+    if (!reg.ownerPrivyId.trim() || !reg.companyEmail.trim() || !reg.companyPhone.trim() || !reg.companyName.trim() || !reg.npwpNumber.trim()) {
       this.setState({ regStep1Error: 'Semua field wajib diisi.' }); return;
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(reg.companyEmail.trim())) {
@@ -4678,7 +4764,7 @@ class Component extends DCLogic {
     const regDocSlots = activeReg ? regDocSlotDefs.map(d => {
       const doc = activeReg.documents[d.key];
       return {
-        key: d.key, label: d.label, required: d.required,
+        key: d.key, label: d.label, required: d.required, isNpwpSlot: d.key === 'npwp',
         fileName: doc ? doc.fileName : '', hasFile: !!doc, showUpload: !doc,
         onFile: (e) => this.onRegDocFile(d.key, e), remove: () => this.removeRegDoc(d.key)
       };
@@ -4718,22 +4804,27 @@ class Component extends DCLogic {
     const regView = activeReg ? {
       ownerPrivyId: activeReg.ownerPrivyId, ownerName: activeReg.ownerName, ownerLookupWarning: !!activeReg.ownerPrivyId.trim() && !activeReg.ownerName,
       companyEmail: activeReg.companyEmail, companyPhone: activeReg.companyPhone,
-      onOwnerPrivyId: (e) => this.onRegOwnerPrivyId(e), onCompanyEmail: this.onRegField('companyEmail'), onCompanyPhone: this.onRegField('companyPhone'),
+      onOwnerPrivyId: (e) => this.onRegOwnerPrivyId(e), onCompanyEmail: (e) => this.onRegCompanyEmail(e), onCompanyPhone: this.onRegField('companyPhone'),
       formNumberPrivy: activeReg.formNumberPrivy, formNumberPelanggan: activeReg.formNumberPelanggan,
       onFormNumberPrivy: this.onRegField('formNumberPrivy'), onFormNumberPelanggan: this.onRegField('formNumberPelanggan'),
       privySigner: activeReg.privySigner, onPrivySigner: this.onRegField('privySigner'),
       customerType: activeReg.customerType, onCustomerType: this.onRegField('customerType'),
       companyName: activeReg.companyName, onCompanyName: this.onRegField('companyName'),
-      companyAddress: activeReg.companyAddress, onCompanyAddress: this.onRegField('companyAddress'),
+      companyAddress: activeReg.companyAddress, onCompanyAddress: (e) => this.onRegCompanyAddress(e),
       businessField: activeReg.businessField, onBusinessField: this.onRegField('businessField'),
       npwpNumber: activeReg.npwpNumber, onNpwpNumber: this.onRegField('npwpNumber'),
       signerPrivyId: activeReg.signerPrivyId, signerName: activeReg.signerName, signerLookupWarning: !!activeReg.signerPrivyId.trim() && !activeReg.signerName,
       onSignerPrivyId: (e) => this.onRegSignerPrivyId(e),
       signerTitle: activeReg.signerTitle, onSignerTitle: this.onRegField('signerTitle'),
       correspondenceAddress: activeReg.correspondenceAddress, onCorrespondenceAddress: this.onRegField('correspondenceAddress'),
-      emailPriceUpdate: activeReg.emailPriceUpdate, onEmailPriceUpdate: this.onRegField('emailPriceUpdate'),
-      emailDisruption: activeReg.emailDisruption, onEmailDisruption: this.onRegField('emailDisruption'),
-      emailBilling: activeReg.emailBilling, onEmailBilling: this.onRegField('emailBilling'),
+      emailPriceUpdate: activeReg.emailPriceUpdate, onEmailPriceUpdate: this.onRegAutofillableField('emailPriceUpdate'),
+      emailDisruption: activeReg.emailDisruption, onEmailDisruption: this.onRegAutofillableField('emailDisruption'),
+      emailBilling: activeReg.emailBilling, onEmailBilling: this.onRegAutofillableField('emailBilling'),
+      emailPriceUpdateAutofilled: !!(activeReg.autofilledFields && activeReg.autofilledFields.emailPriceUpdate),
+      emailDisruptionAutofilled: !!(activeReg.autofilledFields && activeReg.autofilledFields.emailDisruption),
+      emailBillingAutofilled: !!(activeReg.autofilledFields && activeReg.autofilledFields.emailBilling),
+      signerSameAsOwner: activeReg.signerSameAsOwner, toggleSignerSameAsOwner: (e) => this.toggleSignerSameAsOwner(e),
+      correspondenceSameAsCompany: activeReg.correspondenceSameAsCompany, toggleCorrespondenceSameAsCompany: (e) => this.toggleCorrespondenceSameAsCompany(e),
       agreementDate: activeReg.agreementDate, onAgreementDate: this.onRegField('agreementDate'),
       status: activeReg.status, statusMeta: regStatusMeta[activeReg.status],
       rejectReason: activeReg.rejectReason, rejectedAtStep: activeReg.rejectedAtStep, hasRejectReason: !!activeReg.rejectReason,
