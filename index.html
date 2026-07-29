@@ -270,9 +270,14 @@
         <div data-screen-label="Enterprise Registration Wizard" style="max-width:{{ regWizardMaxWidth }}; margin:0 auto;">
           <button onClick="{{ backToRegList }}" style="border:none; background:none; cursor:pointer; display:flex; align-items:center; gap:6px; color:#0075D9; font-size:13px; font-weight:600; padding:0; margin-bottom:16px;"><i class="pi-arrow-left"></i>Back to Enterprise Registration list</button>
 
-          <div style="margin-bottom:20px;">
-            <h1 style="font-size:22px; font-weight:500; color:#191C21; margin-bottom:5px;">Registrasi Enterprise Baru</h1>
-            <p style="font-size:14px; color:#647184;">Lengkapi data awal, formulir pendaftaran, lalu submit untuk verifikasi.</p>
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:16px; margin-bottom:20px;">
+            <div>
+              <h1 style="font-size:22px; font-weight:500; color:#191C21; margin-bottom:5px;">Registrasi Enterprise Baru</h1>
+              <p style="font-size:14px; color:#647184;">Lengkapi data awal, formulir pendaftaran, lalu submit untuk verifikasi.</p>
+            </div>
+            <sc-if value="{{ showRegDummyButton }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ fillRegDummyData }}" title="Khusus testing, hapus sebelum rilis" style="border:1.5px dashed #E0A82E; background:#FFF9EC; color:#8C6D1F; font-size:12.5px; font-weight:700; padding:9px 16px; border-radius:8px; cursor:pointer; display:flex; align-items:center; gap:7px; flex:none;"><i class="pi-flash-on" style="font-size:13px;"></i>Isi Data Contoh (Testing)</button>
+            </sc-if>
           </div>
 
           <div style="display:flex; align-items:center; gap:8px; margin-bottom:22px;">
@@ -4020,6 +4025,48 @@ class Component extends DCLogic {
     this.setState({ regStep: reg.rejectedAtStep || 1 });
   }
   toggleRegHistoryExpanded() { this.setState({ regHistoryExpanded: !this.state.regHistoryExpanded }); }
+  fillRegDummyData() {
+    const reg = this.getActiveReg();
+    if (!reg) return;
+    const now = new Date();
+    const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+    const randDigits = (n) => Array.from({ length: n }, () => Math.floor(Math.random() * 10)).join('');
+    const owner = pick(PRIVY_DIRECTORY);
+    const companyName = pick(['PT Contoh Digital Nusantara', 'PT Maju Bersama Teknologi', 'CV Sinar Abadi Jaya']);
+    const slug = companyName.toLowerCase().replace(/[^a-z0-9]+/g, '');
+    const companyEmail = 'info@' + slug + '.co.id';
+    const companyAddress = 'Jl. Testing Dummy No. ' + (Math.floor(Math.random() * 90) + 1) + ', Jakarta';
+    const businessField = pick(['Teknologi Informasi', 'Jasa Konsultasi', 'Perdagangan Umum', 'Manufaktur']);
+    const counter = String(Date.now()).slice(-6);
+    const docFileNames = { npwp: 'npwp-dummy.pdf', nib: 'nib-dummy.pdf', skPendirian: 'sk-pendirian-dummy.pdf', aktaPendirian: 'akta-pendirian-dummy.pdf', suratKuasa: 'surat-kuasa-dummy.pdf' };
+    const documents = {};
+    Object.keys(docFileNames).forEach(k => { documents[k] = { fileName: docFileNames[k], uploadedAt: now }; });
+    const eaBase = INITIAL_PRODUCTS_ACCOUNT[0].base;
+    const emeteraiBase = INITIAL_PRODUCTS_STAMP[0].base;
+    const stampFeeBase = INITIAL_PRODUCTS_STAMP[1].base;
+    const serviceItems = [
+      { type: 'Employee Account', periodYears: '1', pricePerYear: String(eaBase), unit: String(Math.floor(Math.random() * 10) + 1), discount: '0' },
+      { type: 'Meterai Elektronik', periodYears: '1', pricePerYear: String(emeteraiBase), unit: String(Math.floor(Math.random() * 50) + 10), discount: '0' },
+      { type: 'Stamping Fee E-Meterai', periodYears: '1', pricePerYear: String(stampFeeBase), unit: String(Math.floor(Math.random() * 20) + 5), discount: '0' }
+    ];
+    this.onRegFieldPatch({
+      ownerPrivyId: owner.privyId, ownerName: owner.name,
+      companyName, npwpNumber: randDigits(15), companyEmail, companyPhone: '+628' + randDigits(9),
+      documents,
+      formNumberPrivy: 'PRIV-' + counter, formNumberPelanggan: 'CUST-' + counter,
+      privySigner: pick(['brata', 'johan']), customerType: pick(['PT', 'Koperasi', 'Yayasan', 'Perusahaan Perorangan', 'Firma', 'CV']),
+      companyAddress, businessField,
+      signerPrivyId: owner.privyId, signerName: owner.name, signerTitle: 'Direktur Utama', signerSameAsOwner: true,
+      correspondenceAddress: companyAddress, correspondenceSameAsCompany: true,
+      emailPriceUpdate: companyEmail, emailDisruption: companyEmail, emailBilling: companyEmail,
+      autofilledFields: { emailPriceUpdate: true, emailDisruption: true, emailBilling: true },
+      serviceItems,
+      agreementDate: now.toISOString().slice(0, 10),
+      currentStep: 3
+    });
+    this.setState({ regStep: 3, regStep1Error: '', regStep2Error: '' });
+    this.addAudit(this.currentActor(), 'Filled dummy testing data for enterprise registration', companyName, null);
+  }
   showToast(message) {
     this.setState({ toastMessage: message, toastVisible: true });
     setTimeout(() => this.setState({ toastVisible: false }), 2500);
@@ -5246,6 +5293,8 @@ class Component extends DCLogic {
       regLockedWrapStyle,
       submissionHistoryRows, noSubmissionHistoryRows: submissionHistoryRows.length === 0,
       goToRejectedStep: () => this.goToRejectedStep(),
+      fillRegDummyData: () => this.fillRegDummyData(),
+      showRegDummyButton: s.regStep === 1 || s.regStep === 2,
       regHistoryExpanded: s.regHistoryExpanded, toggleRegHistoryExpanded: () => this.toggleRegHistoryExpanded(), regHistoryToggleIcon,
       regSummaryStep1Open: s.regSummaryStep1Open, toggleRegSummaryStep1: () => this.toggleRegSummaryStep1(), regSummaryStep1Icon,
       regSummaryStep2Open: s.regSummaryStep2Open, toggleRegSummaryStep2: () => this.toggleRegSummaryStep2(), regSummaryStep2Icon,
