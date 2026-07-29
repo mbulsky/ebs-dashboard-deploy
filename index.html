@@ -246,6 +246,18 @@
             <button onClick="{{ startNewRegistration }}" style="border:none; cursor:pointer; display:flex; align-items:center; gap:7px; background:#E42E2C; color:#fff; font-size:13px; font-weight:600; padding:10px 18px; border-radius:8px; flex:none;"><i class="pi-add-circle" style="font-size:14px;"></i>Registrasi Enterprise Baru</button>
           </div>
 
+          <div style="border:1.5px dashed #E0A82E; background:#FFF9EC; border-radius:12px; padding:16px 18px; margin-bottom:20px;">
+            <div style="font-size:12.5px; font-weight:700; color:#8C6D1F; margin-bottom:10px; display:flex; align-items:center; gap:7px;"><i class="pi-flash-on" style="font-size:13px;"></i>Testing: Buat Contoh Registrasi</div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <button onClick="{{ createSample_pendingVerification }}" style="border:1px solid #E0A82E; background:#fff; color:#8C6D1F; font-size:12.5px; font-weight:600; padding:8px 14px; border-radius:7px; cursor:pointer;">+ Contoh: Menunggu Verifikasi</button>
+              <button onClick="{{ createSample_inReview }}" style="border:1px solid #E0A82E; background:#fff; color:#8C6D1F; font-size:12.5px; font-weight:600; padding:8px 14px; border-radius:7px; cursor:pointer;">+ Contoh: Sedang Diverifikasi</button>
+              <button onClick="{{ createSample_rejected }}" style="border:1px solid #E0A82E; background:#fff; color:#8C6D1F; font-size:12.5px; font-weight:600; padding:8px 14px; border-radius:7px; cursor:pointer;">+ Contoh: Ditolak</button>
+              <button onClick="{{ createSample_rejectedMultiple }}" style="border:1px solid #E0A82E; background:#fff; color:#8C6D1F; font-size:12.5px; font-weight:600; padding:8px 14px; border-radius:7px; cursor:pointer;">+ Contoh: Ditolak Berkali-kali</button>
+              <button onClick="{{ createSample_pendingClientSignature }}" style="border:1px solid #E0A82E; background:#fff; color:#8C6D1F; font-size:12.5px; font-weight:600; padding:8px 14px; border-radius:7px; cursor:pointer;">+ Contoh: Menunggu Tanda Tangan Client</button>
+              <button onClick="{{ createSample_published }}" style="border:1px solid #E0A82E; background:#fff; color:#8C6D1F; font-size:12.5px; font-weight:600; padding:8px 14px; border-radius:7px; cursor:pointer;">+ Contoh: Sudah Terbit</button>
+            </div>
+          </div>
+
           <div style="background:#FBFCFD; border:1px solid #E6E7EB; border-radius:14px; overflow:hidden;">
             <div style="display:grid; grid-template-columns:1.6fr 1fr 1.3fr 1fr 1fr 0.9fr; padding:13px 20px; font-size:11px; font-weight:700; letter-spacing:0.3px; color:#939EAE; text-transform:uppercase; border-bottom:1px solid #F4F5F7;">
               <div>Nama Perusahaan</div><div>Owner PrivyID</div><div>Status</div><div>Dibuat</div><div>Diperbarui</div><div>Actor</div>
@@ -4081,9 +4093,7 @@ class Component extends DCLogic {
     this.setState({ regStep: reg.rejectedAtStep || 1 });
   }
   toggleRegHistoryExpanded() { this.setState({ regHistoryExpanded: !this.state.regHistoryExpanded }); }
-  fillRegDummyData() {
-    const reg = this.getActiveReg();
-    if (!reg) return;
+  buildDummyRegPatch() {
     const now = new Date();
     const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
     const randDigits = (n) => Array.from({ length: n }, () => Math.floor(Math.random() * 10)).join('');
@@ -4093,7 +4103,7 @@ class Component extends DCLogic {
     const companyEmail = 'info@' + slug + '.co.id';
     const companyAddress = 'Jl. Testing Dummy No. ' + (Math.floor(Math.random() * 90) + 1) + ', Jakarta';
     const businessField = pick(['Teknologi Informasi', 'Jasa Konsultasi', 'Perdagangan Umum', 'Manufaktur']);
-    const counter = String(Date.now()).slice(-6);
+    const counter = String(Date.now()).slice(-6) + Math.floor(Math.random() * 90 + 10);
     const docFileNames = { npwp: 'npwp-dummy.pdf', nib: 'nib-dummy.pdf', skPendirian: 'sk-pendirian-dummy.pdf', aktaPendirian: 'akta-pendirian-dummy.pdf', suratKuasa: 'surat-kuasa-dummy.pdf' };
     const documents = {};
     Object.keys(docFileNames).forEach(k => { documents[k] = { fileName: docFileNames[k], uploadedAt: now }; });
@@ -4105,7 +4115,7 @@ class Component extends DCLogic {
       { type: 'Meterai Elektronik', periodYears: '1', pricePerYear: String(emeteraiBase), unit: String(Math.floor(Math.random() * 50) + 10), discount: '0' },
       { type: 'Stamping Fee E-Meterai', periodYears: '1', pricePerYear: String(stampFeeBase), unit: String(Math.floor(Math.random() * 20) + 5), discount: '0' }
     ];
-    this.onRegFieldPatch({
+    return {
       ownerPrivyId: owner.privyId, ownerName: owner.name,
       companyName, npwpNumber: randDigits(15), companyEmail, companyPhone: '+628' + randDigits(9),
       documents,
@@ -4117,11 +4127,79 @@ class Component extends DCLogic {
       emailPriceUpdate: companyEmail, emailDisruption: companyEmail, emailBilling: companyEmail,
       autofilledFields: { emailPriceUpdate: true, emailDisruption: true, emailBilling: true },
       serviceItems,
-      agreementDate: now.toISOString().slice(0, 10),
-      currentStep: 3
-    });
+      agreementDate: now.toISOString().slice(0, 10)
+    };
+  }
+  fillRegDummyData() {
+    const reg = this.getActiveReg();
+    if (!reg) return;
+    const patch = this.buildDummyRegPatch();
+    this.onRegFieldPatch({ ...patch, currentStep: 3 });
     this.setState({ regStep: 3, regStep1Error: '', regStep2Error: '' });
-    this.addAudit(this.currentActor(), 'Filled dummy testing data for enterprise registration', companyName, null);
+    this.addAudit(this.currentActor(), 'Filled dummy testing data for enterprise registration', patch.companyName, null);
+  }
+  createSampleRegistration(targetStatus) {
+    const actor = this.currentActor();
+    const now = new Date();
+    const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+    const rejectReasons = [
+      'Dokumen NPWP tidak terbaca jelas, mohon upload ulang.',
+      'Alamat perusahaan tidak sesuai dengan dokumen legal.',
+      'Data penandatangan tidak cocok dengan Akta Pendirian.'
+    ];
+    const reg = { ...this.makeNewRegistration(actor), ...this.buildDummyRegPatch() };
+    reg.currentStep = 3;
+    const makeHistoryEntry = (attemptNumber, overrides) => ({
+      id: uid('sub-'), attemptNumber, submittedAt: now, submittedBy: actor,
+      result: 'pending', reviewedAt: null, rejectReason: null, rejectedAtStep: null, reviewStartedAt: null,
+      ...overrides
+    });
+
+    if (targetStatus === 'pending_verification') {
+      reg.status = 'pending_verification';
+      reg.submissionHistory = [makeHistoryEntry(1)];
+    } else if (targetStatus === 'in_review') {
+      reg.status = 'in_review';
+      reg.submissionHistory = [makeHistoryEntry(1, { reviewStartedAt: now })];
+    } else if (targetStatus === 'rejected') {
+      const step = pick([1, 2]);
+      const reason = pick(rejectReasons);
+      reg.status = 'rejected';
+      reg.rejectReason = reason;
+      reg.rejectedAtStep = step;
+      reg.submissionHistory = [makeHistoryEntry(1, { result: 'rejected', reviewStartedAt: now, reviewedAt: now, rejectReason: reason, rejectedAtStep: step })];
+    } else if (targetStatus === 'rejected_multiple') {
+      const count = Math.floor(Math.random() * 2) + 2;
+      const history = [];
+      let lastReason = '', lastStep = 2;
+      for (let i = 1; i <= count; i++) {
+        lastReason = pick(rejectReasons);
+        lastStep = pick([1, 2]);
+        history.push(makeHistoryEntry(i, { result: 'rejected', reviewStartedAt: now, reviewedAt: now, rejectReason: lastReason, rejectedAtStep: lastStep }));
+      }
+      reg.status = 'rejected';
+      reg.rejectReason = lastReason;
+      reg.rejectedAtStep = lastStep;
+      reg.submissionHistory = history;
+    } else if (targetStatus === 'pending_client_signature') {
+      reg.status = 'pending_client_signature';
+      reg.verifiedBy = actor; reg.verifiedAt = now;
+      reg.docSentAt = now;
+      reg.submissionHistory = [makeHistoryEntry(1, { result: 'approved', reviewStartedAt: now, reviewedAt: now })];
+    } else if (targetStatus === 'published') {
+      reg.status = 'published';
+      reg.verifiedBy = actor; reg.verifiedAt = now;
+      reg.docSentAt = now; reg.clientSignedAt = now;
+      reg.submissionHistory = [makeHistoryEntry(1, { result: 'approved', reviewStartedAt: now, reviewedAt: now })];
+      const newEnt = this.buildEnterpriseFromRegistration(reg, now);
+      reg.publishedEnterpriseId = newEnt.id;
+      this.setState({ enterpriseRegistrations: [reg, ...this.state.enterpriseRegistrations], enterprises: [...this.state.enterprises, newEnt] });
+      this.addAudit(actor, 'Testing shortcut: created sample enterprise (published)', reg.companyName, newEnt.id);
+      return;
+    }
+
+    this.setState({ enterpriseRegistrations: [reg, ...this.state.enterpriseRegistrations] });
+    this.addAudit(actor, 'Testing shortcut: created sample registration (' + targetStatus + ')', reg.companyName, null);
   }
   showToast(message) {
     this.setState({ toastMessage: message, toastVisible: true });
@@ -4247,10 +4325,8 @@ class Component extends DCLogic {
     const reg = regs.find(r => r.id === id);
     this.addAudit(this.currentActor(), 'Sent registration document to client', reg.companyName || id, null);
   }
-  publishRegistration(id) {
-    const reg = this.getReg(id);
-    if (!reg) return;
-    const now = new Date();
+  buildEnterpriseFromRegistration(reg, now) {
+    now = now || new Date();
     const findServiceItem = (keyword) => reg.serviceItems.find(it => it.type && it.type.toLowerCase().includes(keyword));
     const emptyItem = { periodYears: 1, unit: 0, pricePerYear: 0 };
     const eaItem = findServiceItem('employee') || emptyItem, meItem = findServiceItem('meterai') || emptyItem, feeItem = findServiceItem('stamping') || emptyItem;
@@ -4260,7 +4336,7 @@ class Component extends DCLogic {
     const stampExpiredAt = addYears(agreementDate, meItem.periodYears || 1);
     const eaUnit = parseInt(eaItem.unit, 10) || 0;
     const meUnit = parseInt(meItem.unit, 10) || 0;
-    const newEnt = {
+    return {
       id: uid('ent-'), uuid: uid('uuid-'), name: reg.companyName, pid: uid('EID').toUpperCase(), ownerPid: reg.ownerPrivyId, npwp: reg.npwpNumber,
       syncBy: reg.createdBy, createdAt: reg.createdAt, registeredBy: reg.createdBy, updatedAt: now, updatedBy: this.currentActor(),
       email: reg.companyEmail, phone: reg.companyPhone, address: reg.companyAddress, ownerName: reg.ownerName, ownerUuid: uid('uuid-'),
@@ -4274,6 +4350,12 @@ class Component extends DCLogic {
         { code: '387', name: 'Stamping Fee - (E-Meterai)', unit: 'piece', base: parseFloat(feeItem.pricePerYear) || 0, hasSpecial: false, special: null }
       ]
     };
+  }
+  publishRegistration(id) {
+    const reg = this.getReg(id);
+    if (!reg) return;
+    const now = new Date();
+    const newEnt = this.buildEnterpriseFromRegistration(reg, now);
     const regs = this.state.enterpriseRegistrations.map(r => r.id === id ? { ...r, status: 'published', clientSignedAt: now, publishedEnterpriseId: newEnt.id, updatedAt: now } : r);
     this.setState({ enterpriseRegistrations: regs, enterprises: [...this.state.enterprises, newEnt] });
     this.addAudit(this.currentActor(), 'Client signed — enterprise registration published', newEnt.name, newEnt.id);
@@ -5409,6 +5491,12 @@ class Component extends DCLogic {
       submissionHistoryRows, noSubmissionHistoryRows: submissionHistoryRows.length === 0,
       goToRejectedStep: () => this.goToRejectedStep(),
       fillRegDummyData: () => this.fillRegDummyData(),
+      createSample_pendingVerification: () => this.createSampleRegistration('pending_verification'),
+      createSample_inReview: () => this.createSampleRegistration('in_review'),
+      createSample_rejected: () => this.createSampleRegistration('rejected'),
+      createSample_rejectedMultiple: () => this.createSampleRegistration('rejected_multiple'),
+      createSample_pendingClientSignature: () => this.createSampleRegistration('pending_client_signature'),
+      createSample_published: () => this.createSampleRegistration('published'),
       showRegDummyButton: s.regStep === 1 || s.regStep === 2,
       regHistoryExpanded: s.regHistoryExpanded, toggleRegHistoryExpanded: () => this.toggleRegHistoryExpanded(), regHistoryToggleIcon,
       regSummaryStep1Open: s.regSummaryStep1Open, toggleRegSummaryStep1: () => this.toggleRegSummaryStep1(), regSummaryStep1Icon,
