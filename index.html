@@ -967,10 +967,11 @@
 
           <sc-if value="{{ isConfigTab }}" hint-placeholder-val="{{ false }}">
             <div style="background:#FBFCFD; border:1px solid #E6E7EB; border-radius:14px; padding:20px 22px;">
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; gap:12px;">
-                <div style="font-size:13px; color:#647184;">EBS dan Lead EBS dapat menambah dan mengubah harga dasar untuk enterprise ini.</div>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; gap:12px;">
+                <div style="font-size:13px; color:#647184;">EBS dan Lead EBS dapat mengatur harga spesial (upselling & diskon) untuk enterprise ini.</div>
                 <button onClick="{{ openAddConfigPriceModal }}" style="border:none; cursor:pointer; flex:none; display:flex; align-items:center; gap:7px; background:#E42E2C; color:#fff; font-size:13px; font-weight:600; padding:9px 18px; border-radius:8px;"><i class="pi-add-circle" style="font-size:14px;"></i>Add Config Price</button>
               </div>
+              <div style="font-size:12px; color:#939EAE; margin-bottom:16px;">{{ configPriceRoleHint }}</div>
               <sc-for list="{{ selectedEnt.items }}" as="pitem" hint-placeholder-count="3">
                 <div class="row-card" style="border:1px solid #E6E7EB; border-radius:10px; padding:16px 18px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
                   <div>
@@ -978,6 +979,9 @@
                     <div style="font-size:12px; color:#939EAE; margin-bottom:8px;">Code: {{ pitem.code }} &middot; Unit: {{ pitem.unit }}</div>
                     <sc-if value="{{ pitem.hasSpecial }}" hint-placeholder-val="{{ false }}">
                       <span style="background:#FFF7E5; border:1px solid #FFE7AD; border-radius:6px; padding:3px 9px; font-size:11.5px; color:#B37E00; font-weight:600;"><i class="pi-shield-on" style="font-size:11px;"></i> Harga spesial aktif: {{ pitem.specialLabel }}</span>
+                    </sc-if>
+                    <sc-if value="{{ pitem.hasTenor }}" hint-placeholder-val="{{ false }}">
+                      <span style="background:#E5F3FF; border:1px solid #C7E4FF; border-radius:6px; padding:3px 9px; font-size:11.5px; color:#0061B3; font-weight:600; margin-left:6px;"><i class="pi-calendar" style="font-size:11px;"></i> {{ pitem.tenorLabel }}</span>
                     </sc-if>
                   </div>
                   <div style="text-align:right; display:flex; flex-direction:column; align-items:flex-end; gap:6px;">
@@ -2811,7 +2815,17 @@
         <input type="number" value="{{ configPriceUpsell }}" onChange="{{ onConfigPriceUpsell }}" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:12px 14px; font-size:14px; color:#1F2329; margin-bottom:18px;" />
 
         <div style="font-size:13px; font-weight:600; color:#647184; margin-bottom:6px;">Discount</div>
-        <input type="number" value="{{ configPriceDiscount }}" onChange="{{ onConfigPriceDiscount }}" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:12px 14px; font-size:14px; color:#1F2329;" />
+        <input type="number" value="{{ configPriceDiscount }}" onChange="{{ onConfigPriceDiscount }}" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:12px 14px; font-size:14px; color:#1F2329; margin-bottom:18px;" />
+
+        <div style="font-size:13px; font-weight:600; color:#647184; margin-bottom:6px;">Tenor</div>
+        <select value="{{ configPriceTenor }}" onChange="{{ onConfigPriceTenor }}" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:12px 14px; font-size:14px; color:#1F2329; margin-bottom:18px;">
+          <option value="3">3 bulan</option>
+          <option value="6">6 bulan</option>
+          <option value="12">12 bulan</option>
+        </select>
+
+        <div style="font-size:13px; font-weight:600; color:#647184; margin-bottom:6px;">Notes</div>
+        <textarea value="{{ configPriceNotes }}" onInput="{{ onConfigPriceNotes }}" rows="3" placeholder="Wajib diisi, mis. alasan override harga untuk enterprise ini" style="width:100%; border:1px solid #CBD1D8; border-radius:8px; padding:12px 14px; font-size:14px; color:#1F2329; resize:vertical;"></textarea>
 
         <sc-if value="{{ configPriceError }}" hint-placeholder-val="{{ false }}">
           <div style="color:#C22725; font-size:12px; margin-top:10px;">{{ configPriceError }}</div>
@@ -3194,7 +3208,7 @@ class Component extends DCLogic {
     ebsAssignQuery: '', ebsAssignCandidate: null,
     checkoutExpiryHours: '24', personalCheckoutExpiryHours: '24', bulkCheckoutExpiryHours: '24',
     bulkReqFirstName: '', bulkReqLastName: '', bulkReqPrivyId: '', bulkReqEmail: '', bulkNeedFracture: false, bulkCcEmails: '',
-    configPriceItemCode: '', configPriceUpsell: '0', configPriceDiscount: '0', configPriceError: '',
+    configPriceItemCode: '', configPriceUpsell: '0', configPriceDiscount: '0', configPriceTenor: '3', configPriceNotes: '', configPriceError: '',
     editingProductId: null, productFormName: '', productFormUnit: '', productFormCode: '', productFormPrice: '0', productFormError: '',
     productFormTier: '', productFormEaCount: '',
 
@@ -3236,27 +3250,31 @@ class Component extends DCLogic {
 
   // ---------- price configuration ----------
   openAddConfigPriceModal() {
-    this.setState({ modal: 'addConfigPrice', configPriceItemCode: '', configPriceUpsell: '0', configPriceDiscount: '0', configPriceError: '' });
+    this.setState({ modal: 'addConfigPrice', configPriceItemCode: '', configPriceUpsell: '0', configPriceDiscount: '0', configPriceTenor: '3', configPriceNotes: '', configPriceError: '' });
   }
   onConfigPriceItemCode(e) { this.setState({ configPriceItemCode: e.target.value, configPriceError: '' }); }
   onConfigPriceUpsell(e) { this.setState({ configPriceUpsell: e.target.value }); }
   onConfigPriceDiscount(e) { this.setState({ configPriceDiscount: e.target.value }); }
+  onConfigPriceTenor(e) { this.setState({ configPriceTenor: e.target.value }); }
+  onConfigPriceNotes(e) { this.setState({ configPriceNotes: e.target.value, configPriceError: '' }); }
   saveConfigPrice() {
     const s = this.state;
     if (!s.configPriceItemCode) { this.setState({ configPriceError: 'Item wajib dipilih' }); return; }
+    if (!s.configPriceNotes.trim()) { this.setState({ configPriceError: 'Catatan wajib diisi.' }); return; }
     const prod = s.products.find(p => p.key === s.configPriceItemCode);
     const upsell = parseInt(s.configPriceUpsell, 10) || 0;
     const discount = parseInt(s.configPriceDiscount, 10) || 0;
+    const tenor = s.configPriceTenor;
     const base = Math.max(0, prod.base + upsell - discount);
     const enterprises = s.enterprises.map(e => {
       if (e.id !== s.selectedEntId) return e;
       const exists = e.items.some(it => it.code === prod.key);
       const items = exists
-        ? e.items.map(it => it.code === prod.key ? { ...it, base, hasSpecial: false, special: null } : it)
-        : [...e.items, { code: prod.key, name: prod.name, unit: prod.unit, base, hasSpecial: false, special: null }];
+        ? e.items.map(it => it.code === prod.key ? { ...it, base, tenorMonths: tenor, hasSpecial: false, special: null } : it)
+        : [...e.items, { code: prod.key, name: prod.name, unit: prod.unit, base, tenorMonths: tenor, hasSpecial: false, special: null }];
       return { ...e, items };
     });
-    this.addAudit(this.currentActor(), 'Add config price', prod.name + ' \u2192 ' + rp(base), s.selectedEntId);
+    this.addAudit(this.currentActor(), 'Add config price', prod.name + ' \u2192 ' + rp(base) + ' (Tenor ' + tenor + ' bulan) \u2014 ' + s.configPriceNotes.trim(), s.selectedEntId);
     this.setState({ enterprises, modal: null });
   }
 
@@ -3840,7 +3858,7 @@ class Component extends DCLogic {
   onEntExpiryFrom(e) { this.setState({ entExpiryFrom: e.target.value }); }
   onEntExpiryTo(e) { this.setState({ entExpiryTo: e.target.value }); }
   copyToClipboard(text) { if (navigator.clipboard) navigator.clipboard.writeText(text).catch(() => {}); }
-  setTab_details() { this.setState({ detailTab: 'details', companyProfileOpen: true }); }
+  setTab_details() { this.setState({ detailTab: 'details' }); }
   setTab_config() { this.setState({ detailTab: 'config', companyProfileOpen: false }); }
   closeCompanyProfile() { this.setState({ companyProfileOpen: false }); }
   viewTopupHistory() { this.setState({ page: 'topup' }); }
@@ -4621,6 +4639,7 @@ class Component extends DCLogic {
       items: ent.items.map(it => ({
         ...it, code: it.code, unit: it.unit,
         baseLabel: rp(it.base), hasSpecial: it.hasSpecial, specialLabel: it.hasSpecial ? rp(it.special) : '',
+        hasTenor: !!it.tenorMonths, tenorLabel: it.tenorMonths ? ('Tenor: ' + it.tenorMonths + ' bulan') : '',
         openSpecial: () => this.openSpecialPriceModal(it)
       }))
     };
@@ -5154,6 +5173,9 @@ class Component extends DCLogic {
       configPriceOptions: s.products.map(p => ({ code: p.key, label: p.name })),
       configPriceUpsell: s.configPriceUpsell, onConfigPriceUpsell: (e) => this.onConfigPriceUpsell(e),
       configPriceDiscount: s.configPriceDiscount, onConfigPriceDiscount: (e) => this.onConfigPriceDiscount(e),
+      configPriceTenor: s.configPriceTenor, onConfigPriceTenor: (e) => this.onConfigPriceTenor(e),
+      configPriceNotes: s.configPriceNotes, onConfigPriceNotes: (e) => this.onConfigPriceNotes(e),
+      configPriceRoleHint: isLead ? 'Sebagai Lead EBS, Anda dapat mengatur harga spesial per tenor dan override manual (wajib catatan).' : 'Sebagai EBS, perubahan di sini tercatat sebagai harga spesial enterprise. Diskon per transaksi diatur saat proses Top Up.',
       configPriceError: s.configPriceError, saveConfigPrice: () => this.saveConfigPrice(),
 
       searchQuery: s.searchQuery, onSearchInput: (e) => this.onSearchInput(e), filteredEnterprises, syncEnterprise: () => this.syncEnterprise(),
